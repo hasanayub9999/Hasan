@@ -1,0 +1,348 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ray Detection</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #080b12;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    canvas {
+      display: block;
+      margin: auto;
+      background: #080b12;
+    }
+
+    #message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="message">Scanning...</div>
+
+<canvas id="canvas" width="900" height="500"></canvas>
+
+<script>
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const message = document.getElementById("message");
+
+
+// =========================
+// MOVABLE OBJECT
+// =========================
+
+const object = {
+  x: 150,
+  y: 250,
+  radius: 20,
+  speed: 4
+};
+
+
+// =========================
+// WALL
+// =========================
+
+const wall = {
+  x: 700,
+  y: 100,
+  width: 20,
+  height: 300
+};
+
+
+// =========================
+// KEYBOARD
+// =========================
+
+const keys = {};
+
+document.addEventListener("keydown", (event) => {
+  keys[event.key.toLowerCase()] = true;
+});
+
+document.addEventListener("keyup", (event) => {
+  keys[event.key.toLowerCase()] = false;
+});
+
+
+// =========================
+// RAYS
+// =========================
+
+const rays = [];
+
+function createRay() {
+
+  rays.push({
+    x: object.x + object.radius,
+    y: object.y,
+
+    // Starts moving RIGHT
+    vx: 6,
+
+    // Keeps the ray horizontal
+    vy: 0,
+
+    bounced: false
+  });
+
+}
+
+
+// =========================
+// MOVE OBJECT
+// =========================
+
+function moveObject() {
+
+  if (keys["w"] || keys["arrowup"]) {
+    object.y -= object.speed;
+  }
+
+  if (keys["s"] || keys["arrowdown"]) {
+    object.y += object.speed;
+  }
+
+  if (keys["a"] || keys["arrowleft"]) {
+    object.x -= object.speed;
+  }
+
+  if (keys["d"] || keys["arrowright"]) {
+    object.x += object.speed;
+  }
+
+
+  // Keep object inside screen
+
+  object.x = Math.max(
+    object.radius,
+    Math.min(canvas.width - object.radius, object.x)
+  );
+
+  object.y = Math.max(
+    object.radius,
+    Math.min(canvas.height - object.radius, object.y)
+  );
+
+}
+
+
+// =========================
+// MOVE RAYS
+// =========================
+
+function updateRays() {
+
+  for (let i = rays.length - 1; i >= 0; i--) {
+
+    const ray = rays[i];
+
+    ray.x += ray.vx;
+    ray.y += ray.vy;
+
+
+    // ==================================
+    // ACTUAL WALL COLLISION
+    // ==================================
+
+    if (
+      !ray.bounced &&
+      ray.x >= wall.x &&
+      ray.y >= wall.y &&
+      ray.y <= wall.y + wall.height
+    ) {
+
+      // Put ray exactly at wall
+      ray.x = wall.x;
+
+      // Reverse direction
+      ray.vx *= -1;
+
+      ray.bounced = true;
+    }
+
+
+    // ==================================
+    // OBJECT DETECTION
+    // ==================================
+
+    if (
+      ray.bounced &&
+      Math.hypot(
+        ray.x - object.x,
+        ray.y - object.y
+      ) < object.radius
+    ) {
+
+      message.textContent = "OBJECT DETECTED!";
+
+      rays.splice(i, 1);
+
+      continue;
+    }
+
+
+    // Remove rays that leave screen
+
+    if (
+      ray.x < 0 ||
+      ray.x > canvas.width ||
+      ray.y < 0 ||
+      ray.y > canvas.height
+    ) {
+
+      rays.splice(i, 1);
+    }
+
+  }
+
+}
+
+
+// =========================
+// DRAW
+// =========================
+
+function draw() {
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  // Background
+
+  ctx.fillStyle = "#080b12";
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  // =========================
+  // WALL
+  // =========================
+
+  ctx.fillStyle = "#777";
+
+  ctx.fillRect(
+    wall.x,
+    wall.y,
+    wall.width,
+    wall.height
+  );
+
+
+  // =========================
+  // OBJECT
+  // =========================
+
+  ctx.beginPath();
+
+  ctx.arc(
+    object.x,
+    object.y,
+    object.radius,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle = "#22c55e";
+
+  ctx.fill();
+
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 2;
+
+  ctx.stroke();
+
+
+  // =========================
+  // RAYS
+  // =========================
+
+  for (const ray of rays) {
+
+    ctx.beginPath();
+
+    ctx.arc(
+      ray.x,
+      ray.y,
+      3,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fillStyle = ray.bounced
+      ? "#facc15"
+      : "#60a5fa";
+
+    ctx.fill();
+
+  }
+
+}
+
+
+// =========================
+// MAIN LOOP
+// =========================
+
+let rayTimer = 0;
+
+function gameLoop() {
+
+  moveObject();
+
+  updateRays();
+
+  rayTimer++;
+
+  // Create rays continuously
+
+  if (rayTimer >= 8) {
+
+    createRay();
+
+    rayTimer = 0;
+
+  }
+
+  draw();
+
+  requestAnimationFrame(gameLoop);
+
+}
+
+
+gameLoop();
+
+</script>
+
+</body>
+</html>
+```
