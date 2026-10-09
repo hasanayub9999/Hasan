@@ -6,3 +6,4 @@ unity/[Bb]uild*/
 unity/[Uu]ser[Ss]ettings/
 unity/*.csproj
 unity/*.sln
+.DS_Store
