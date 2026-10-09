@@ -1,0 +1,13 @@
+newmtl pouch_Brown
+Kd 0.1101 0.0600 0.0409
+Ka 0 0 0
+Ks 0 0 0
+d 1
+illum 1
+
+newmtl pouch_DarkRed
+Kd 0.0919 0.0258 0.0214
+Ka 0 0 0
+Ks 0 0 0
+d 1
+illum 1

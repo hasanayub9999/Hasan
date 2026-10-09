@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f76bf347bda3a84e940a5734d065c9d, type: 3}
+  m_Name: PropCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::PropCatalog
+  entries:
+  - name: Sedan
+    prefab: {fileID: 919132149155446097, guid: 2918c17543b3624479c2a80c42c4cd8e, type: 3}
+    size: 4.5
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: SUV
+    prefab: {fileID: 919132149155446097, guid: d7f58d4116b158b4c9a87adb20e91899, type: 3}
+    size: 4.8
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: Taxi
+    prefab: {fileID: 919132149155446097, guid: f00a7fa90fc78614cb3d48c688f6b4a0, type: 3}
+    size: 4.5
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: Police car
+    prefab: {fileID: 919132149155446097, guid: 31778723f0c55de4e9f37d8ea18de6e2, type: 3}
+    size: 4.7
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: Van
+    prefab: {fileID: 919132149155446097, guid: 10f5dc3cf85303748a19983e1a6bd727, type: 3}
+    size: 5.2
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: Pine tree
+    prefab: {fileID: 919132149155446097, guid: 33d3e408cfb62f540814de2cd2a9eac2, type: 3}
+    size: 7
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: Round tree
+    prefab: {fileID: 919132149155446097, guid: 3d158e9e53639264fbf05ec7c9864d9b, type: 3}
+    size: 5
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: Bush
+    prefab: {fileID: 919132149155446097, guid: 6ab344690311f204dad4eacd05371993, type: 3}
+    size: 1.6
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: Street light
+    prefab: {fileID: 919132149155446097, guid: 1783b2688c9082f448bb4606c4cada58, type: 3}
+    size: 5.5
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: Traffic cone
+    prefab: {fileID: 919132149155446097, guid: bdb815626d640814cac953c16c660a04, type: 3}
+    size: 0.7
+    modelRotation: {x: 0, y: 0, z: 0}
+  - name: Phone
+    prefab: {fileID: 919132149155446097, guid: 4103747c58ba3314488017a6f0fe8958, type: 3}
+    size: 0.15
+    modelRotation: {x: 90, y: 0, z: 0}
+  - name: Keys
+    prefab: {fileID: 919132149155446097, guid: c8ebd085191cbb84c89714ff1a1b85de, type: 3}
+    size: 0.12
+    modelRotation: {x: 90, y: 0, z: 0}
+  - name: Wallet
+    prefab: {fileID: 919132149155446097, guid: 1f608046dd3a476439269f5c5cbd61f6, type: 3}
+    size: 0.18
+    modelRotation: {x: 0, y: 0, z: 0}

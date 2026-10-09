@@ -1,0 +1,9 @@
+3D models used by the prop catalog. All are CC0 (public domain); credit is optional but given anyway.
+
+Cars/   sedan, suv, taxi, police, van, cone  - Kenney "Car Kit"        https://kenney.nl/assets/car-kit         CC0
+Roads/  light-square (street light)           - Kenney "City Kit Roads" https://kenney.nl/assets/city-kit-roads  CC0
+Nature/ tree_pineTallA, tree_default, plant_bushLarge - Kenney "Nature Kit" https://kenney.nl/assets/nature-kit  CC0
+Items/  phone  - "Phone" by Quaternius          https://poly.pizza/m/k2kgBepoMU  CC0
+Items/  key    - "Key With Tag" by iPoly3D      https://poly.pizza/m/K6h20LmA1U  CC0
+Items/  pouch  - "Coin Pouch" by Quaternius     https://poly.pizza/m/pTZyPTMH88  CC0
+(Items were converted from the GLB files to OBJ+MTL so Unity imports them without extra packages.)

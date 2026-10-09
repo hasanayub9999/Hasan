@@ -1,0 +1,20 @@
+newmtl phone_White
+Kd 0.5586 0.5586 0.5586
+Ka 0 0 0
+Ks 0 0 0
+d 1
+illum 1
+
+newmtl phone_Grey
+Kd 0.1139 0.1139 0.1139
+Ka 0 0 0
+Ks 0 0 0
+d 1
+illum 1
+
+newmtl phone_Black
+Kd 0.0265 0.0265 0.0265
+Ka 0 0 0
+Ks 0 0 0
+d 1
+illum 1

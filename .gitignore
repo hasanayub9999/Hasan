@@ -1,0 +1,8 @@
+unity/[Ll]ibrary/
+unity/[Tt]emp/
+unity/[Ll]ogs/
+unity/[Oo]bj/
+unity/[Bb]uild*/
+unity/[Uu]ser[Ss]ettings/
+unity/*.csproj
+unity/*.sln
