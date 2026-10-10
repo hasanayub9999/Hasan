@@ -1,7 +1,293 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SkyRL Portal — Flight Lab</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="portal.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script></head>
-<body><div class="loader" id="loader"><div class="loader-mark">✦</div><b class="loader-brand">Sky<span>RL</span></b><p>INITIALIZING FLIGHT SYSTEMS</p><div class="loadtrack"><i id="loadbar"></i></div><small id="loadstatus">Preparing your workspace…</small></div>
-<header class="topnav"><a class="portal-logo" href="index.html"><b>✦</b> Sky<span>RL</span><small>FLIGHT LAB</small></a><div class="navcenter"><i></i> WORKSPACE / 3D ENVIRONMENT</div><div><button id="lighting" class="tinybtn">☼</button><a href="index.html" class="back">← Main site</a></div></header>
-<main class="layout"><aside class="left"><label>MISSION CONTROL</label><h1>Flight<br><span>workspace.</span></h1><p class="intro">Explore the 3D scene. This is the visual workspace shell; the live PPO simulator will be integrated with Sakthi's code.</p><hr><label>SCENE CONTROLS</label><button class="mode active" data-mode="orbit"><b>◉</b><span><strong>Orbital view</strong><small>Explore the environment</small></span><em>01</em></button><button class="mode" data-mode="grid"><b>▦</b><span><strong>Navigation grid</strong><small>Show flight coordinates</small></span><em>02</em></button><button class="mode" data-mode="obstacles"><b>⬡</b><span><strong>Obstacle field</strong><small>Toggle environment blocks</small></span><em>03</em></button><hr><label>DEMO AGENT</label><div class="agent"><b>✦</b><span><strong>Drone-01</strong><small>Navigation agent <i id="agentStatus">● IDLE</i></small></span></div><div class="triplet"><div><small>ALGORITHM</small><b>PPO</b></div><div><small>EPISODE</small><b id="episode">000</b></div><div><small>REWARD</small><b id="reward">—</b></div></div><button class="run" id="run">▶ &nbsp; Run visual demo</button><button class="reset" id="reset">Reset scene</button><p class="disclaimer">VISUAL DEMO ONLY · NO RL MODEL CONNECTED</p></aside>
-<section class="view"><div class="viewtop"><span><i></i> 3D ENVIRONMENT <em>/</em> SECTOR A-01</span><div><button id="gridbtn" class="tool active">▦ Grid</button><button id="labelbtn" class="tool active">⌖ Labels</button><small>WEBGL / 3D</small></div></div><div id="mount"><div id="fallback">Loading 3D environment…</div></div><div class="axis"><span><i class="x"></i>X AXIS</span><span><i class="y"></i>Y AXIS</span><span><i class="z"></i>Z AXIS</span></div><div class="target"><b>◎</b><span><small>MISSION TARGET</small><strong>Landing Zone A</strong></span><em>ACTIVE</em></div><div class="tip">↗ Drag to orbit · Scroll to zoom · Right-click to pan</div><div class="viewbottom"><div><small>COORDINATES</small><b id="coords">X 0.0 / Y 0.0 / Z 0.0</b></div><div><small>CAMERA</small><b>ORBIT · PERSPECTIVE</b></div><div><small>ENVIRONMENT</small><b><i></i> READY</b></div></div></section>
-<aside class="right"><div class="righthead"><div><label>ENVIRONMENT DATA</label><h2>Scene overview</h2></div><span>READY</span></div><article class="panel"><label>WORLD STATUS <em>LIVE VIEW</em></label><div class="world"><b>⌘</b><span><strong>Training arena</strong><small>Procedural 3D scene</small></span></div><hr><div class="row"><span>Environment bounds</span><b>100 × 100 units</b></div><div class="row"><span>Static obstacles</span><b id="obstacleCount">08</b></div><div class="row"><span>Landing zones</span><b>01</b></div></article><article class="panel"><label>AGENT TELEMETRY <em>DEMO</em></label><div class="telemetry"><div><small>ALTITUDE</small><b id="altitude">12.0 <i>m</i></b></div><div><small>VELOCITY</small><b id="velocity">0.0 <i>m/s</i></b></div><div><small>HEADING</small><b id="heading">090°</b></div><div><small>BATTERY</small><b>98 <i>%</i></b></div></div><p class="note">● Telemetry values are illustrative demo data</p></article><article class="panel integrate"><label>SIMULATION ENGINE</label><div class="bigglyph">⌁</div><h3>Bring the agent online.</h3><p>This portal is ready for the real environment, PPO policy, and training controls to be connected.</p><small>● AWAITING SAKTHI'S CODE</small></article><footer>SKYRL PORTAL <span>BUILD 0.1.0 · HACKPHS</span></footer></aside></main><script src="portal.js"></script></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SkyRL Portal — Flight Lab</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="portal.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+</head>
+
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loader">
+    <div class="loader-content">
+      <div class="loader-mark">S</div>
+      <div class="loader-brand">SkyRL</div>
+      <p>Initializing Flight Lab...</p>
+
+      <div class="loadbar">
+        <div class="loadbar-fill"></div>
+      </div>
+
+      <div id="loadstatus">Preparing simulation environment...</div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="topnav">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">S</span>
+
+      <span class="brand-text">
+        <strong>SkyRL</strong>
+        <small>FLIGHT LAB</small>
+      </span>
+    </a>
+
+    <div class="nav-center">
+      <span class="status-dot"></span>
+      SIMULATION ENVIRONMENT
+    </div>
+
+    <div class="nav-actions">
+      <button id="lightingBtn" class="nav-btn">
+        Toggle Lighting
+      </button>
+
+      <a href="index.html" class="nav-link">
+        Main Site ↗
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Layout -->
+  <main class="layout">
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar left-sidebar">
+
+      <div class="section-heading">
+        <span class="eyebrow">FLIGHT LAB</span>
+        <h2>Mission Control</h2>
+      </div>
+
+      <p class="muted">
+        Explore the 3D scene. This is the visual workspace shell,
+        ready for integration with Sakthi's simulator code.
+      </p>
+
+      <!-- Scene Controls -->
+      <article class="panel">
+        <label>SCENE CONTROLS</label>
+
+        <div class="button-stack">
+          <button class="control-btn active" data-mode="orbit">
+            Orbit View
+          </button>
+
+          <button class="control-btn" data-mode="grid">
+            Grid View
+          </button>
+
+          <button class="control-btn" data-mode="obstacles">
+            Obstacle View
+          </button>
+        </div>
+      </article>
+
+      <!-- Demo Agent -->
+      <article class="panel">
+        <label>AGENT CONTROL</label>
+
+        <div class="agent-heading">
+          <div>
+            <h3>Demo Agent</h3>
+            <p class="muted">Preview controls</p>
+          </div>
+
+          <span id="agentStatus" class="status-pill">IDLE</span>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat">
+            <span>EPISODE</span>
+            <strong id="episode">000</strong>
+          </div>
+
+          <div class="stat">
+            <span>REWARD</span>
+            <strong id="reward">0.00</strong>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="runBtn" class="primary-btn">Run Demo</button>
+          <button id="resetBtn" class="secondary-btn">Reset</button>
+        </div>
+
+        <p class="disclaimer">
+          VISUAL DEMO ONLY · NO RL MODEL CONNECTED
+        </p>
+      </article>
+
+    </aside>
+
+    <!-- Central 3D View -->
+    <section class="view">
+
+      <div class="viewtop">
+        <div>
+          <span class="eyebrow">ENVIRONMENT VIEWPORT</span>
+          <h2>Simulation Space</h2>
+        </div>
+
+        <div class="view-actions">
+          <button id="gridbtn" class="icon-btn">Grid</button>
+          <button id="labelbtn" class="icon-btn">Labels</button>
+        </div>
+      </div>
+
+      <!-- Three.js Viewport -->
+      <div id="mount" class="simulation-viewport">
+        <div class="viewport-fallback">
+          <div class="fallback-mark">S</div>
+          <h3>Preparing 3D Environment</h3>
+          <p>Your simulation workspace will appear here.</p>
+        </div>
+      </div>
+
+      <!-- Axis Legend -->
+      <div class="axis-legend">
+        <span><i class="axis-x"></i> X AXIS</span>
+        <span><i class="axis-y"></i> Y AXIS</span>
+        <span><i class="axis-z"></i> Z AXIS</span>
+      </div>
+
+      <div id="target" class="target-indicator"></div>
+
+      <div class="viewport-tip">
+        DRAG TO ROTATE · SCROLL TO ZOOM
+      </div>
+
+      <!-- Viewport Footer -->
+      <div class="view-footer">
+        <div class="coordinate-display">
+          <span>POSITION</span>
+          <strong id="coordinates">X: 0.00 · Y: 0.00 · Z: 0.00</strong>
+        </div>
+
+        <div class="connection-status">
+          <span class="status-dot"></span>
+          <span id="connectionStatus">ENVIRONMENT READY</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar right-sidebar">
+
+      <div class="section-heading">
+        <span class="eyebrow">ENVIRONMENT</span>
+        <h2>World Data</h2>
+      </div>
+
+      <!-- Environment Data -->
+      <article class="panel">
+        <label>ENVIRONMENT DATA</label>
+
+        <div class="data-row">
+          <span>Environment</span>
+          <strong id="environmentName">Flight Lab</strong>
+        </div>
+
+        <div class="data-row">
+          <span>Render Engine</span>
+          <strong>Three.js</strong>
+        </div>
+
+        <div class="data-row">
+          <span>Agent Type</span>
+          <strong id="agentType">Demo</strong>
+        </div>
+
+        <div class="data-row">
+          <span>Training Mode</span>
+          <strong id="trainingMode">Disconnected</strong>
+        </div>
+      </article>
+
+      <!-- World Status -->
+      <article class="panel">
+        <label>WORLD STATUS</label>
+
+        <div class="world-status">
+          <span class="status-dot"></span>
+
+          <div>
+            <strong id="worldStatus">Awaiting Integration</strong>
+            <p class="muted">Simulator connection pending.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Telemetry -->
+      <article class="panel">
+        <label>TELEMETRY</label>
+
+        <div class="data-row">
+          <span>Episode</span>
+          <strong id="telemetryEpisode">000</strong>
+        </div>
+
+        <div class="data-row">
+          <span>Reward</span>
+          <strong id="telemetryReward">0.00</strong>
+        </div>
+
+        <div class="data-row">
+          <span>Agent Status</span>
+          <strong id="telemetryStatus">Idle</strong>
+        </div>
+      </article>
+
+      <!-- Simulation Integration Space -->
+      <article class="panel integrate">
+        <label>SIMULATION ENGINE</label>
+
+        <!-- Sakthi's simulator code can mount inside this element. -->
+        <div
+          id="simulation-integration"
+          class="simulation-integration"
+        ></div>
+      </article>
+
+    </aside>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="portal-footer">
+    <span>SKYRL PORTAL</span>
+    <span>BUILD 0.1.0 · HACKPHS</span>
+  </footer>
+
+  <!-- Portal JavaScript -->
+  <script src="portal.js"></script>
+
+  <!-- Integration Space Styling -->
+  <style>
+    .simulation-integration {
+      width: 100%;
+      min-height: 180px;
+      margin-top: 14px;
+      border: 1px dashed #2a3b59;
+      border-radius: 10px;
+      background: #080d17;
+      box-sizing: border-box;
+    }
+  </style>
+
+</body>
+</html>
