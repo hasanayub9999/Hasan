@@ -1,23 +1,16 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1020">
-  <title>SkyRL — Project Workspace</title>
-  <link rel="stylesheet" href="portal.css">
-  <script>
-    try {
-      document.documentElement.dataset.theme =
-        localStorage.getItem("skyrl-theme") || "dark";
-    } catch (e) {}
-  </script>
+  <title>SkyRL Workspace</title>
+  <link rel="stylesheet" href="style.css">
   <script src="portal.js" defer></script>
 </head>
 <body>
   <div class="app-shell">
-
     <aside class="sidebar">
       <a class="brand" href="index.html" aria-label="SkyRL home">
         <span class="brand-mark">S</span>
@@ -26,347 +19,339 @@
 
       <div class="sidebar-label">WORKSPACE</div>
 
-      <button class="side-link active" data-section="workspace">
-        <span class="side-icon">⌂</span>
-        Workspace
-      </button>
-
-      <div class="sidebar-label project-label">PROJECTS</div>
-
-      <button class="side-link project-link" data-mode="objects">
-        <span class="project-symbol object-symbol">O</span>
-        Objects
-      </button>
-
-      <button class="side-link project-link" data-mode="humans">
-        <span class="project-symbol human-symbol">H</span>
-        Humans
-      </button>
+      <nav class="side-nav" aria-label="Workspace navigation">
+        <button class="side-link active" data-page="overview"><span>▦</span> Overview</button>
+        <button class="side-link" data-page="projects"><span>◇</span> Projects</button>
+        <button class="side-link" data-page="experiments"><span>⌁</span> Experiment setup</button>
+        <button class="side-link" data-page="results"><span>↗</span> Results &amp; evaluation</button>
+        <button class="side-link" data-page="history"><span>◷</span> Experiment history</button>
+      </nav>
 
       <div class="sidebar-bottom">
-        <div class="connection-status">
-          <span class="status-dot"></span>
-          <div>
-            <strong>Workspace ready</strong>
-            <small>Local interface</small>
-          </div>
-        </div>
-        <a href="index.html" class="back-link">← Back to website</a>
+        <div class="status-line"><span class="status-dot"></span> Demo workspace</div>
+        <p>Interface preview. No real reinforcement-learning model is being trained.</p>
+        <a class="back-link" href="index.html">← Back to website</a>
       </div>
     </aside>
 
-    <main class="main-area">
+    <main class="main-content">
       <header class="topbar">
-        <div class="breadcrumbs">
-          <span>SkyRL</span>
-          <span class="crumb-separator">/</span>
-          <strong id="breadcrumbCurrent">Workspace</strong>
+        <div class="crumb">
+          <span class="crumb-muted">SkyRL Research</span>
+          <span class="crumb-sep">/</span>
+          <span id="crumb-current">Overview</span>
         </div>
-
-        <div class="topbar-right">
-          <span class="environment-badge">
-            <span class="status-dot"></span>
-            DEVELOPMENT
-          </span>
-          <button id="themeToggle" class="theme-button"
-            type="button" aria-label="Toggle light and dark mode">☼</button>
+        <div class="topbar-actions">
+          <span class="demo-pill"><span class="status-dot"></span> DEMO MODE</span>
+          <button id="theme-toggle" class="icon-button" aria-label="Toggle color theme" title="Toggle theme">☼</button>
         </div>
       </header>
 
-      <div class="content">
-
-        <!-- WORKSPACE HOME -->
-        <section id="homeView" class="view">
-          <div class="page-intro">
-            <div class="eyebrow">SKYRL / RESEARCH WORKSPACE</div>
-            <h1>Your workspace.</h1>
-            <p>Select a project to open its dedicated interface.</p>
+      <!-- OVERVIEW -->
+      <section class="page-section" id="overview-page">
+        <div class="hero-row">
+          <div>
+            <div class="eyebrow">HACKPHS 2026 · INTO THE SKY</div>
+            <h1>Research workspace<span class="heading-period">.</span></h1>
+            <p class="page-lede">
+              Configure environments, organize entities, and compare experiment settings in one place.
+            </p>
           </div>
-
-          <div class="project-tabs" role="tablist" aria-label="SkyRL projects">
-            <button id="objectsTab" class="project-tab active"
-              role="tab" aria-selected="true" aria-controls="objectsView"
-              data-mode="objects">
-              <span class="tab-symbol object-symbol">O</span>
-              <span class="tab-copy">
-                <strong>Objects</strong>
-                <small>Object-based project</small>
-              </span>
-              <span class="tab-arrow">↗</span>
-            </button>
-
-            <button id="humansTab" class="project-tab"
-              role="tab" aria-selected="false" aria-controls="humansView"
-              data-mode="humans">
-              <span class="tab-symbol human-symbol">H</span>
-              <span class="tab-copy">
-                <strong>Humans</strong>
-                <small>Human-based project</small>
-              </span>
-              <span class="tab-arrow">↗</span>
-            </button>
+          <div class="hero-symbol" aria-hidden="true">
+            <span>SR</span><i></i><i></i><i></i>
           </div>
+        </div>
 
-          <div class="section-heading">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-label">ACTIVE PROJECTS</div>
+            <div class="stat-value" id="project-count">2</div>
+            <div class="stat-foot">Objects and Humans</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-label">SAVED CONFIGURATIONS</div>
+            <div class="stat-value" id="saved-count">0</div>
+            <div class="stat-foot">Stored in this browser</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-label">WORKSPACE STATUS</div>
+            <div class="stat-value status-text">Ready</div>
+            <div class="stat-foot"><span class="status-dot"></span> Demo environment</div>
+          </article>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">YOUR WORKSPACE</div>
+            <h2>Choose a project</h2>
+          </div>
+          <span class="subtle">Two independent project spaces</span>
+        </div>
+
+        <div class="project-grid">
+          <button class="project-card object-card" data-open-project="objects">
+            <div class="project-card-top">
+              <span class="project-icon">▧</span>
+              <span class="card-arrow">↗</span>
+            </div>
+            <div class="project-type">PROJECT 01</div>
+            <h3>Objects</h3>
+            <p>Set up object properties and interaction parameters for your environment.</p>
+            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
+          </button>
+
+          <button class="project-card human-card" data-open-project="humans">
+            <div class="project-card-top">
+              <span class="project-icon">◎</span>
+              <span class="card-arrow">↗</span>
+            </div>
+            <div class="project-type">PROJECT 02</div>
+            <h3>Humans</h3>
+            <p>Configure human-agent parameters separately from the Objects project.</p>
+            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
+          </button>
+        </div>
+
+        <div class="notice">
+          <span class="notice-icon">i</span>
+          <div>
+            <strong>Demo mode is active</strong>
+            <p>Controls below are a front-end interface demonstration. They do not represent measurements from a trained model or a physical drone.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECT LIBRARY -->
+      <section class="page-section hidden" id="projects-page">
+        <div class="eyebrow">PROJECT LIBRARY</div>
+        <h1>Projects<span class="heading-period">.</span></h1>
+        <p class="page-lede">Open either project. Their settings are saved independently in this browser.</p>
+
+        <div class="project-grid compact-projects">
+          <button class="project-card object-card" data-open-project="objects">
+            <div class="project-card-top"><span class="project-icon">▧</span><span class="card-arrow">↗</span></div>
+            <div class="project-type">PROJECT 01</div>
+            <h3>Objects</h3>
+            <p>Object properties and interactions.</p>
+            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
+          </button>
+          <button class="project-card human-card" data-open-project="humans">
+            <div class="project-card-top"><span class="project-icon">◎</span><span class="card-arrow">↗</span></div>
+            <div class="project-type">PROJECT 02</div>
+            <h3>Humans</h3>
+            <p>Human-agent configuration.</p>
+            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
+          </button>
+        </div>
+      </section>
+
+      <!-- INDIVIDUAL PROJECT WORKSPACE -->
+      <section class="page-section hidden" id="project-page">
+        <button class="back-inline" id="back-to-projects">← All projects</button>
+
+        <div class="eyebrow" id="project-eyebrow">PROJECT 01</div>
+
+        <div class="project-title-row">
+          <div>
+            <h1 id="project-title">Objects<span class="heading-period">.</span></h1>
+            <p class="page-lede" id="project-description">Configure object properties.</p>
+          </div>
+          <span class="project-badge" id="project-badge">OBJECT CONFIG</span>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Project tabs">
+          <button class="tab-button active" role="tab" aria-selected="true" data-tab="configuration">Configuration</button>
+          <button class="tab-button" role="tab" aria-selected="false" data-tab="advanced">Advanced settings</button>
+          <button class="tab-button" role="tab" aria-selected="false" data-tab="notes">Notes</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading">
             <div>
-              <div class="eyebrow">YOUR PROJECTS</div>
-              <h2>Choose where to work</h2>
+              <div class="eyebrow" id="panel-eyebrow">OBJECT PARAMETERS</div>
+              <h2 id="panel-title">Environment configuration</h2>
             </div>
-            <span class="small-muted">2 project modes</span>
+            <span class="autosave">LOCAL SETTINGS</span>
           </div>
 
-          <div class="project-grid">
-            <button class="project-card" data-mode="objects">
-              <span class="project-card-top">
-                <span class="project-symbol object-symbol">O</span>
-                <span class="open-indicator">↗</span>
-              </span>
-              <span class="project-card-title">Objects</span>
-              <span class="project-card-description">
-                Open the Objects workspace, configure its settings,
-                and prepare the interface for your project integration.
-              </span>
-              <span class="project-card-footer">Open Objects <span>→</span></span>
-            </button>
-
-            <button class="project-card" data-mode="humans">
-              <span class="project-card-top">
-                <span class="project-symbol human-symbol">H</span>
-                <span class="open-indicator">↗</span>
-              </span>
-              <span class="project-card-title">Humans</span>
-              <span class="project-card-description">
-                Open the Humans workspace, configure its settings,
-                and prepare the interface for your project integration.
-              </span>
-              <span class="project-card-footer">Open Humans <span>→</span></span>
-            </button>
-          </div>
-
-          <div class="info-panel">
-            <span class="info-icon">i</span>
-            <div>
-              <strong>Separate project interfaces</strong>
-              <p>
-                Objects and Humans have separate settings and workspace
-                views. The actual simulation or processing engine can be
-                connected to each project independently.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- OBJECTS PROJECT -->
-        <section id="objectsView" class="view project-view" hidden>
-          <div class="project-page-heading">
-            <button class="back-button" data-section="workspace">← Workspace</button>
-            <div class="eyebrow">PROJECT / 01</div>
-            <div class="title-row">
-              <span class="large-project-symbol object-symbol">O</span>
-              <div>
-                <h1>Objects</h1>
-                <p>A dedicated workspace for the Objects project.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="project-tabs compact-tabs" role="tablist" aria-label="Switch project">
-            <button class="project-tab active" data-mode="objects"
-              role="tab" aria-selected="true">
-              <span class="tab-symbol object-symbol">O</span>
-              <span class="tab-copy"><strong>Objects</strong><small>Object project</small></span>
-              <span class="tab-arrow">●</span>
-            </button>
-            <button class="project-tab" data-mode="humans"
-              role="tab" aria-selected="false">
-              <span class="tab-symbol human-symbol">H</span>
-              <span class="tab-copy"><strong>Humans</strong><small>Human project</small></span>
-              <span class="tab-arrow">↗</span>
-            </button>
-          </div>
-
-          <div class="workspace-panel">
-            <div class="panel-heading">
-              <div>
-                <div class="eyebrow">OBJECTS WORKSPACE</div>
-                <h2>Project configuration</h2>
-                <p>Configure the object project before connecting its engine.</p>
-              </div>
-              <span class="state-badge">INTERFACE READY</span>
-            </div>
-
-            <div class="field-grid">
+          <!-- CONFIGURATION TAB -->
+          <div id="configuration-panel" class="tab-panel">
+            <div class="form-grid">
               <label class="field">
-                <span>Project name</span>
-                <input id="objectName" type="text" value="Objects" maxlength="80">
+                <span>Configuration name</span>
+                <input id="config-name" type="text" placeholder="e.g. Baseline setup" maxlength="70">
               </label>
 
               <label class="field">
-                <span>Environment mode</span>
-                <select id="objectEnvironment">
-                  <option value="default">Default environment</option>
-                  <option value="custom">Custom environment</option>
-                  <option value="test">Test environment</option>
+                <span>Environment preset</span>
+                <select id="preset">
+                  <option value="balanced">Balanced</option>
+                  <option value="simple">Simple</option>
+                  <option value="complex">Complex</option>
+                  <option value="custom">Custom</option>
                 </select>
               </label>
 
               <label class="field">
-                <span>Processing mode</span>
-                <select id="objectProcessing">
-                  <option value="manual">Manual configuration</option>
-                  <option value="automatic">Automatic (integration required)</option>
-                </select>
+                <span>Entity count</span>
+                <input id="entity-count" type="number" min="1" max="100" value="10">
               </label>
 
               <label class="field">
-                <span>Experiment label</span>
-                <input id="objectLabel" type="text" value="Objects - Experiment 01" maxlength="100">
+                <span>Interaction mode</span>
+                <select id="interaction">
+                  <option value="standard">Standard</option>
+                  <option value="direct">Direct interaction</option>
+                  <option value="limited">Limited interaction</option>
+                </select>
               </label>
             </div>
 
-            <div class="panel-divider"></div>
+            <div class="range-field">
+              <div class="range-header">
+                <label for="complexity">Environment complexity</label>
+                <output id="complexity-value">50%</output>
+              </div>
+              <input id="complexity" type="range" min="0" max="100" value="50">
+              <div class="range-scale">
+                <span>Low complexity</span>
+                <span>High complexity</span>
+              </div>
+            </div>
 
-            <div class="setting-row">
+            <div class="check-row">
               <div>
-                <strong>Enable project</strong>
-                <p>Allow this project to be selected as the active workspace.</p>
+                <strong>Enable interaction logging</strong>
+                <p>Keep a local record of configuration changes.</p>
               </div>
               <label class="switch">
-                <input id="objectEnabled" type="checkbox" checked>
-                <span class="switch-track"></span>
+                <input id="logging" type="checkbox" checked>
+                <span></span>
               </label>
             </div>
 
-            <div class="panel-actions">
-              <span id="objectSaveStatus" class="save-status" aria-live="polite">
-                Settings ready
-              </span>
-              <button class="primary-button" id="saveObjects">Save settings</button>
+            <div class="form-actions">
+              <span class="save-message" id="save-message">Changes are stored locally in this browser.</span>
+              <button class="primary-button" id="save-config">Save configuration <span>→</span></button>
             </div>
           </div>
 
-          <div class="integration-panel">
-            <div class="eyebrow">INTEGRATION</div>
-            <h2>Connect the Objects engine</h2>
-            <p>
-              This interface is ready for your actual project code. The
-              simulation or processing engine has not been connected yet.
-            </p>
-            <div class="integration-footer">
-              <span class="integration-dot"></span>
-              <span id="objectEngineStatus">Engine not connected</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- HUMANS PROJECT -->
-        <section id="humansView" class="view project-view" hidden>
-          <div class="project-page-heading">
-            <button class="back-button" data-section="workspace">← Workspace</button>
-            <div class="eyebrow">PROJECT / 02</div>
-            <div class="title-row">
-              <span class="large-project-symbol human-symbol">H</span>
-              <div>
-                <h1>Humans</h1>
-                <p>A dedicated workspace for the Humans project.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="project-tabs compact-tabs" role="tablist" aria-label="Switch project">
-            <button class="project-tab" data-mode="objects"
-              role="tab" aria-selected="false">
-              <span class="tab-symbol object-symbol">O</span>
-              <span class="tab-copy"><strong>Objects</strong><small>Object project</small></span>
-              <span class="tab-arrow">↗</span>
-            </button>
-            <button class="project-tab active" data-mode="humans"
-              role="tab" aria-selected="true">
-              <span class="tab-symbol human-symbol">H</span>
-              <span class="tab-copy"><strong>Humans</strong><small>Human project</small></span>
-              <span class="tab-arrow">●</span>
-            </button>
-          </div>
-
-          <div class="workspace-panel">
-            <div class="panel-heading">
-              <div>
-                <div class="eyebrow">HUMANS WORKSPACE</div>
-                <h2>Project configuration</h2>
-                <p>Configure the human project independently from Objects.</p>
-              </div>
-              <span class="state-badge">INTERFACE READY</span>
-            </div>
-
-            <div class="field-grid">
+          <!-- ADVANCED TAB -->
+          <div id="advanced-panel" class="tab-panel hidden">
+            <div class="form-grid">
               <label class="field">
-                <span>Project name</span>
-                <input id="humanName" type="text" value="Humans" maxlength="80">
+                <span>Random seed</span>
+                <input id="seed" type="number" min="0" max="999999" value="42">
               </label>
 
               <label class="field">
-                <span>Environment mode</span>
-                <select id="humanEnvironment">
-                  <option value="default">Default environment</option>
-                  <option value="custom">Custom environment</option>
-                  <option value="test">Test environment</option>
+                <span>Evaluation frequency</span>
+                <select id="frequency">
+                  <option>Every 10 steps</option>
+                  <option>Every 25 steps</option>
+                  <option>Every 50 steps</option>
+                  <option>Manual</option>
                 </select>
               </label>
 
               <label class="field">
-                <span>Processing mode</span>
-                <select id="humanProcessing">
-                  <option value="manual">Manual configuration</option>
-                  <option value="automatic">Automatic (integration required)</option>
+                <span>Observation profile</span>
+                <select id="observation">
+                  <option>Default</option>
+                  <option>Compact</option>
+                  <option>Extended</option>
                 </select>
               </label>
 
               <label class="field">
-                <span>Experiment label</span>
-                <input id="humanLabel" type="text" value="Humans - Experiment 01" maxlength="100">
+                <span>Output detail</span>
+                <select id="output-detail">
+                  <option>Standard</option>
+                  <option>Summary only</option>
+                  <option>Detailed</option>
+                </select>
               </label>
             </div>
 
-            <div class="panel-divider"></div>
+            <p class="helper-note">These are editable demo controls. They do not launch training or connect to a simulation engine.</p>
 
-            <div class="setting-row">
-              <div>
-                <strong>Enable project</strong>
-                <p>Allow this project to be selected as the active workspace.</p>
-              </div>
-              <label class="switch">
-                <input id="humanEnabled" type="checkbox" checked>
-                <span class="switch-track"></span>
-              </label>
-            </div>
-
-            <div class="panel-actions">
-              <span id="humanSaveStatus" class="save-status" aria-live="polite">
-                Settings ready
-              </span>
-              <button class="primary-button" id="saveHumans">Save settings</button>
+            <div class="form-actions">
+              <span class="save-message">Advanced settings are saved with this project.</span>
+              <button class="primary-button" id="save-advanced">Save advanced settings <span>→</span></button>
             </div>
           </div>
 
-          <div class="integration-panel">
-            <div class="eyebrow">INTEGRATION</div>
-            <h2>Connect the Humans engine</h2>
-            <p>
-              This interface is ready for your actual project code. The
-              human-related processing or simulation engine has not been connected yet.
-            </p>
-            <div class="integration-footer">
-              <span class="integration-dot"></span>
-              <span id="humanEngineStatus">Engine not connected</span>
+          <!-- NOTES TAB -->
+          <div id="notes-panel" class="tab-panel hidden">
+            <label class="field">
+              <span>Project notes</span>
+              <textarea id="project-notes" rows="7" placeholder="Write hypotheses, planned tests, or observations..."></textarea>
+            </label>
+
+            <div class="form-actions">
+              <span class="save-message">Notes are kept separately for each project.</span>
+              <button class="primary-button" id="save-notes">Save notes <span>→</span></button>
             </div>
           </div>
-        </section>
+        </div>
 
-        <footer class="page-footer">
-          <span>SkyRL · HackPHS 2026</span>
-          <span>Research workspace · Project interfaces</span>
-        </footer>
-      </div>
+        <div class="bottom-tip">
+          <span>✳</span>
+          <p><strong>Keep experiments organized.</strong> Save a configuration before switching projects; Objects and Humans maintain separate settings.</p>
+        </div>
+      </section>
+
+      <!-- EXPERIMENT SETUP -->
+      <section class="page-section hidden" id="experiments-page">
+        <div class="eyebrow">WORKFLOW</div>
+        <h1>Experiment setup<span class="heading-period">.</span></h1>
+        <p class="page-lede">Prepare a configuration before evaluating it.</p>
+
+        <div class="panel simple-panel">
+          <h2>Start with a project</h2>
+          <p>Choose Objects or Humans to edit its independent settings.</p>
+          <div class="inline-actions">
+            <button class="primary-button" data-open-project="objects">Configure Objects →</button>
+            <button class="secondary-button" data-open-project="humans">Configure Humans →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS -->
+      <section class="page-section hidden" id="results-page">
+        <div class="eyebrow">EVALUATION</div>
+        <h1>Results &amp; evaluation<span class="heading-period">.</span></h1>
+        <p class="page-lede">A place to review future experiment outputs.</p>
+
+        <div class="panel simple-panel">
+          <div class="empty-state-icon">↗</div>
+          <h2>No evaluation results yet</h2>
+          <p>This demo workspace does not run a model. Saved settings can be used as a planning record.</p>
+          <button class="secondary-button" data-page="projects">Browse projects →</button>
+        </div>
+      </section>
+
+      <!-- HISTORY -->
+      <section class="page-section hidden" id="history-page">
+        <div class="eyebrow">ACTIVITY</div>
+        <h1>Experiment history<span class="heading-period">.</span></h1>
+        <p class="page-lede">Your locally saved configurations appear here.</p>
+
+        <div class="panel">
+          <div class="history-header">
+            <h2>Saved configurations</h2>
+            <button id="refresh-history" class="secondary-button">Refresh</button>
+          </div>
+          <div id="history-list" class="history-list">
+            <div class="empty-state">No saved configurations yet. Open a project and save its settings.</div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="page-footer">
+        <span>SKYRL RESEARCH WORKSPACE</span>
+        <span>HackPHS 2026 · Interface demo</span>
+      </footer>
     </main>
   </div>
 </body>
