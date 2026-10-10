@@ -6,124 +6,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090d18">
   <meta name="description" content="SkyRL — an experimental simulation and reinforcement learning environment.">
-  <title>SkyRL · HackPHS 2026</title>
+  <title>Our Mission · SkyRL</title>
   <link rel="stylesheet" href="style.css">
-
   <script>
     try {
       document.documentElement.dataset.theme =
-        localStorage.getItem("skyrl-theme") === "light" ? "light" : "dark";
+        localStorage.getItem("skyrl-theme") || "dark";
     } catch (e) {}
   </script>
-
   <script src="portal.js" defer></script>
 </head>
-
 <body>
-  <div class="app" id="app">
-    <div class="main">
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="SkyRL home">
+        <span class="brand-mark">S</span>
+        <span>Sky<span class="accent">RL</span></span>
+      </a>
 
-      <header class="topbar">
-        <a class="brand" href="index.html" aria-label="SkyRL home">
-          <span class="brand-mark">S</span>
-          <span>Sky<span class="accent">RL</span></span>
-        </a>
+      <nav class="top-nav" aria-label="Main navigation">
+        <a class="top-link active" aria-current="page" href="index.html">Mission</a>
+        <a class="top-link" href="human.html">Human</a>
+        <a class="top-link" href="object.html">Object</a>
+      </nav>
 
-        <nav class="top-nav" aria-label="Main navigation">
-          <button type="button" class="top-link active"
-            data-view="mission" aria-current="page">
-            Mission
-          </button>
-          <button type="button" class="top-link" data-view="human">
-            Human
-          </button>
-          <button type="button" class="top-link" data-view="object">
-            Object
-          </button>
-        </nav>
+      <div class="actions">
+        <button type="button" class="icon-btn" id="themeToggle"
+          aria-label="Switch to light mode">☼</button>
+      </div>
+    </header>
 
-        <div class="actions">
-          <button type="button" class="icon-btn" id="themeToggle"
-            aria-label="Switch to light mode">☼</button>
-        </div>
-      </header>
+    <main class="view">
+      <p class="eyebrow">OUR MISSION</p>
+      <h1>Teaching drones to <span class="accent">navigate better.</span></h1>
+      <p class="lead">
+        SkyRL is an experimental research project exploring how
+        reinforcement learning can help autonomous agents learn navigation
+        policies in simulated environments.
+      </p>
 
-      <main id="content" tabindex="-1">
+      <div class="cards">
+        <article class="card">
+          <h3>Experimentation</h3>
+          <p>Change settings, run experiments, and observe the results.</p>
+        </article>
+        <article class="card">
+          <h3>Reproducibility</h3>
+          <p>Record configurations and random seeds to repeat experiments.</p>
+        </article>
+        <article class="card">
+          <h3>Evaluation</h3>
+          <p>Compare simulated runs using consistent evaluation metrics.</p>
+        </article>
+      </div>
 
-        <section class="view" data-view-id="mission">
-          <p class="eyebrow">OUR MISSION</p>
+      <div class="cta">
+        <a class="btn primary" href="human.html">Open Human</a>
+        <a class="btn" href="object.html">Open Object</a>
+      </div>
 
-          <h1>
-            Teaching drones to
-            <span class="accent">navigate better.</span>
-          </h1>
-
-          <p class="lead">
-            SkyRL is an experimental research project exploring how
-            reinforcement learning can help autonomous agents learn
-            navigation policies in simulated environments.
-          </p>
-
-          <div class="cards">
-            <article class="card">
-              <h3>Experimentation</h3>
-              <p>Change one setting, run it, and look at what happened.</p>
-            </article>
-
-            <article class="card">
-              <h3>Reproducibility</h3>
-              <p>Record every configuration and seed so results can be repeated.</p>
-            </article>
-
-            <article class="card">
-              <h3>Evaluation</h3>
-              <p>Compare runs on shared metrics, with clear labels on what is simulated.</p>
-            </article>
-          </div>
-
-          <div class="cta">
-            <button type="button" class="btn primary" data-view="human">
-              Open Human
-            </button>
-            <button type="button" class="btn" data-view="object">
-              Open Object
-            </button>
-          </div>
-
-          <p class="note">
-            SkyRL is not a certified real-world flight system.
-            Simulation results do not prove real-world safety or readiness.
-          </p>
-        </section>
-
-        <section class="view blank" data-view-id="human" hidden>
-          <div class="placeholder">
-            <p class="eyebrow">HUMAN SIMULATION</p>
-            <h1 class="blank-text">ALI INTEGRATE!!!!</h1>
-            <p class="lead">
-              The human simulation environment will be integrated here.
-            </p>
-            <button type="button" class="btn" data-view="mission">
-              Back to Mission
-            </button>
-          </div>
-        </section>
-
-        <section class="view blank" data-view-id="object" hidden>
-          <div class="placeholder">
-            <p class="eyebrow">OBJECT SIMULATION</p>
-            <h1 class="blank-text">ALI INTEGRATE!!!!</h1>
-            <p class="lead">
-              The object simulation environment will be integrated here.
-            </p>
-            <button type="button" class="btn" data-view="mission">
-              Back to Mission
-            </button>
-          </div>
-        </section>
-
-      </main>
-    </div>
+      <p class="note">
+        SkyRL is an experimental project, not a certified real-world
+        flight system. Simulation results do not establish real-world safety.
+      </p>
+    </main>
   </div>
 </body>
 </html>
