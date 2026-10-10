@@ -2,6 +2,8 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const root = document.documentElement;
+
   const pageNames = {
     mission: "Our Mission",
     humans: "Human",
@@ -9,141 +11,329 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const navLinks = document.querySelectorAll(".side-link");
-  const pageSections = document.querySelectorAll("[data-page-section]");
+  const sections = document.querySelectorAll("[data-page-section]");
   const breadcrumb = document.getElementById("breadcrumb-current");
 
-  function showPage(pageName) {
-    if (!pageNames[pageName]) {
+  const themeToggle = document.getElementById("theme-toggle");
+  const themeIcon = document.getElementById("theme-icon");
+  const themeLabel = document.getElementById("theme-label");
+
+  const deployWrap = document.getElementById("deploy-wrap");
+  const deployButton = document.getElementById("deploy-button");
+  const deployMenu = document.getElementById("deploy-menu");
+
+  let pointerIsInsideDeploy = false;
+
+  function showPage(page) {
+    if (!Object.prototype.hasOwnProperty.call(pageNames, page)) {
       return;
     }
 
-    // Show the selected page and hide the others.
-    pageSections.forEach((section) => {
-      const isActive = section.dataset.pageSection === pageName;
-
-      section.hidden = !isActive;
-      section.classList.toggle("active", isActive);
+    sections.forEach((section) => {
+      const active = section.dataset.pageSection === page;
+      section.hidden = !active;
+      section.classList.toggle("active", active);
     });
 
-    // Update the sidebar selection.
     navLinks.forEach((link) => {
-      const isActive = link.dataset.page === pageName;
+      const active = link.dataset.page === page;
 
-      link.classList.toggle("active", isActive);
-      link.setAttribute("aria-current", isActive ? "page" : "false");
+      link.classList.toggle("active", active);
+
+      if (active) {
+        link.setAttribute("aria-current", "page");
+      } else {
+        link.removeAttribute("aria-current");
+      }
     });
 
-    // Update the breadcrumb.
     if (breadcrumb) {
-      breadcrumb.textContent = pageNames[pageName];
+      breadcrumb.textContent = pageNames[page];
     }
 
-    // Keep the browser's page position tidy.
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    closeDeployMenu();
+
+    // Keep navigation tidy without jumping the entire page unexpectedly.
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
-  // Sidebar navigation.
+  // SIDEBAR NAVIGATION
+
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
       showPage(link.dataset.page);
     });
   });
 
-  // Mission-page buttons and the SkyRL logo.
-  document.querySelectorAll("[data-go], [data-page-link]").forEach((element) => {
+  // LOGO AND PAGE ACTIONS
+
+  document.querySelectorAll("[data-page-link], [data-go]").forEach((element) => {
     element.addEventListener("click", (event) => {
       event.preventDefault();
 
-      const pageName =
-        element.dataset.go || element.dataset.pageLink;
+      const page = element.dataset.pageLink || element.dataset.go;
 
-      showPage(pageName);
+      if (page === "mission") {
+        showPage("mission");
+      } else {
+        showPage(page);
+      }
     });
   });
 
-  // Scene toolbar controls.
-  document.querySelectorAll(".simulation-scene").forEach((scene) => {
-    const toolbar = scene.previousElementSibling;
+  // THEME TOGGLE
 
-    if (!toolbar || !toolbar.classList.contains("scene-toolbar")) {
+  function applyTheme(theme, save = true) {
+    const validTheme = theme === "light" ? "light" : "dark";
+
+    root.dataset.theme = validTheme;
+
+    if (themeIcon) {
+      themeIcon.textContent = validTheme === "dark" ? "☼" : "☾";
+    }
+
+    if (themeLabel) {
+      themeLabel.textContent =
+        validTheme === "dark" ? "Light mode" : "Dark mode";
+    }
+
+    if (themeToggle) {
+      const nextTheme = validTheme === "dark" ? "light" : "dark";
+
+      themeToggle.setAttribute(
+        "aria-label",
+        `Switch to ${nextTheme} mode`
+      );
+
+      themeToggle.setAttribute("aria-pressed", String(validTheme === "light"));
+    }
+
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+
+    if (themeColor) {
+      themeColor.setAttribute(
+        "content",
+        validTheme === "dark" ? "#090c14" : "#f5f6fa"
+      );
+    }
+
+    if (save) {
+      try {
+        localStorage.setItem("skyrl-theme", validTheme);
+      } catch (error) {
+        // Theme still works for the current page if storage is unavailable.
+      }
+    }
+  }
+
+  let initialTheme = root.dataset.theme === "light" ? "light" : "dark";
+
+  try {
+    const savedTheme = localStorage.getItem("skyrl-theme");
+
+    if (savedTheme === "light" || savedTheme === "dark") {
+      initialTheme = savedTheme;
+    }
+  } catch (error) {
+    // Fall back to the theme set in the HTML.
+  }
+
+  applyTheme(initialTheme, false);
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+      applyTheme(nextTheme);
+    });
+  }
+
+  // DEPLOY DROPDOWN
+
+  function openDeployMenu() {
+    if (!deployMenu || !deployButton || !deployWrap) {
       return;
     }
 
-    const toolButtons = toolbar.querySelectorAll(".tool-button");
+    deployMenu.hidden = false;
+    deployWrap.classList.add("open");
+    deployButton.setAttribute("aria-expanded", "true");
+  }
 
-    toolButtons.forEach((button) => {
+  function closeDeployMenu() {
+    if (!deployMenu || !deployButton || !deployWrap) {
+      return;
+    }
+
+    deployMenu.hidden = true;
+    deployWrap.classList.remove("open");
+    deployButton.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleDeployMenu() {
+    if (!deployMenu) {
+      return;
+    }
+
+    if (deployMenu.hidden) {
+      openDeployMenu();
+    } else {
+      closeDeployMenu();
+    }
+  }
+
+  if (deployButton) {
+    deployButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleDeployMenu();
+    });
+  }
+
+  // Open on hover for pointer devices. Clicking still works on touchscreens.
+  if (deployWrap) {
+    deployWrap.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse" || event.pointerType === "pen") {
+        pointerIsInsideDeploy = true;
+        openDeployMenu();
+      }
+    });
+
+    deployWrap.addEventListener("pointerleave", (event) => {
+      if (event.pointerType === "mouse" || event.pointerType === "pen") {
+        pointerIsInsideDeploy = false;
+
+        if (document.activeElement &&
+            deployWrap.contains(document.activeElement)) {
+          return;
+        }
+
+        closeDeployMenu();
+      }
+    });
+
+    deployWrap.addEventListener("focusout", () => {
+      // Let focus move to the next dropdown item before checking.
+      requestAnimationFrame(() => {
+        if (
+          !pointerIsInsideDeploy &&
+          !deployWrap.contains(document.activeElement)
+        ) {
+          closeDeployMenu();
+        }
+      });
+    });
+  }
+
+  // Choosing an environment from Deploy navigates to that workspace.
+  document.querySelectorAll("[data-deploy-page]").forEach((option) => {
+    option.addEventListener("click", () => {
+      showPage(option.dataset.deployPage);
+    });
+  });
+
+  // The hero CTA opens the same Deploy menu.
+  document.querySelectorAll("[data-open-deploy]").forEach((button) => {
+    button.addEventListener("click", () => {
+      openDeployMenu();
+
+      if (deployButton) {
+        deployButton.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
+
+        deployButton.focus({ preventScroll: true });
+      }
+    });
+  });
+
+  // Close the dropdown when clicking outside it.
+  document.addEventListener("click", (event) => {
+    if (deployWrap && !deployWrap.contains(event.target)) {
+      closeDeployMenu();
+    }
+  });
+
+  // Escape closes the menu and returns focus to Deploy.
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && deployMenu && !deployMenu.hidden) {
+      closeDeployMenu();
+
+      if (deployButton) {
+        deployButton.focus();
+      }
+    }
+  });
+
+  // SCENE CONTROLS
+
+  document.querySelectorAll(".simulation-scene").forEach((scene) => {
+    const toolbar = scene.closest(".scene-panel")?.querySelector(".scene-toolbar");
+
+    if (!toolbar) {
+      return;
+    }
+
+    toolbar.querySelectorAll("[data-scene-action]").forEach((button) => {
       button.addEventListener("click", async () => {
-        const view = button.dataset.view;
+        const action = button.dataset.sceneAction;
 
-        if (view === "grid") {
-          const isHidden = scene.classList.toggle("grid-hidden");
+        if (action === "grid") {
+          const hidden = scene.classList.toggle("grid-hidden");
 
-          button.classList.toggle("active", !isHidden);
-          button.setAttribute("aria-pressed", String(!isHidden));
+          button.classList.toggle("active", !hidden);
+          button.setAttribute("aria-pressed", String(!hidden));
           return;
         }
 
-        if (view === "axes") {
-          const isHidden = scene.classList.toggle("axes-hidden");
+        if (action === "axes") {
+          const hidden = scene.classList.toggle("axes-hidden");
 
-          button.classList.toggle("active", !isHidden);
-          button.setAttribute("aria-pressed", String(!isHidden));
+          button.classList.toggle("active", !hidden);
+          button.setAttribute("aria-pressed", String(!hidden));
           return;
         }
 
-        if (view === "fullscreen") {
-          if (document.fullscreenElement === scene) {
-            try {
+        if (action === "fullscreen") {
+          try {
+            if (document.fullscreenElement === scene) {
               await document.exitFullscreen();
-            } catch (error) {
-              console.warn("Could not exit fullscreen:", error);
-            }
-          } else if (scene.requestFullscreen) {
-            try {
+            } else if (document.fullscreenElement) {
+              await document.exitFullscreen();
               await scene.requestFullscreen();
-            } catch (error) {
-              // Fall back to the built-in fullscreen styling.
-              scene.classList.toggle("fullscreen");
+            } else if (scene.requestFullscreen) {
+              await scene.requestFullscreen();
+            } else {
+              scene.classList.toggle("fallback-fullscreen");
             }
-          } else {
-            scene.classList.toggle("fullscreen");
+          } catch (error) {
+            // Keep a usable fullscreen alternative if browser fullscreen fails.
+            scene.classList.toggle("fallback-fullscreen");
           }
 
           button.classList.toggle(
             "active",
             document.fullscreenElement === scene ||
-              scene.classList.contains("fullscreen")
+              scene.classList.contains("fallback-fullscreen")
           );
         }
       });
     });
   });
 
-  // Keep fullscreen button state synchronized.
   document.addEventListener("fullscreenchange", () => {
-    document.querySelectorAll(".simulation-scene").forEach((scene) => {
-      const toolbar = scene.previousElementSibling;
+    document.querySelectorAll('[data-scene-action="fullscreen"]').forEach((button) => {
+      const scene = button.closest(".scene-panel")?.querySelector(".simulation-scene");
 
-      if (!toolbar) {
-        return;
-      }
-
-      const fullscreenButton = toolbar.querySelector(
-        '[data-view="fullscreen"]'
-      );
-
-      if (fullscreenButton) {
-        fullscreenButton.classList.toggle(
+      if (scene) {
+        button.classList.toggle(
           "active",
-          document.fullscreenElement === scene
+          document.fullscreenElement === scene ||
+            scene.classList.contains("fallback-fullscreen")
         );
       }
     });
   });
 
-  // Start on Our Mission.
+  // Initial page.
   showPage("mission");
 });
