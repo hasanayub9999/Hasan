@@ -1,368 +1,921 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1020">
-  <title>SkyRL Workspace</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="portal.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b14">
+  <meta name="description" content="SkyRL — a reinforcement learning research workspace built for experimentation, simulation, and intelligent systems.">
+  <title>SkyRL — Into the Sky</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #080b14;
+      --panel: #101625;
+      --line: #252f43;
+      --text: #f1f4ff;
+      --muted: #9aa7bf;
+      --purple: #929fff;
+      --mint: #64e6ca;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Manrope, sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .site-header {
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7%;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      position: relative;
+      z-index: 2;
+      background: rgba(8,11,20,.86);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .brand-icon {
+      height: 36px;
+      width: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      color: #101529;
+      background: linear-gradient(135deg,#b7c0ff,#7586f8);
+      font-size: 18px;
+    }
+
+    .brand span:last-child span {
+      color: var(--mint);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 31px;
+      color: #a8b3c9;
+      font-size: 12px;
+    }
+
+    .nav-links a:hover {
+      color: white;
+    }
+
+    .nav-cta {
+      border: 1px solid #394565;
+      border-radius: 8px;
+      padding: 10px 15px;
+      color: white !important;
+      transition: .2s;
+    }
+
+    .nav-cta:hover {
+      background: rgba(146,159,255,.12);
+      border-color: var(--purple);
+    }
+
+    .hero {
+      min-height: 650px;
+      padding: 100px 7% 90px;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.12fr .88fr;
+      align-items: center;
+      gap: 50px;
+      overflow: hidden;
+    }
+
+    .hero:before {
+      content: "";
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      top: -170px;
+      left: -230px;
+      border-radius: 50%;
+      background: rgba(96,113,255,.11);
+      filter: blur(100px);
+      pointer-events: none;
+    }
+
+    .hero:after {
+      content: "";
+      position: absolute;
+      width: 470px;
+      height: 470px;
+      right: -180px;
+      bottom: -180px;
+      border-radius: 50%;
+      background: rgba(72,220,195,.08);
+      filter: blur(90px);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--mint);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 1.6px;
+      margin-bottom: 27px;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--mint);
+      border-radius: 50%;
+      box-shadow: 0 0 14px rgba(100,230,202,.6);
+    }
+
+    h1 {
+      font-size: clamp(46px,6.1vw,82px);
+      letter-spacing: -5px;
+      line-height: 1.07;
+      font-weight: 800;
+      max-width: 700px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(100deg,#b9c2ff 10%,#8d9aff 50%,#70e6d0 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-description {
+      max-width: 510px;
+      margin-top: 25px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 2;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 14px 19px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 800;
+      transition: transform .2s, background .2s, border-color .2s;
+    }
+
+    .primary-button {
+      background: var(--purple);
+      color: #101529;
+      border: 1px solid var(--purple);
+      box-shadow: 0 8px 30px rgba(146,159,255,.12);
+    }
+
+    .primary-button:hover {
+      background: #b2bcff;
+      transform: translateY(-2px);
+    }
+
+    .secondary-button {
+      background: rgba(255,255,255,.025);
+      border: 1px solid #303b52;
+      color: #e2e8f7;
+    }
+
+    .secondary-button:hover {
+      border-color: #7e8bb2;
+      transform: translateY(-2px);
+    }
+
+    .hero-caption {
+      margin-top: 26px;
+      font-size: 10px;
+      color: #78859e;
+      font-family: "DM Mono", monospace;
+      letter-spacing: .3px;
+    }
+
+    /* Decorative research visualization */
+    .visual {
+      height: 420px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      z-index: 1;
+    }
+
+    .orbit {
+      position: absolute;
+      width: 330px;
+      height: 330px;
+      border: 1px solid rgba(146,159,255,.2);
+      border-radius: 50%;
+    }
+
+    .orbit-two {
+      width: 250px;
+      height: 370px;
+      transform: rotate(55deg);
+      border-color: rgba(100,230,202,.22);
+    }
+
+    .orbit-three {
+      width: 400px;
+      height: 210px;
+      transform: rotate(-35deg);
+      border-color: rgba(146,159,255,.15);
+    }
+
+    .core {
+      width: 170px;
+      height: 170px;
+      display: grid;
+      place-items: center;
+      border-radius: 35px;
+      position: relative;
+      background:
+        radial-gradient(circle at 25% 15%,rgba(174,185,255,.25),transparent 65%),
+        linear-gradient(145deg,#171f37,#0c1220);
+      border: 1px solid #3b496c;
+      box-shadow:
+        0 0 70px rgba(110,126,255,.15),
+        inset 0 0 40px rgba(146,159,255,.04);
+      transform: rotate(-7deg);
+    }
+
+    .core:before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(146,159,255,.22);
+      border-radius: 27px;
+    }
+
+    .core-text {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -3px;
+      transform: rotate(7deg);
+    }
+
+    .core-text span {
+      color: var(--mint);
+    }
+
+    .node {
+      position: absolute;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 22px rgba(100,230,202,.7);
+    }
+
+    .node-one {
+      top: 54px;
+      left: 22%;
+    }
+
+    .node-two {
+      top: 90px;
+      right: 13%;
+      background: var(--purple);
+      box-shadow: 0 0 22px rgba(146,159,255,.7);
+    }
+
+    .node-three {
+      bottom: 64px;
+      left: 17%;
+      background: var(--purple);
+    }
+
+    .node-four {
+      bottom: 38px;
+      right: 26%;
+    }
+
+    .float-card {
+      position: absolute;
+      background: rgba(16,22,37,.92);
+      border: 1px solid #2d3952;
+      border-radius: 11px;
+      padding: 12px 15px;
+      box-shadow: 0 15px 45px rgba(0,0,0,.2);
+      backdrop-filter: blur(12px);
+    }
+
+    .float-card small {
+      display: block;
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
+      letter-spacing: 1px;
+      color: #8593ad;
+      margin-bottom: 4px;
+    }
+
+    .float-card strong {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .float-card-one {
+      top: 46px;
+      right: 0;
+    }
+
+    .float-card-two {
+      bottom: 45px;
+      left: 0;
+    }
+
+    .float-card-two strong {
+      color: var(--mint);
+    }
+
+    .trust-strip {
+      padding: 23px 7%;
+      border-top: 1px solid rgba(255,255,255,.07);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,.012);
+    }
+
+    .trust-label {
+      color: #77859e;
+      font: 9px "DM Mono", monospace;
+      letter-spacing: 1.2px;
+    }
+
+    .trust-item {
+      color: #bbc5d9;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .trust-item span {
+      color: var(--mint);
+      font-size: 14px;
+    }
+
+    .section {
+      padding: 100px 7%;
+    }
+
+    .section-header {
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+
+    .section-kicker {
+      font: 10px "DM Mono", monospace;
+      color: var(--mint);
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      font-size: clamp(30px,4vw,45px);
+      letter-spacing: -2px;
+      line-height: 1.2;
+    }
+
+    .section-description {
+      margin-top: 15px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 17px;
+    }
+
+    .feature-card {
+      padding: 25px;
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg,#111827,#0c111d);
+      border-radius: 14px;
+      transition: transform .2s,border-color .2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: #485776;
+    }
+
+    .feature-icon {
+      height: 42px;
+      width: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(146,159,255,.1);
+      color: var(--purple);
+      font-size: 20px;
+      margin-bottom: 22px;
+    }
+
+    .feature-card:nth-child(2) .feature-icon {
+      background: rgba(100,230,202,.08);
+      color: var(--mint);
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 12px;
+      line-height: 1.9;
+      color: var(--muted);
+    }
+
+    .project-section {
+      padding: 25px 7% 100px;
+    }
+
+    .project-panel {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(30px,5vw,60px);
+      border: 1px solid #303b57;
+      border-radius: 19px;
+      background:
+        radial-gradient(ellipse at 100% 0%,rgba(100,230,202,.08),transparent 45%),
+        radial-gradient(ellipse at 0% 100%,rgba(146,159,255,.1),transparent 50%),
+        #0d1321;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .project-panel h2 {
+      max-width: 600px;
+    }
+
+    .project-panel p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 15px;
+      line-height: 1.9;
+      max-width: 560px;
+    }
+
+    .project-panel .primary-button {
+      flex: none;
+    }
+
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 25px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      color: #7e8ba3;
+      font-size: 10px;
+    }
+
+    .footer-brand {
+      font-weight: 800;
+      font-size: 14px;
+      color: #dce3f5;
+    }
+
+    .footer-brand span {
+      color: var(--mint);
+    }
+
+    .footer-note {
+      font-family: "DM Mono", monospace;
+      letter-spacing: .3px;
+    }
+
+    /* Light theme */
+    body.light-theme {
+      --bg: #f5f7fc;
+      --panel: #ffffff;
+      --line: #dfe5ef;
+      --text: #172239;
+      --muted: #64728b;
+    }
+
+    body.light-theme .site-header {
+      background: rgba(245,247,252,.9);
+      border-color: var(--line);
+    }
+
+    body.light-theme .nav-links {
+      color: #56647c;
+    }
+
+    body.light-theme .nav-links a:hover {
+      color: #172239;
+    }
+
+    body.light-theme .feature-card {
+      background: linear-gradient(145deg,#fff,#f6f8fd);
+    }
+
+    body.light-theme .project-panel {
+      background:
+        radial-gradient(ellipse at 100% 0%,rgba(100,230,202,.13),transparent 45%),
+        radial-gradient(ellipse at 0% 100%,rgba(146,159,255,.12),transparent 50%),
+        #fff;
+      border-color: var(--line);
+    }
+
+    body.light-theme .trust-strip,
+    body.light-theme .site-footer {
+      border-color: var(--line);
+    }
+
+    body.light-theme .trust-item {
+      color: #47556d;
+    }
+
+    body.light-theme .footer-brand {
+      color: #172239;
+    }
+
+    @media (max-width: 1000px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 75px;
+      }
+
+      .hero-content {
+        max-width: 750px;
+      }
+
+      .visual {
+        height: 350px;
+        max-width: 600px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+
+      .project-panel {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .site-header {
+        height: 68px;
+        padding: 0 5%;
+      }
+
+      .brand {
+        font-size: 20px;
+      }
+
+      .nav-links {
+        gap: 12px;
+      }
+
+      .nav-links a:not(.nav-cta) {
+        display: none;
+      }
+
+      .nav-cta {
+        padding: 9px 11px;
+        font-size: 11px;
+      }
+
+      .hero {
+        padding: 76px 6% 55px;
+        gap: 15px;
+        min-height: 0;
+      }
+
+      h1 {
+        font-size: clamp(43px,12vw,64px);
+        letter-spacing: -3px;
+      }
+
+      .hero-description {
+        font-size: 13px;
+      }
+
+      .hero-actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .hero-actions a {
+        width: 100%;
+      }
+
+      .visual {
+        height: 300px;
+        transform: scale(.84);
+        transform-origin: center;
+        margin-top: -5px;
+        margin-bottom: -15px;
+      }
+
+      .trust-strip {
+        padding: 22px 6%;
+        justify-content: flex-start;
+      }
+
+      .trust-label {
+        width: 100%;
+      }
+
+      .section {
+        padding: 70px 6%;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-section {
+        padding: 0 6% 70px;
+      }
+
+      .project-panel {
+        padding: 28px 22px;
+      }
+
+      .project-panel .primary-button {
+        width: 100%;
+      }
+
+      .site-footer {
+        padding: 22px 6%;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .float-card-one {
+        right: -15px;
+      }
+
+      .float-card-two {
+        left: -10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <a class="brand" href="index.html" aria-label="SkyRL home">
-        <span class="brand-mark">S</span>
-        <span>skyrl<span class="brand-dot">.</span></span>
-      </a>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="SkyRL home">
+      <span class="brand-icon">S</span>
+      <span>skyrl<span>.</span></span>
+    </a>
 
-      <div class="sidebar-label">WORKSPACE</div>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#features">Platform</a>
+      <a href="#about">About</a>
+      <a href="#workspace" class="nav-cta">Launch workspace ↗</a>
+    </nav>
+  </header>
 
-      <nav class="side-nav" aria-label="Workspace navigation">
-        <button class="side-link active" data-page="overview"><span>▦</span> Overview</button>
-        <button class="side-link" data-page="projects"><span>◇</span> Projects</button>
-        <button class="side-link" data-page="experiments"><span>⌁</span> Experiment setup</button>
-        <button class="side-link" data-page="results"><span>↗</span> Results &amp; evaluation</button>
-        <button class="side-link" data-page="history"><span>◷</span> Experiment history</button>
-      </nav>
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          HACKPHS 2026 · INTO THE SKY
+        </div>
 
-      <div class="sidebar-bottom">
-        <div class="status-line"><span class="status-dot"></span> Demo workspace</div>
-        <p>Interface preview. No real reinforcement-learning model is being trained.</p>
-        <a class="back-link" href="index.html">← Back to website</a>
+        <h1>
+          Intelligence<br>
+          takes <span class="gradient-text">flight.</span>
+        </h1>
+
+        <p class="hero-description">
+          Introducing SkyRL — a research workspace concept for exploring
+          reinforcement learning, configuring intelligent environments, and
+          organizing experiments through a unified interface.
+        </p>
+
+        <div class="hero-actions">
+          <a class="primary-button" href="portal.html">
+            Launch workspace <span>↗</span>
+          </a>
+
+          <a class="secondary-button" href="#features">
+            Explore the platform <span>↓</span>
+          </a>
+        </div>
+
+        <div class="hero-caption">
+          RESEARCH · SIMULATION CONCEPTS · EXPERIMENT DESIGN
+        </div>
       </div>
-    </aside>
 
-    <main class="main-content">
-      <header class="topbar">
-        <div class="crumb">
-          <span class="crumb-muted">SkyRL Research</span>
-          <span class="crumb-sep">/</span>
-          <span id="crumb-current">Overview</span>
+      <div class="visual" aria-label="Abstract SkyRL research visualization">
+        <div class="orbit"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="orbit orbit-three"></div>
+
+        <span class="node node-one"></span>
+        <span class="node node-two"></span>
+        <span class="node node-three"></span>
+        <span class="node node-four"></span>
+
+        <div class="core">
+          <div class="core-text">SR<span>.</span></div>
         </div>
 
-        <div class="topbar-actions">
-          <span class="demo-pill"><span class="status-dot"></span> DEMO MODE</span>
-          <button id="theme-toggle" class="icon-button" aria-label="Toggle color theme" title="Toggle theme">☼</button>
-        </div>
-      </header>
-
-      <!-- OVERVIEW -->
-      <section class="page-section" id="overview-page">
-        <div class="hero-row">
-          <div>
-            <div class="eyebrow">HACKPHS 2026 · INTO THE SKY</div>
-            <h1>Research workspace<span class="heading-period">.</span></h1>
-            <p class="page-lede">Configure environments, organize entities, and compare experiment settings in one place.</p>
-          </div>
-
-          <div class="hero-symbol" aria-hidden="true">
-            <span>SR</span><i></i><i></i><i></i>
-          </div>
+        <div class="float-card float-card-one">
+          <small>RESEARCH SPACE</small>
+          <strong>Environment design</strong>
         </div>
 
-        <div class="stats-grid">
-          <article class="stat-card">
-            <div class="stat-label">ACTIVE PROJECTS</div>
-            <div class="stat-value" id="project-count">2</div>
-            <div class="stat-foot">Objects and Humans</div>
-          </article>
+        <div class="float-card float-card-two">
+          <small>WORKSPACE</small>
+          <strong>Ready to explore ↗</strong>
+        </div>
+      </div>
+    </section>
 
-          <article class="stat-card">
-            <div class="stat-label">SAVED CONFIGURATIONS</div>
-            <div class="stat-value" id="saved-count">0</div>
-            <div class="stat-foot">Stored in this browser</div>
-          </article>
+    <div class="trust-strip">
+      <div class="trust-label">BUILT AROUND EXPLORATION</div>
+      <div class="trust-item"><span>◇</span> Configurable projects</div>
+      <div class="trust-item"><span>⌁</span> Experiment workflows</div>
+      <div class="trust-item"><span>↗</span> Research-oriented design</div>
+    </div>
 
-          <article class="stat-card">
-            <div class="stat-label">WORKSPACE STATUS</div>
-            <div class="stat-value status-text">Ready</div>
-            <div class="stat-foot"><span class="status-dot"></span> Demo environment</div>
-          </article>
+    <section class="section" id="features">
+      <div class="section-header">
+        <div class="section-kicker">THE PLATFORM</div>
+        <h2>From a research idea to an organized workflow.</h2>
+        <p class="section-description">
+          SkyRL brings project configuration and experiment planning into one
+          interface, designed to make complex workflows easier to navigate.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-icon">◇</div>
+          <h3>Independent projects</h3>
+          <p>
+            Keep Objects and Humans in separate project spaces, each with its
+            own configuration and notes.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">⌁</div>
+          <h3>Experiment configuration</h3>
+          <p>
+            Organize environment settings, interaction modes, and other
+            parameters through a structured interface.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">↗</div>
+          <h3>Results and evaluation</h3>
+          <p>
+            Provide a dedicated place for reviewing future experiment outputs
+            and keeping research organized.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="project-section" id="about">
+      <div class="project-panel">
+        <div>
+          <div class="section-kicker">YOUR NEXT EXPERIMENT</div>
+          <h2>A workspace for ideas that take you further.</h2>
+          <p>
+            Explore the SkyRL interface, configure your project spaces, and
+            keep your research settings organized in one place.
+          </p>
         </div>
 
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">YOUR WORKSPACE</div>
-            <h2>Choose a project</h2>
-          </div>
-          <span class="subtle">Two independent project spaces</span>
+        <a href="portal.html" class="primary-button">
+          Enter SkyRL <span>↗</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="project-section" id="workspace">
+      <div class="project-panel">
+        <div>
+          <div class="section-kicker">SKYRL WORKSPACE</div>
+          <h2>Ready to enter the workspace?</h2>
+          <p>
+            Open the project portal to explore Objects, Humans, experiment
+            settings, and the research interface.
+          </p>
         </div>
 
-        <div class="project-grid">
-          <button class="project-card object-card" data-open-project="objects">
-            <div class="project-card-top">
-              <span class="project-icon project-placeholder">ALI</span>
-              <span class="card-arrow">↗</span>
-            </div>
-            <div class="project-type">PROJECT 01</div>
-            <h3>Objects</h3>
-            <p>Set up object properties and interaction parameters for your environment.</p>
-            <div class="project-card-footer">
-              <span>Open project</span><span>→</span>
-            </div>
-          </button>
+        <a href="portal.html" class="primary-button">
+          Launch workspace <span>→</span>
+        </a>
+      </div>
+    </section>
+  </main>
 
-          <button class="project-card human-card" data-open-project="humans">
-            <div class="project-card-top">
-              <span class="project-icon project-placeholder">ALI</span>
-              <span class="card-arrow">↗</span>
-            </div>
-            <div class="project-type">PROJECT 02</div>
-            <h3>Humans</h3>
-            <p>Configure human-agent parameters separately from the Objects project.</p>
-            <div class="project-card-footer">
-              <span>Open project</span><span>→</span>
-            </div>
-          </button>
-        </div>
+  <footer class="site-footer">
+    <a class="footer-brand" href="#">skyrl<span>.</span></a>
+    <div class="footer-note">HACKPHS 2026 · INTO THE SKY</div>
+    <div>Research workspace concept · Demo interface</div>
+  </footer>
 
-        <div class="notice">
-          <span class="notice-icon">i</span>
-          <div>
-            <strong>Demo mode is active</strong>
-            <p>Controls below are a front-end interface demonstration. They do not represent measurements from a trained model or a physical drone.</p>
-          </div>
-        </div>
-      </section>
+  <script>
+    // Optional theme preference for the landing page.
+    // This does not affect portal.html.
+    const themeKey = "skyrl-landing-theme";
 
-      <!-- PROJECT LIBRARY -->
-      <section class="page-section hidden" id="projects-page">
-        <div class="eyebrow">PROJECT LIBRARY</div>
-        <h1>Projects<span class="heading-period">.</span></h1>
-        <p class="page-lede">Open either project. Their settings are saved independently in this browser.</p>
+    try {
+      const savedTheme = localStorage.getItem(themeKey);
 
-        <div class="project-grid compact-projects">
-          <button class="project-card object-card" data-open-project="objects">
-            <div class="project-card-top">
-              <span class="project-icon project-placeholder">ALI</span>
-              <span class="card-arrow">↗</span>
-            </div>
-            <div class="project-type">PROJECT 01</div>
-            <h3>Objects</h3>
-            <p>Object properties and interactions.</p>
-            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
-          </button>
-
-          <button class="project-card human-card" data-open-project="humans">
-            <div class="project-card-top">
-              <span class="project-icon project-placeholder">ALI</span>
-              <span class="card-arrow">↗</span>
-            </div>
-            <div class="project-type">PROJECT 02</div>
-            <h3>Humans</h3>
-            <p>Human-agent configuration.</p>
-            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
-          </button>
-        </div>
-      </section>
-
-      <!-- INDIVIDUAL PROJECT SETTINGS -->
-      <section class="page-section hidden" id="project-page">
-        <button class="back-inline" id="back-to-projects">← All projects</button>
-
-        <div class="eyebrow" id="project-eyebrow">PROJECT 01</div>
-
-        <div class="project-title-row">
-          <div>
-            <h1 id="project-title">Objects<span class="heading-period">.</span></h1>
-            <p class="page-lede" id="project-description">Configure object properties.</p>
-          </div>
-          <span class="project-badge" id="project-badge">OBJECT CONFIG</span>
-        </div>
-
-        <div class="tabs" role="tablist" aria-label="Project tabs">
-          <button class="tab-button active" role="tab" aria-selected="true" data-tab="configuration">Configuration</button>
-          <button class="tab-button" role="tab" aria-selected="false" data-tab="advanced">Advanced settings</button>
-          <button class="tab-button" role="tab" aria-selected="false" data-tab="notes">Notes</button>
-        </div>
-
-        <div class="panel">
-          <div class="panel-heading">
-            <div>
-              <div class="eyebrow" id="panel-eyebrow">OBJECT PARAMETERS</div>
-              <h2 id="panel-title">Environment configuration</h2>
-            </div>
-            <span class="autosave">LOCAL SETTINGS</span>
-          </div>
-
-          <div id="configuration-panel" class="tab-panel">
-            <div class="form-grid">
-              <label class="field">
-                <span>Configuration name</span>
-                <input id="config-name" type="text" placeholder="e.g. Baseline setup" maxlength="70">
-              </label>
-
-              <label class="field">
-                <span>Environment preset</span>
-                <select id="preset">
-                  <option value="balanced">Balanced</option>
-                  <option value="simple">Simple</option>
-                  <option value="complex">Complex</option>
-                  <option value="custom">Custom</option>
-                </select>
-              </label>
-
-              <label class="field">
-                <span>Entity count</span>
-                <input id="entity-count" type="number" min="1" max="100" value="10">
-              </label>
-
-              <label class="field">
-                <span>Interaction mode</span>
-                <select id="interaction">
-                  <option value="standard">Standard</option>
-                  <option value="direct">Direct interaction</option>
-                  <option value="limited">Limited interaction</option>
-                </select>
-              </label>
-            </div>
-
-            <div class="range-field">
-              <div class="range-header">
-                <label for="complexity">Environment complexity</label>
-                <output id="complexity-value">50%</output>
-              </div>
-              <input id="complexity" type="range" min="0" max="100" value="50">
-              <div class="range-scale">
-                <span>Low complexity</span>
-                <span>High complexity</span>
-              </div>
-            </div>
-
-            <div class="check-row">
-              <div>
-                <strong>Enable interaction logging</strong>
-                <p>Keep a local record of configuration changes.</p>
-              </div>
-              <label class="switch">
-                <input id="logging" type="checkbox" checked>
-                <span></span>
-              </label>
-            </div>
-
-            <div class="form-actions">
-              <span class="save-message" id="save-message">Changes are stored locally in this browser.</span>
-              <button class="primary-button" id="save-config">Save configuration <span>→</span></button>
-            </div>
-          </div>
-
-          <div id="advanced-panel" class="tab-panel hidden">
-            <div class="form-grid">
-              <label class="field">
-                <span>Random seed</span>
-                <input id="seed" type="number" min="0" max="999999" value="42">
-              </label>
-
-              <label class="field">
-                <span>Evaluation frequency</span>
-                <select id="frequency">
-                  <option>Every 10 steps</option>
-                  <option>Every 25 steps</option>
-                  <option>Every 50 steps</option>
-                  <option>Manual</option>
-                </select>
-              </label>
-
-              <label class="field">
-                <span>Observation profile</span>
-                <select id="observation">
-                  <option>Default</option>
-                  <option>Compact</option>
-                  <option>Extended</option>
-                </select>
-              </label>
-
-              <label class="field">
-                <span>Output detail</span>
-                <select id="output-detail">
-                  <option>Standard</option>
-                  <option>Summary only</option>
-                  <option>Detailed</option>
-                </select>
-              </label>
-            </div>
-
-            <p class="helper-note">These are editable demo controls. They do not launch training or connect to a simulation engine.</p>
-
-            <div class="form-actions">
-              <span class="save-message">Advanced settings are saved with this project.</span>
-              <button class="primary-button" id="save-advanced">Save advanced settings <span>→</span></button>
-            </div>
-          </div>
-
-          <div id="notes-panel" class="tab-panel hidden">
-            <label class="field">
-              <span>Project notes</span>
-              <textarea id="project-notes" rows="7" placeholder="Write hypotheses, planned tests, or observations..."></textarea>
-            </label>
-
-            <div class="form-actions">
-              <span class="save-message">Notes are kept separately for each project.</span>
-              <button class="primary-button" id="save-notes">Save notes <span>→</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="bottom-tip">
-          <span>✳</span>
-          <p><strong>Keep experiments organized.</strong> Save a configuration before switching projects; Objects and Humans maintain separate settings.</p>
-        </div>
-      </section>
-
-      <!-- EXPERIMENT SETUP -->
-      <section class="page-section hidden" id="experiments-page">
-        <div class="eyebrow">WORKFLOW</div>
-        <h1>Experiment setup<span class="heading-period">.</span></h1>
-        <p class="page-lede">Prepare a configuration before evaluating it.</p>
-
-        <div class="panel simple-panel">
-          <h2>Start with a project</h2>
-          <p>Choose Objects or Humans to edit its independent settings.</p>
-          <div class="inline-actions">
-            <button class="primary-button" data-open-project="objects">Configure Objects →</button>
-            <button class="secondary-button" data-open-project="humans">Configure Humans →</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- RESULTS -->
-      <section class="page-section hidden" id="results-page">
-        <div class="eyebrow">EVALUATION</div>
-        <h1>Results &amp; evaluation<span class="heading-period">.</span></h1>
-        <p class="page-lede">A place to review future experiment outputs.</p>
-
-        <div class="panel simple-panel">
-          <div class="empty-state-icon">↗</div>
-          <h2>No evaluation results yet</h2>
-          <p>This demo workspace does not run a model. Saved settings can be used as a planning record.</p>
-          <button class="secondary-button" data-page="projects">Browse projects →</button>
-        </div>
-      </section>
-
-      <!-- EXPERIMENT HISTORY -->
-      <section class="page-section hidden" id="history-page">
-        <div class="eyebrow">ACTIVITY</div>
-        <h1>Experiment history<span class="heading-period">.</span></h1>
-        <p class="page-lede">Your locally saved configurations appear here.</p>
-
-        <div class="panel">
-          <div class="history-header">
-            <h2>Saved configurations</h2>
-            <button id="refresh-history" class="secondary-button">Refresh</button>
-          </div>
-          <div id="history-list" class="history-list">
-            <div class="empty-state">No saved configurations yet. Open a project and save its settings.</div>
-          </div>
-        </div>
-      </section>
-
-      <footer class="page-footer">
-        <span>SKYRL RESEARCH WORKSPACE</span>
-        <span>HackPHS 2026 · Interface demo</span>
-      </footer>
-    </main>
-  </div>
+      if (savedTheme === "light") {
+        document.body.classList.add("light-theme");
+      }
+    } catch (error) {
+      // The landing page still works if browser storage is unavailable.
+    }
+  </script>
 </body>
 </html>
