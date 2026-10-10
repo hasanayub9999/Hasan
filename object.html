@@ -1,0 +1,59 @@
+```html
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d18">
+  <title>Object Simulation · SkyRL</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    try {
+      document.documentElement.dataset.theme =
+        localStorage.getItem("skyrl-theme") || "dark";
+    } catch (e) {}
+  </script>
+  <script src="portal.js" defer></script>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="SkyRL home">
+        <span class="brand-mark">S</span>
+        <span>Sky<span class="accent">RL</span></span>
+      </a>
+
+      <nav class="top-nav" aria-label="Main navigation">
+        <a class="top-link" href="index.html">Mission</a>
+        <a class="top-link" href="human.html">Human</a>
+        <a class="top-link active" aria-current="page" href="object.html">Object</a>
+      </nav>
+
+      <div class="actions">
+        <button type="button" class="icon-btn" id="themeToggle"
+          aria-label="Switch to light mode">☼</button>
+      </div>
+    </header>
+
+    <main class="view simulation-page">
+      <p class="eyebrow">OBJECT SIMULATION</p>
+      <h1>Object <span class="accent">Environment.</span></h1>
+      <p class="lead">
+        This page is reserved for the object simulation environment.
+      </p>
+
+      <section class="integration-panel">
+        <div class="panel-symbol">O</div>
+        <h2>ALI INTEGRATE!!!!</h2>
+        <p>
+          The object environment will be integrated here.
+          This placeholder is ready for the simulation implementation.
+        </p>
+      </section>
+
+      <a class="btn" href="index.html">← Back to Mission</a>
+    </main>
+  </div>
+</body>
+</html>
+```
