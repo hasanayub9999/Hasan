@@ -4,228 +4,223 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f6f7f4">
-  <meta name="description" content="Explore the SkyRL autonomous navigation research workspace.">
-  <title>SkyRL Workspace</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Configure and review SkyRL experimental navigation runs.">
+  <title>Workspace — SkyRL</title>
   <link rel="stylesheet" href="portal.css">
+  <script>
+    try {
+      document.documentElement.dataset.theme =
+        localStorage.getItem("skyrl-theme") || "dark";
+    } catch (_) {}
+  </script>
   <script src="portal.js" defer></script>
 </head>
 <body>
-  <div class="portal-shell">
+  <div class="workspace-shell">
     <aside class="sidebar" id="sidebar">
       <a class="brand" href="index.html">
         <span class="brand-mark">S</span>
-        <span>SkyRL<span class="brand-period">.</span></span>
+        <span>skyrl<span class="brand-period">.</span></span>
       </a>
 
-      <div class="workspace-label">RESEARCH WORKSPACE</div>
-
+      <div class="sidebar-caption">WORKSPACE</div>
       <nav class="sidebar-nav" aria-label="Workspace navigation">
-        <a class="side-link active" href="#overview"><span>⌂</span> Overview</a>
-        <a class="side-link" href="#environment"><span>⌘</span> Environment</a>
-        <a class="side-link" href="#training"><span>↗</span> Training setup</a>
-        <a class="side-link" href="#evaluation"><span>◫</span> Evaluation</a>
+        <a class="sidebar-link active" href="#overview"><span>▦</span> Overview</a>
+        <a class="sidebar-link" href="#configuration"><span>⚙</span> Experiment setup</a>
+        <a class="sidebar-link" href="#results"><span>⌁</span> Results & evaluation</a>
+        <a class="sidebar-link" href="#history"><span>◷</span> Experiment history</a>
       </nav>
 
+      <div class="sidebar-caption sidebar-caption-spaced">PROJECT</div>
+      <div class="project-card">
+        <span class="project-dot"></span>
+        <div><strong>SkyRL Research</strong><small>HackPHS 2026</small></div>
+      </div>
+
       <div class="sidebar-bottom">
-        <div class="sidebar-status">
-          <span class="status-dot"></span>
-          <div>
-            <strong>Prototype workspace</strong>
-            <span>Local demo mode</span>
-          </div>
+        <div class="sidebar-note">
+          <span class="note-symbol">i</span>
+          <p>Demo mode is active. No real reinforcement-learning model is being trained.</p>
         </div>
-        <a class="back-link" href="index.html">← Back to main site</a>
+        <a href="index.html" class="back-link">← Back to website</a>
       </div>
     </aside>
 
-    <main class="portal-main">
-      <header class="portal-topbar">
-        <button class="portal-menu" id="portalMenu" aria-label="Toggle sidebar" aria-expanded="false">☰</button>
+    <main class="dashboard">
+      <header class="dashboard-topbar">
         <div class="breadcrumb"><a href="index.html">SkyRL</a><span>/</span><strong>Workspace</strong></div>
-        <div class="topbar-right">
-          <span class="prototype-tag"><span class="status-dot"></span> PROTOTYPE</span>
-          <button class="icon-button" id="portalThemeToggle" aria-label="Toggle color theme" title="Toggle theme"><span id="portalThemeIcon">☾</span></button>
+        <div class="topbar-actions">
+          <span class="demo-badge"><span class="status-dot"></span> DEMO MODE</span>
+          <button class="icon-button" data-theme-toggle aria-label="Toggle color theme">☼</button>
         </div>
       </header>
 
-      <div class="portal-content" id="overview">
-        <section class="portal-welcome">
+      <section class="dashboard-content" id="overview">
+        <div class="page-heading">
           <div>
-            <div class="eyebrow">SKYRL / RESEARCH WORKSPACE</div>
-            <h1>Welcome to the lab.</h1>
-            <p>Configure a navigation scenario, explore the learning process, and review the metrics that matter.</p>
+            <span class="eyebrow">RESEARCH WORKSPACE</span>
+            <h1>Experiment overview</h1>
+            <p>Configure a run, explore illustrative outputs, and compare experiment settings.</p>
           </div>
-          <span class="session-chip">DEMO SESSION · 001</span>
-        </section>
+          <button class="button button-primary" id="runTopButton">Run demo experiment <span>↗</span></button>
+        </div>
 
-        <section class="workspace-stats" aria-label="Workspace status">
-          <article class="mini-stat">
-            <span class="mini-stat-label">SIMULATION</span>
-            <strong id="simulationStatus">Ready</strong>
-            <span class="mini-stat-note">Interactive 2D demo</span>
-          </article>
-          <article class="mini-stat">
-            <span class="mini-stat-label">SCENARIO</span>
-            <strong id="scenarioStatus">Basic course</strong>
-            <span class="mini-stat-note">Editable environment</span>
-          </article>
-          <article class="mini-stat">
-            <span class="mini-stat-label">TRAINING MODEL</span>
-            <strong>Not connected</strong>
-            <span class="mini-stat-note">No real model running</span>
-          </article>
-          <article class="mini-stat">
-            <span class="mini-stat-label">DATA SOURCE</span>
-            <strong>Local demo</strong>
-            <span class="mini-stat-note">No external data submitted</span>
-          </article>
-        </section>
-
-        <section class="workspace-grid">
-          <article class="workspace-panel simulation-panel" id="environment">
-            <div class="panel-heading">
-              <div>
-                <div class="eyebrow">01 / ENVIRONMENT</div>
-                <h2>Navigation sandbox</h2>
-              </div>
-              <span class="panel-chip">2D DEMO</span>
-            </div>
-            <p class="panel-description">Choose a scenario, then run the demonstration to move the agent toward its target while avoiding obstacles.</p>
-
-            <div class="canvas-toolbar">
-              <label for="scenarioSelect">SCENARIO</label>
-              <select id="scenarioSelect">
-                <option value="basic">Basic course</option>
-                <option value="obstacles">Obstacle field</option>
-                <option value="maze">Maze course</option>
-              </select>
-              <button class="small-button" id="resetSimulation">Reset</button>
-            </div>
-
-            <div class="simulation-stage">
-              <canvas id="simulationCanvas" aria-label="Interactive two-dimensional navigation simulation">
-                Your browser does not support the canvas element.
-              </canvas>
-              <div class="canvas-overlay canvas-overlay-top">NAVIGATION VIEW <span>SIM / 2D</span></div>
-              <div class="canvas-overlay canvas-overlay-bottom" id="canvasMessage">Ready to begin</div>
-            </div>
-
-            <div class="simulation-controls">
-              <button class="button button-dark" id="runSimulation">▶ Run demo</button>
-              <button class="button button-outline" id="stepSimulation">Next step →</button>
-              <span class="control-hint" id="stepCounter">Step 0</span>
-            </div>
-
-            <div class="legend">
-              <span><i class="legend-agent"></i> Agent</span>
-              <span><i class="legend-target"></i> Target</span>
-              <span><i class="legend-obstacle"></i> Obstacle</span>
-              <span><i class="legend-route"></i> Route</span>
-            </div>
-          </article>
-
-          <article class="workspace-panel settings-panel" id="training">
-            <div class="panel-heading">
-              <div>
-                <div class="eyebrow">02 / CONFIGURATION</div>
-                <h2>Experiment setup</h2>
-              </div>
-            </div>
-            <p class="panel-description">Adjust the illustrative parameters for a hypothetical learning experiment.</p>
-
-            <div class="field-group">
-              <label for="algorithmSelect">Algorithm concept</label>
-              <select id="algorithmSelect">
-                <option value="PPO">Proximal Policy Optimization (PPO)</option>
-                <option value="DQN">Deep Q-Network (DQN)</option>
-                <option value="A2C">Advantage Actor-Critic (A2C)</option>
-              </select>
-              <small>Selection only — no model is trained by this page.</small>
-            </div>
-
-            <div class="field-group">
-              <div class="field-label-row">
-                <label for="episodeRange">Episodes</label>
-                <strong id="episodeValue">500</strong>
-              </div>
-              <input id="episodeRange" type="range" min="100" max="2000" step="100" value="500">
-              <div class="range-labels"><span>100</span><span>2,000</span></div>
-            </div>
-
-            <div class="field-group">
-              <div class="field-label-row">
-                <label for="rewardRange">Target reward</label>
-                <strong id="rewardValue">100</strong>
-              </div>
-              <input id="rewardRange" type="range" min="10" max="300" step="10" value="100">
-              <div class="range-labels"><span>10</span><span>300</span></div>
-            </div>
-
-            <div class="field-group">
-              <label for="difficultySelect">Environment difficulty</label>
-              <select id="difficultySelect">
-                <option value="1">Level 1 — Introductory</option>
-                <option value="2" selected>Level 2 — Intermediate</option>
-                <option value="3">Level 3 — Advanced</option>
-              </select>
-            </div>
-
-            <button class="button button-dark full-width" id="saveConfig">Apply configuration</button>
-            <p class="form-feedback" id="configFeedback" role="status">Default demonstration settings are loaded.</p>
-          </article>
-        </section>
-
-        <section class="workspace-panel evaluation-panel" id="evaluation">
-          <div class="panel-heading">
-            <div>
-              <div class="eyebrow">03 / EVALUATION</div>
-              <h2>Session metrics</h2>
-            </div>
-            <span class="panel-chip">DEMO VALUES</span>
+        <div class="notice-banner">
+          <span class="notice-icon">i</span>
+          <div>
+            <strong>Illustrative demo environment</strong>
+            <p>Results on this page are generated locally for interface demonstration. They are not measurements from a trained model or a physical drone.</p>
           </div>
-          <p class="panel-description">These counters describe the 2D demo session. They are not results from reinforcement learning training.</p>
+        </div>
 
-          <div class="evaluation-grid">
-            <div class="evaluation-metric">
-              <span>Steps taken</span>
-              <strong id="metricSteps">0</strong>
-              <small>Agent movement actions</small>
+        <div class="overview-grid">
+          <article class="metric-card">
+            <div class="metric-label">EXPERIMENTS IN THIS SESSION</div>
+            <div class="metric-value" id="metricRuns">0</div>
+            <div class="metric-foot">Demo runs created in this session</div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-label">LATEST DEMO SUCCESS</div>
+            <div class="metric-value" id="metricSuccess">—<span class="metric-unit"></span></div>
+            <div class="metric-foot">Illustrative task completion rate</div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-label">LATEST EPISODE REWARD</div>
+            <div class="metric-value" id="metricReward">—</div>
+            <div class="metric-foot">Illustrative reward score</div>
+          </article>
+        </div>
+
+        <div class="dashboard-section-heading" id="configuration">
+          <div><span class="eyebrow">CONFIGURATION</span><h2>Experiment setup</h2></div>
+          <button class="button button-secondary button-small" id="resetButton">Reset settings</button>
+        </div>
+
+        <div class="configuration-grid">
+          <section class="workspace-card">
+            <div class="card-heading">
+              <div><h3>Environment</h3><p>Choose a task configuration for the demo.</p></div>
+              <span class="card-number">01</span>
             </div>
-            <div class="evaluation-metric">
-              <span>Distance remaining</span>
-              <strong id="metricDistance">—</strong>
-              <small>Canvas units to target</small>
+
+            <label class="field-label" for="environment">Environment preset</label>
+            <select class="field-control" id="environment">
+              <option value="grid">Grid navigation</option>
+              <option value="waypoint">Waypoint navigation</option>
+              <option value="obstacle">Obstacle avoidance (abstract)</option>
+            </select>
+
+            <div class="field-help" id="environmentHelp">An abstract grid-navigation task used for demonstration.</div>
+
+            <label class="field-label" for="episodes">Episode count <output id="episodesOutput">100</output></label>
+            <input class="range-control" id="episodes" type="range" min="20" max="500" step="20" value="100">
+            <div class="range-ends"><span>20</span><span>500</span></div>
+
+            <label class="field-label" for="seed">Random seed</label>
+            <input class="field-control" id="seed" type="number" min="0" max="999999" value="42">
+            <div class="field-help">Use the same settings and seed for a repeatable demo.</div>
+          </section>
+
+          <section class="workspace-card">
+            <div class="card-heading">
+              <div><h3>Training parameters</h3><p>Adjust illustrative training settings.</p></div>
+              <span class="card-number">02</span>
             </div>
-            <div class="evaluation-metric">
-              <span>Target reached</span>
-              <strong id="metricSuccess">No</strong>
-              <small>Current demo attempt</small>
-            </div>
+
+            <label class="field-label" for="steps">Training steps <output id="stepsOutput">10,000</output></label>
+            <input class="range-control" id="steps" type="range" min="1000" max="50000" step="1000" value="10000">
+            <div class="range-ends"><span>1,000</span><span>50,000</span></div>
+
+            <label class="field-label" for="learningRate">Learning rate</label>
+            <select class="field-control" id="learningRate">
+              <option value="0.0001">0.0001</option>
+              <option value="0.0003" selected>0.0003</option>
+              <option value="0.001">0.001</option>
+              <option value="0.003">0.003</option>
+            </select>
+
+            <label class="field-label" for="exploration">Exploration level <output id="explorationOutput">50%</output></label>
+            <input class="range-control" id="exploration" type="range" min="0" max="100" step="5" value="50">
+            <div class="range-ends"><span>Lower</span><span>Higher</span></div>
+
+            <label class="field-label" for="evalRuns">Evaluation runs</label>
+            <select class="field-control" id="evalRuns">
+              <option value="5">5 runs</option>
+              <option value="10" selected>10 runs</option>
+              <option value="25">25 runs</option>
+              <option value="50">50 runs</option>
+            </select>
+          </section>
+        </div>
+
+        <div class="run-bar">
+          <div><strong>Ready to explore?</strong><p>Run a local demo using your selected settings.</p></div>
+          <button class="button button-primary" id="runButton">Run demo experiment <span>↗</span></button>
+        </div>
+
+        <section class="results-section" id="results">
+          <div class="dashboard-section-heading">
+            <div><span class="eyebrow">EVALUATION</span><h2>Results & analysis</h2></div>
+            <span class="subtle-label" id="resultsLabel">Waiting for first demo run</span>
           </div>
 
-          <div class="evaluation-bottom">
-            <div>
-              <strong>Current configuration</strong>
-              <p id="appliedSummary">PPO · 500 episodes · Level 2</p>
-            </div>
-            <button class="button button-outline" id="exportSession">Export session JSON ↓</button>
+          <div class="results-grid">
+            <article class="workspace-card chart-card">
+              <div class="card-heading">
+                <div><h3>Illustrative reward progression</h3><p>Example values across demo episodes</p></div>
+                <span class="chart-legend"><i></i> Demo reward</span>
+              </div>
+              <div class="chart-wrap"><svg id="rewardChart" viewBox="0 0 600 240" role="img" aria-label="Illustrative reward progression chart"></svg></div>
+              <div class="chart-axis-labels"><span>Start</span><span>Episode progression</span><span>End</span></div>
+            </article>
+
+            <article class="workspace-card chart-card">
+              <div class="card-heading">
+                <div><h3>Evaluation summary</h3><p>Illustrative run metrics</p></div>
+              </div>
+              <div class="summary-stat">
+                <span>Task completion</span><strong id="resultSuccess">—</strong>
+              </div>
+              <div class="summary-stat">
+                <span>Average reward</span><strong id="resultReward">—</strong>
+              </div>
+              <div class="summary-stat">
+                <span>Average episode length</span><strong id="resultLength">—</strong>
+              </div>
+              <div class="summary-stat">
+                <span>Evaluation sample size</span><strong id="resultSamples">—</strong>
+              </div>
+              <p class="chart-footnote">All values above are illustrative demo outputs, not scientific measurements.</p>
+            </article>
           </div>
         </section>
 
-        <section class="portal-note">
-          <span class="note-icon">i</span>
-          <p><strong>Integration note:</strong> The current navigation sandbox is a browser-based demonstration. Connecting Unity, real reinforcement learning, authentication, or saved user projects requires additional implementation and configuration.</p>
+        <section class="history-section" id="history">
+          <div class="dashboard-section-heading">
+            <div><span class="eyebrow">SESSION RECORD</span><h2>Experiment history</h2></div>
+            <button class="button button-secondary button-small" id="clearHistoryButton">Clear history</button>
+          </div>
+
+          <div class="workspace-card history-card">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr><th>Experiment</th><th>Environment</th><th>Episodes</th><th>Demo reward</th><th>Success</th><th>Mode</th></tr>
+                </thead>
+                <tbody id="historyBody">
+                  <tr id="emptyHistory"><td colspan="6" class="empty-state">No runs yet. Run a demo experiment to populate this table.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </section>
 
-        <footer class="portal-footer">
-          <span>SkyRL Workspace · Experimental prototype</span>
-          <a href="index.html">Return to SkyRL ↗</a>
+        <footer class="dashboard-footer">
+          <span>SkyRL · HackPHS 2026</span>
+          <span>Experimental interface · No physical flight control</span>
         </footer>
-      </div>
+      </section>
     </main>
   </div>
 </body>
