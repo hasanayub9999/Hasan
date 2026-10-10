@@ -1,123 +1,71 @@
-```html
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090d18">
-  <meta name="description" content="SkyRL — an experimental simulation and reinforcement learning environment.">
   <title>SkyRL · HackPHS 2026</title>
   <link rel="stylesheet" href="style.css">
-
   <script>
-    try {
-      document.documentElement.dataset.theme =
-        localStorage.getItem("skyrl-theme") === "light" ? "light" : "dark";
-    } catch (e) {}
+    try { document.documentElement.dataset.theme = localStorage.getItem("skyrl-theme") === "light" ? "light" : "dark"; } catch (e) {}
   </script>
-
   <script src="portal.js" defer></script>
 </head>
 <body>
   <div class="app" id="app">
+
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <a class="brand" href="index.html" aria-label="SkyRL home">
+        <span class="brand-mark">S</span><span>Sky<span class="accent">RL</span></span>
+      </a>
+      <p class="side-label">Navigate</p>
+      <nav class="side-nav">
+        <button type="button" class="side-link" data-view="mission">Our Mission</button>
+        <button type="button" class="side-link" data-view="human">Human</button>
+        <button type="button" class="side-link" data-view="object">Object</button>
+      </nav>
+      <p class="side-note">HackPHS 2026 · Experimental research project</p>
+    </aside>
+
+    <div class="scrim" id="scrim" hidden></div>
+
     <div class="main">
-
       <header class="topbar">
-        <a class="brand" href="index.html" aria-label="SkyRL home">
-          <span class="brand-mark">S</span>
-          <span>Sky<span class="accent">RL</span></span>
-        </a>
-
-        <div class="crumbs">
-          SkyRL <span>/</span>
-          <strong id="crumb">Our Mission</strong>
-        </div>
+        <button type="button" class="icon-btn menu-btn" id="menuBtn" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">☰</button>
+        <div class="crumbs">SkyRL <span>/</span> <strong id="crumb">Our Mission</strong></div>
 
         <div class="actions">
           <div class="dropdown" id="deploy">
-            <button
-              type="button"
-              class="btn"
-              id="deployBtn"
-              aria-haspopup="true"
-              aria-expanded="false"
-              aria-controls="deployMenu">
+            <button type="button" class="btn" id="deployBtn" aria-haspopup="true" aria-expanded="false" aria-controls="deployMenu">
               Deploy <span class="caret" aria-hidden="true">▾</span>
             </button>
-
             <div class="menu" id="deployMenu" role="menu" hidden>
-              <button type="button" role="menuitem" data-view="human">
-                Human
-              </button>
-              <button type="button" role="menuitem" data-view="object">
-                Object
-              </button>
+              <button type="button" role="menuitem" data-view="human">Human</button>
+              <button type="button" role="menuitem" data-view="object">Object</button>
             </div>
           </div>
-
-          <button
-            type="button"
-            class="icon-btn"
-            id="themeToggle"
-            aria-label="Switch to light mode">
-            ☼
-          </button>
+          <button type="button" class="icon-btn" id="themeToggle" aria-label="Switch to light mode">☼</button>
         </div>
       </header>
 
       <main id="content" tabindex="-1">
-
         <section class="view" data-view-id="mission">
           <p class="eyebrow">Our Mission</p>
-
-          <h1>
-            Teaching drones to
-            <span class="accent">navigate better.</span>
-          </h1>
-
-          <p class="lead">
-            SkyRL is an experimental research project exploring how
-            reinforcement learning can help autonomous agents learn
-            navigation policies in simulated environments.
-          </p>
+          <h1>Teaching drones to <span class="accent">navigate better.</span></h1>
+          <p class="lead">SkyRL is an experimental research project exploring how reinforcement learning can help autonomous agents learn navigation policies in simulated environments.</p>
 
           <div class="cards">
-            <div class="card">
-              <h3>Experimentation</h3>
-              <p>
-                Change one setting, run it, and look at what happened.
-              </p>
-            </div>
-
-            <div class="card">
-              <h3>Reproducibility</h3>
-              <p>
-                Record every configuration and seed so results can be repeated.
-              </p>
-            </div>
-
-            <div class="card">
-              <h3>Evaluation</h3>
-              <p>
-                Compare runs on shared metrics, with clear labels on what is simulated.
-              </p>
-            </div>
+            <div class="card"><h3>Experimentation</h3><p>Change one setting, run it, and look at what happened.</p></div>
+            <div class="card"><h3>Reproducibility</h3><p>Record every configuration and seed so results can be repeated.</p></div>
+            <div class="card"><h3>Evaluation</h3><p>Compare runs on shared metrics, with clear labels on what is simulated.</p></div>
           </div>
 
           <div class="cta">
-            <button type="button" class="btn primary" data-view="human">
-              Open Human
-            </button>
-
-            <button type="button" class="btn" data-view="object">
-              Open Object
-            </button>
+            <button type="button" class="btn primary" data-view="human">Open Human</button>
+            <button type="button" class="btn" data-view="object">Open Object</button>
           </div>
 
-          <p class="note">
-            SkyRL is not a certified real-world flight system.
-            Simulation results do not prove real-world safety or readiness.
-          </p>
+          <p class="note">SkyRL is not a certified real-world flight system. Simulation results do not prove real-world safety or readiness.</p>
         </section>
 
         <section class="view blank" data-view-id="human" hidden>
@@ -127,10 +75,8 @@
         <section class="view blank" data-view-id="object" hidden>
           <h1 class="blank-text">ALI INTEGRATE!!!!</h1>
         </section>
-
       </main>
     </div>
   </div>
 </body>
 </html>
-```
