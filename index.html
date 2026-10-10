@@ -1,257 +1,456 @@
+
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SkyRL — Autonomous Flight Intelligence</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<script>try{if(localStorage.getItem('skyrl-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
-</head>
-<body>
-<header class="nav"><a class="logo" href="index.html"><b>✦</b> Sky<span>RL</span></a><nav><a href="#platform">Platform</a><a href="#how">How it works</a><a href="#community">Community</a></nav><div class="navright"><button id="themeToggle" class="iconbtn" aria-label="Toggle dark mode">☾ href="portal.html">Launch now ↗</a></div></header>
-<main>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f7f4">
+<meta name="description" content="SkyRL explores reinforcement learning for autonomous drone navigation.">
+<title>SkyRL — Autonomous Flight Research</title>
 
-<section class="impact section" id="mission">
-  <div class="impact-header">
-    <div>
-      <label>THE HUMAN SIDE OF AUTONOMOUS FLIGHT</label>
-      <h2>When disaster strikes,<br><span>every second matters.</span></h2>
-    </div>
-    <p>
-      Earthquakes can leave people trapped beneath collapsed
-      structures. Search-and-rescue teams face difficult,
-      unpredictable environments where locating survivors
-      and accessing dangerous areas are major challenges.
-    </p>
-  </div>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <div class="impact-grid">
-
-    <article class="impact-card">
-      <span class="impact-index">01 / MEXICO · 2017</span>
-      <div class="impact-number">7.1<span class="impact-unit"> MAG</span></div>
-      <h3>Earthquake in central Mexico</h3>
-      <p>
-        On September 19, 2017, a magnitude 7.1 earthquake
-        struck central Mexico and caused widespread damage.
-      </p>
-      <a href="https://www.usgs.gov/news/featured-story/magnitude-71-earthquake-mexico"
-         target="_blank" rel="noopener noreferrer">
-        USGS source ↗
-      </a>
-    </article>
-
-    <article class="impact-card">
-      <span class="impact-index">02 / MEXICO CITY · 2017</span>
-      <div class="impact-number">46</div>
-      <h3>Buildings collapsed</h3>
-      <p>
-        A preliminary Stanford study documented 46 structural
-        collapses in Mexico City.
-      </p>
-      <a href="https://lfestorage.s3.us-east-2.amazonaws.com/images/2017_09_19_Puebla_Mexico/pdfs/Preliminary_Report_Mexico2017_v7.pdf"
-         target="_blank" rel="noopener noreferrer">
-        Stanford study ↗
-      </a>
-    </article>
-
-    <article class="impact-card">
-      <span class="impact-index">03 / MEXICO CITY · 2017</span>
-      <div class="impact-number">219</div>
-      <h3>Lives lost</h3>
-      <p>
-        The same preliminary study reported 219 deaths
-        associated with the building collapses.
-      </p>
-      <a href="https://lfestorage.s3.us-east-2.amazonaws.com/images/2017_09_19_Puebla_Mexico/pdfs/Preliminary_Report_Mexico2017_v7.pdf"
-         target="_blank" rel="noopener noreferrer">
-        Read the report ↗
-      </a>
-    </article>
-
-    <article class="impact-card impact-highlight">
-      <span class="impact-index">04 / NEPAL · 2015</span>
-      <div class="impact-number">4</div>
-      <h3>Survivors located</h3>
-      <p>
-        NASA reported that FINDER, a radar-based life-detection
-        technology, helped locate four men trapped beneath
-        rubble after a separate earthquake in Nepal.
-      </p>
-      <a href="https://www.jpl.nasa.gov/news/nasa-tech-aids-search-following-mexico-quake/"
-         target="_blank" rel="noopener noreferrer">
-        NASA source ↗
-      </a>
-    </article>
-
-  </div>
-
-  <div class="impact-disclaimer">
-    <span>WHY THIS MATTERS</span>
-    <p>
-      These disasters demonstrate the challenges of search and
-      rescue. They do not establish that drone limitations caused
-      the reported deaths. SkyRL explores how reinforcement learning
-      could help train autonomous agents to navigate complex
-      environments in simulation.
-    </p>
-  </div>
-
-  <div class="impact-bottom">
-    <div>
-      <label>THE SKYRL MISSION</label>
-      <h3>Train in simulation.<br>Prepare for the unpredictable.</h3>
-    </div>
-    <a class="btn" href="#platform">Explore SkyRL →</a>
-  </div>
-</section><section class="hero"><div class="hero-copy"><div class="eyebrow"><i></i> COMMUNITY-TRAINED DRONE INTELLIGENCE</div><h1>Teach drones<br><span>how to fly.</span></h1><p>Build environments. Train reinforcement-learning agents. Watch autonomous drones learn how to navigate the world.</p><div class="actions"><a class="btn" href="portal.html">Launch SkyRL <b>→</b></a><a class="btn secondary" href="#how">See how it works</a></div><small class="subnote">● Built for experimentation, learning & autonomous systems</small></div>
-<div class="preview"><div class="windowtop"><span>● ● ●</span> SkyRL / Flight preview <b>● CONCEPT</b></div><div class="map"><div class="grid"></div><i class="block b1"></i><i class="block b2"></i><i class="block b3"></i><i class="block b4"></i><span class="start">○<small>START</small></span><span class="land">◎<small>LAND</small></span><svg viewBox="0 0 500 330"><path d="M55 270 C135 230 145 135 230 175 S340 125 425 65"/></svg><div class="drone">✦</div></div><div class="stats"><div><small>AGENT</small><b>PPO / Drone-01</b></div><div><small>MODE</small><b>Navigation</b></div><div><small>STATUS</small><b class="green">Preview</b></div></div><div class="floatcard topcard">↗ <span><small>POLICY</small><b>Learning loop</b></span></div><div class="floatcard bottomcard">✓ <span><small>MISSION</small><b>Reach the target</b></span></div></div></section>
-<div class="strip"><span>BUILD</span><i></i><span>TRAIN</span><i></i><span>SIMULATE</span><i></i><span>SHARE</span></div>
-<section class="section" id="platform"><div class="sectionhead"><div><label>THE PLATFORM</label><h2>From environment<br>to intelligence.</h2></div><p>SkyRL turns drone navigation into an interactive learning environment where people create challenges and AI agents learn how to solve them.</p></div><div class="cards"><article><small>01</small><div class="symbol">▦</div><h3>Build environments</h3><p>Arrange obstacles, buildings, start points and landing zones to design your own navigation challenge.</p><a href="portal.html">Open workspace →</a></article><article class="darkcard"><small>02</small><div class="symbol">✦</div><h3>Train an AI agent</h3><p>Reinforcement learning allows an agent to explore, receive rewards and discover navigation strategies.</p><a href="portal.html">Explore portal →</a></article><article><small>03</small><div class="symbol">◎</div><h3>Grow the model</h3><p>The long-term vision is to let shared experience improve navigation across new environments.</p><a href="#community">See the vision →</a></article></div></section>
-<section class="section" id="how"><div class="sectionhead centered"><label>HOW IT WORKS</label><h2>Four steps.<br>One learning loop.</h2></div><div class="steps"><div><b>01</b><h3>Create</h3><p>Design a drone environment.</p></div><div><b>02</b><h3>Train</h3><p>Learn through trials and rewards.</p></div><div><b>03</b><h3>Navigate</h3><p>Test a learned navigation policy.</p></div><div><b>04</b><h3>Share</h3><p>Contribute to a shared model vision.</p></div></div></section>
-<section class="cta"><div><label>YOUR WORKSPACE AWAITS</label><h2>Ready for takeoff?</h2><p>Enter the SkyRL portal and explore the 3D workspace.</p></div><a class="btn" href="portal.html">Launch now ↗</a></section>
-<section class="community section" id="community"><div><label>THE BIGGER VISION</label><h2>One drone learns.<br><span>Everyone benefits.</span></h2><p>SkyRL is designed around community-trained intelligence. In the future, experiences from different environments could help create stronger navigation policies for new challenges.</p><a class="btn" href="portal.html">Enter SkyRL →</a></div><div class="network"><i></i><i></i><i></i><b>✦</b><span>01</span><span>02</span><span>03</span><span>04</span></div></section>
-</main>
-<footer><div><a class="logo" href="index.html"><b>✦</b> Sky<span>RL</span></a><p>Community-trained intelligence<br>for autonomous flight.</p></div><div class="footlinks"><div><b>Platform</b><a href="#platform">Environment builder</a><a href="portal.html">3D portal</a><a href="#community">Community model</a></div><div><b>Project</b><a href="#how">How it works</a><a href="https://github.com/hasanayub9999/PHS-HACKS-HASAN-SAKTHI-TEAM">GitHub repository</a></div></div><div class="footbottom">© 2026 SkyRL <span>Built for HackPHS 2026</span></div></footer>
-<div class="modal" id="loginModal"><div class="dialog"><button class="close" id="loginClose">×</button><div class="modalmark">✦</div><h2>Welcome to SkyRL</h2><p>Sign-in will let you save environments and training runs once authentication is connected.</p><button class="google" id="googleBtn"><b>G</b> Continue with Google</button><div class="or">DEMO INTERFACE</div><input type="email" placeholder="Email address"><button class="btn full" id="emailContinue">Continue</button><small>Authentication is not connected yet.</small></div></div>
-<script src="script.js"></script>
-</body></html>
-
-/* SKYRL — REAL-WORLD IMPACT STATISTICS */
-
-.impact {
-  padding-top: 100px;
-  padding-bottom: 85px;
+<style>
+:root {
+  --bg: #f7f7f4;
+  --surface: #ffffff;
+  --ink: #222923;
+  --muted: #68716b;
+  --line: #dedfd9;
+  --accent: #315eb4;
+  --accent-light: #edf1fa;
+  --dark: #1d2923;
+  --sans: "Source Sans 3", Arial, sans-serif;
+  --serif: "Source Serif 4", Georgia, serif;
 }
 
-.impact-header {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 55px;
-  align-items: end;
-  margin-bottom: 40px;
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #171c19;
+  --surface: #202722;
+  --ink: #edf0e9;
+  --muted: #a7b0a8;
+  --line: #374139;
+  --accent: #9ab6ff;
+  --accent-light: #283449;
+  --dark: #101612;
 }
 
-.impact-header label,
-.impact-bottom label {
-  color: #62cafa;
-  font-size: 10px;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 85px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.container {
+  width: min(1120px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
 }
 
-.impact-header h2 {
-  margin: 18px 0 0;
-  font-size: clamp(34px, 4.5vw, 56px);
-  line-height: 1.08;
-  letter-spacing: -2px;
+/* Navigation */
+
+.nav {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 max(24px, calc((100% - 1120px) / 2));
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
 }
 
-.impact-header h2 span {
-  color: #62cafa;
+.logo {
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -.7px;
 }
 
-.impact-header > p {
-  margin: 0 0 5px;
-  color: var(--muted, #8b98aa);
+.logo span {
+  color: var(--accent);
+}
+
+.nav nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav nav a {
+  color: var(--muted);
   font-size: 14px;
+}
+
+.nav nav a:hover {
+  color: var(--accent);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.btn {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 18px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  transition: background .15s, color .15s;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+.btn-outline {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn-outline:hover {
+  border-color: var(--ink);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+/* Hero */
+
+.hero {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-copy {
+  max-width: 760px;
+}
+
+.hero h1 {
+  margin: 22px 0;
+  font-family: var(--serif);
+  font-size: clamp(48px, 7vw, 78px);
+  font-weight: 400;
+  letter-spacing: -2.7px;
+  line-height: 1.08;
+}
+
+.hero h1 span {
+  color: var(--accent);
+}
+
+.hero p {
+  max-width: 610px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.hero-note {
+  margin-top: 25px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Section headings */
+
+.section {
+  padding-top: 88px;
+  padding-bottom: 88px;
+}
+
+.section-heading {
+  display: grid;
+  grid-template-columns: 1fr .8fr;
+  gap: 50px;
+  align-items: end;
+  margin-bottom: 35px;
+}
+
+.section-heading h2 {
+  margin: 12px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(34px, 4.5vw, 49px);
+  font-weight: 400;
+  letter-spacing: -1.3px;
+  line-height: 1.2;
+}
+
+.section-heading > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+/* Platform cards */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.feature {
+  padding: 26px;
+  border-right: 1px solid var(--line);
+}
+
+.feature:last-child {
+  border-right: 0;
+}
+
+.feature-number {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.feature h3 {
+  margin: 20px 0 10px;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.feature p {
+  margin: 0 0 22px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.text-link {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Learning process */
+
+.how-section {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 35px;
+  border-top: 1px solid var(--line);
+}
+
+.step {
+  padding: 22px 20px 0 0;
+}
+
+.step-number {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.step h3 {
+  margin: 12px 0 5px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.step p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* Real-world context */
+
+.impact-heading {
+  margin-bottom: 35px;
+}
+
+.impact-heading h2 {
+  margin: 12px 0;
+  font-family: var(--serif);
+  font-size: clamp(37px, 5vw, 55px);
+  font-weight: 400;
+  letter-spacing: -1.6px;
+  line-height: 1.15;
+}
+
+.impact-heading h2 span {
+  color: var(--accent);
+}
+
+.impact-intro {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 15px;
   line-height: 1.9;
 }
 
 .impact-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 15px;
+  gap: 14px;
 }
 
 .impact-card {
   display: flex;
-  flex-direction: column;
   min-width: 0;
-  padding: 24px 20px;
-  border: 1px solid var(--border, #263141);
-  border-radius: 15px;
-  background: var(--card, rgba(130, 150, 180, 0.035));
-  transition: border-color 0.2s, transform 0.2s;
+  flex-direction: column;
+  padding: 22px 19px 18px;
+  border: 1px solid var(--line);
+  background: var(--surface);
 }
 
-.impact-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(98, 202, 250, 0.5);
+.impact-card:last-child {
+  background: var(--accent-light);
 }
 
 .impact-index {
-  color: var(--muted, #8997aa);
-  font-size: 9px;
-  font-weight: 650;
-  letter-spacing: 1.1px;
-  line-height: 1.7;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .7px;
 }
 
 .impact-number {
-  margin: 29px 0 18px;
-  color: #62cafa;
-  font-size: clamp(38px, 4vw, 54px);
-  font-weight: 750;
+  margin: 27px 0 15px;
+  color: var(--accent);
+  font-family: var(--serif);
+  font-size: clamp(38px, 4vw, 52px);
+  font-weight: 400;
+  letter-spacing: -1.8px;
   line-height: 1;
-  letter-spacing: -2px;
 }
 
 .impact-unit {
+  font-family: var(--sans);
   font-size: 11px;
-  letter-spacing: 1px;
+  letter-spacing: 0;
 }
 
 .impact-card h3 {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   font-size: 15px;
+  font-weight: 600;
   line-height: 1.5;
 }
 
 .impact-card p {
   flex: 1;
   margin: 0 0 24px;
-  color: var(--muted, #8b98aa);
-  font-size: 12px;
-  line-height: 1.85;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
 .impact-card > a {
-  padding-top: 14px;
-  border-top: 1px solid var(--border, #263141);
-  color: #62cafa;
-  font-size: 11px;
-  font-weight: 650;
-  text-decoration: none;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .impact-card > a:hover {
-  color: #b0e8ff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-.impact-highlight {
-  border-color: rgba(98, 202, 250, 0.3);
-  background: rgba(98, 202, 250, 0.045);
+.impact-note {
+  margin-top: 20px;
+  padding: 20px 22px;
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
 }
 
-.impact-disclaimer {
-  margin-top: 24px;
-  padding: 23px 25px;
-  border-left: 2px solid #62cafa;
-  background: rgba(98, 202, 250, 0.035);
-}
-
-.impact-disclaimer > span {
-  color: #62cafa;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-}
-
-.impact-disclaimer p {
-  margin: 10px 0 0;
-  color: var(--muted, #8b98aa);
+.impact-note strong {
   font-size: 12px;
+  letter-spacing: .7px;
+}
+
+.impact-note p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 13px;
   line-height: 1.9;
 }
 
@@ -260,17 +459,164 @@
   align-items: center;
   justify-content: space-between;
   gap: 25px;
-  margin-top: 45px;
-  padding: 30px;
-  border: 1px solid var(--border, #263141);
-  border-radius: 16px;
+  margin-top: 35px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
 }
 
 .impact-bottom h3 {
-  margin: 12px 0 0;
-  font-size: clamp(22px, 3vw, 32px);
-  line-height: 1.3;
-  letter-spacing: -0.7px;
+  margin: 9px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(25px, 3vw, 34px);
+  font-weight: 400;
+  letter-spacing: -.7px;
+  line-height: 1.35;
+}
+
+/* Project vision */
+
+.vision {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.vision-inner {
+  display: grid;
+  grid-template-columns: 1fr .7fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.vision h2 {
+  margin: 12px 0;
+  font-family: var(--serif);
+  font-size: clamp(36px, 4.5vw, 50px);
+  font-weight: 400;
+  letter-spacing: -1.3px;
+  line-height: 1.2;
+}
+
+.vision p {
+  max-width: 600px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.vision-note {
+  padding: 25px;
+  border: 1px solid var(--line);
+}
+
+.vision-note h3 {
+  margin: 0 0 9px;
+  font-size: 16px;
+}
+
+.vision-note p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* Final call to action */
+
+.cta {
+  padding: 45px 0;
+  background: var(--dark);
+  color: #f4f4ed;
+}
+
+.cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.cta h2 {
+  margin: 8px 0;
+  font-family: var(--serif);
+  font-size: clamp(30px, 4vw, 41px);
+  font-weight: 400;
+  letter-spacing: -1px;
+}
+
+.cta p {
+  margin: 0;
+  color: #c0c9c0;
+  font-size: 14px;
+}
+
+.cta .eyebrow {
+  color: #c0c9c0;
+}
+
+.cta .btn {
+  flex-shrink: 0;
+  border-color: #f4f4ed;
+  background: #f4f4ed;
+  color: #1d2923;
+}
+
+.cta .btn:hover {
+  border-color: #c5d5ff;
+  background: #c5d5ff;
+}
+
+/* Footer */
+
+footer {
+  padding-top: 40px;
+  padding-bottom: 20px;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 35px;
+  padding-bottom: 30px;
+}
+
+.footer-description {
+  margin: 9px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 65px;
+}
+
+.footer-links div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.footer-links strong {
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.footer-links a {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
 }
 
 /* Responsive */
@@ -280,49 +626,525 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .impact-header {
-    gap: 30px;
+  .hero {
+    padding-top: 75px;
+    padding-bottom: 75px;
+  }
+
+  .section-heading {
+    gap: 28px;
+  }
+
+  .vision-inner {
+    gap: 35px;
   }
 }
 
-@media (max-width: 650px) {
-  .impact {
-    padding-top: 65px;
-    padding-bottom: 60px;
+@media (max-width: 700px) {
+  .container {
+    width: calc(100% - 36px);
   }
 
-  .impact-header {
+  .nav {
+    min-height: 64px;
+    padding-inline: 18px;
+  }
+
+  .nav nav {
+    display: none;
+  }
+
+  .nav-right {
+    gap: 8px;
+  }
+
+  .nav-right .btn {
+    min-height: 37px;
+    padding-inline: 10px;
+    font-size: 12px;
+  }
+
+  .logo {
+    font-size: 21px;
+  }
+
+  .hero {
+    padding-top: 65px;
+    padding-bottom: 65px;
+  }
+
+  .hero h1 {
+    font-size: clamp(45px, 11vw, 65px);
+    letter-spacing: -1.8px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .section {
+    padding-top: 65px;
+    padding-bottom: 65px;
+  }
+
+  .section-heading {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature {
+    padding: 22px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .feature:last-child {
+    border-bottom: 0;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 22px;
   }
 
   .impact-grid {
-    gap: 12px;
+    gap: 10px;
   }
 
   .impact-card {
-    padding: 19px 15px;
+    padding: 18px 14px;
   }
 
   .impact-index {
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .impact-number {
-    font-size: 38px;
-    margin-top: 24px;
+    font-size: 39px;
   }
 
-  .impact-bottom {
+  .impact-card h3 {
+    font-size: 14px;
+  }
+
+  .impact-card p {
+    font-size: 12px;
+  }
+
+  .impact-bottom,
+  .cta-inner {
     align-items: flex-start;
     flex-direction: column;
-    padding: 23px;
+  }
+
+  .vision-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footer-top {
+    flex-direction: column;
+  }
+
+  .footer-links {
+    justify-content: space-between;
+    gap: 25px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 5px;
   }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 390px) {
+  .nav-right .btn {
+    padding-inline: 7px;
+    font-size: 11px;
+  }
+
+  .theme-toggle {
+    width: 31px;
+    height: 31px;
+  }
+
   .impact-grid {
     grid-template-columns: 1fr;
   }
+
+  .impact-card {
+    padding: 21px;
+  }
+
+  .impact-number {
+    margin-top: 20px;
+    font-size: 44px;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-links {
+    gap: 20px;
+  }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    transition: none !important;
+  }
+}
+</style>
+
+<script>
+try {
+  if (localStorage.getItem("skyrl-theme") === "dark") {
+    document.documentElement.dataset.theme = "dark";
+    document.querySelector('meta[name="theme-color"]').content = "#171c19";
+  }
+} catch (e) {}
+</script>
+</head>
+
+<body>
+
+<header class="nav">
+  <a class="logo" href="#top">Sky<span>RL</span></a>
+
+  <nav aria-label="Main navigation">
+    <a href="#platform">Platform</a>
+    <a href="#how">How it works</a>
+    <a href="#mission">Our mission</a>
+  </nav>
+
+  <div class="nav-right">
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">☾</button>
+    <a class="btn" href="portal.html">Explore SkyRL →</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Introduction -->
+  <section class="hero">
+    <div class="container hero-copy">
+      <div class="eyebrow">AUTONOMOUS FLIGHT · REINFORCEMENT LEARNING</div>
+
+      <h1>Teaching drones<br>to <span>navigate better.</span></h1>
+
+      <p>
+        SkyRL is an experimental platform exploring how reinforcement
+        learning can help autonomous agents navigate complex environments.
+        Build a world, investigate how an agent learns, and test the results.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn" href="portal.html">Explore the workspace →</a>
+        <a class="btn btn-outline" href="#platform">Discover the platform</a>
+      </div>
+
+      <div class="hero-note">
+        An experimental project developed for HackPHS 2026.
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform -->
+  <section class="section container" id="platform">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">THE PLATFORM</div>
+        <h2>From an environment<br>to a learned policy.</h2>
+      </div>
+
+      <p>
+        SkyRL brings environment design, agent training and evaluation
+        into one proposed workflow for experimenting with autonomous
+        navigation in simulation.
+      </p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature">
+        <span class="feature-number">01 / ENVIRONMENTS</span>
+        <h3>Build a world</h3>
+        <p>
+          Configure obstacles, starting positions and destinations
+          to create different simulated navigation challenges.
+        </p>
+        <a class="text-link" href="portal.html">Explore the workspace →</a>
+      </article>
+
+      <article class="feature">
+        <span class="feature-number">02 / TRAINING</span>
+        <h3>Learn through experience</h3>
+        <p>
+          Explore how reinforcement learning uses actions, observations
+          and reward signals to improve an agent's policy.
+        </p>
+        <a class="text-link" href="#how">Understand the process →</a>
+      </article>
+
+      <article class="feature">
+        <span class="feature-number">03 / EVALUATION</span>
+        <h3>Test the results</h3>
+        <p>
+          Compare performance across environments, examine failures
+          and investigate whether an agent generalizes to new challenges.
+        </p>
+        <a class="text-link" href="#mission">Why it matters →</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Workflow -->
+  <section class="section how-section" id="how">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">HOW IT WORKS</div>
+          <h2>A practical learning loop.</h2>
+        </div>
+
+        <p>
+          Training is iterative. Agents interact with an environment,
+          learn from feedback, and are evaluated against a defined task.
+        </p>
+      </div>
+
+      <div class="steps">
+        <article class="step">
+          <span class="step-number">01</span>
+          <h3>Design</h3>
+          <p>Define the environment and the objective.</p>
+        </article>
+
+        <article class="step">
+          <span class="step-number">02</span>
+          <h3>Interact</h3>
+          <p>Let the agent take actions and observe outcomes.</p>
+        </article>
+
+        <article class="step">
+          <span class="step-number">03</span>
+          <h3>Train</h3>
+          <p>Use rewards and experience to update the policy.</p>
+        </article>
+
+        <article class="step">
+          <span class="step-number">04</span>
+          <h3>Evaluate</h3>
+          <p>Measure performance and identify areas to improve.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Disaster statistics -->
+  <section class="section container" id="mission">
+    <div class="impact-heading">
+      <div class="eyebrow">THE HUMAN CONTEXT</div>
+
+      <h2>In disaster response,<br><span>every second matters.</span></h2>
+
+      <p class="impact-intro">
+        Earthquakes can damage buildings, block access and leave people
+        trapped beneath debris. Search-and-rescue teams work in difficult,
+        unpredictable conditions. Technology that helps responders assess
+        an environment could be valuable when properly tested.
+      </p>
+    </div>
+
+    <div class="impact-grid">
+
+      <article class="impact-card">
+        <div class="impact-index">01 / MEXICO · 2017</div>
+        <div class="impact-number">7.1 <span class="impact-unit">MAG</span></div>
+        <h3>Earthquake in central Mexico</h3>
+        <p>
+          A magnitude 7.1 earthquake struck central Mexico on
+          September 19, 2017, causing widespread damage.
+        </p>
+        <a href="https://www.usgs.gov/news/featured-story/magnitude-71-earthquake-mexico" target="_blank" rel="noopener noreferrer">Read the USGS report →</a>
+      </article>
+
+      <article class="impact-card">
+        <div class="impact-index">02 / MEXICO CITY · 2017</div>
+        <div class="impact-number">46</div>
+        <h3>Building collapses documented</h3>
+        <p>
+          A preliminary research report documented 46 building
+          collapses in Mexico City following the earthquake.
+        </p>
+        <a href="https://lfestorage.s3.us-east-2.amazonaws.com/images/2017_09_19_Puebla_Mexico/pdfs/Preliminary_Report_Mexico2017_v7.pdf" target="_blank" rel="noopener noreferrer">Read the research report →</a>
+      </article>
+
+      <article class="impact-card">
+        <div class="impact-index">03 / MEXICO CITY · 2017</div>
+        <div class="impact-number">219</div>
+        <h3>Deaths reported in the study</h3>
+        <p>
+          The same preliminary study reported 219 deaths associated
+          with the documented building collapses.
+        </p>
+        <a href="https://lfestorage.s3.us-east-2.amazonaws.com/images/2017_09_19_Puebla_Mexico/pdfs/Preliminary_Report_Mexico2017_v7.pdf" target="_blank" rel="noopener noreferrer">Read the study →</a>
+      </article>
+
+      <article class="impact-card">
+        <div class="impact-index">04 / NEPAL · 2015</div>
+        <div class="impact-number">4</div>
+        <h3>People located beneath rubble</h3>
+        <p>
+          NASA reported that FINDER, a radar-based detection technology,
+          helped locate four men trapped beneath rubble after the Nepal
+          earthquake.
+        </p>
+        <a href="https://www.jpl.nasa.gov/news/nasa-tech-aids-search-following-mexico-quake/" target="_blank" rel="noopener noreferrer">Read NASA's coverage →</a>
+      </article>
+
+    </div>
+
+    <div class="impact-note">
+      <strong>WHY THIS MATTERS</strong>
+      <p>
+        These examples show the challenges of disaster response; they do
+        not establish that drone limitations caused the reported deaths.
+        SkyRL investigates reinforcement learning in simulation as a
+        potential research direction. It is not a proven rescue system,
+        and simulation alone cannot establish real-world safety.
+      </p>
+    </div>
+
+    <div class="impact-bottom">
+      <div>
+        <div class="eyebrow">THE SKYRL MISSION</div>
+        <h3>Train in simulation.<br>Evaluate for the real world.</h3>
+      </div>
+
+      <a class="btn" href="portal.html">Explore SkyRL →</a>
+    </div>
+  </section>
+
+  <!-- Vision -->
+  <section class="section vision">
+    <div class="container vision-inner">
+      <div>
+        <div class="eyebrow">THE LONG-TERM VISION</div>
+        <h2>Better experiments.<br>More capable agents.</h2>
+
+        <p>
+          SkyRL aims to make it easier to create navigation challenges,
+          examine agent behavior and compare training results. Over time,
+          shared experiments could help researchers investigate how
+          policies perform across different environments.
+        </p>
+
+        <a class="btn" href="portal.html">Visit the workspace →</a>
+      </div>
+
+      <aside class="vision-note">
+        <h3>Built around experimentation</h3>
+        <p>
+          Real-world deployment would require additional validation,
+          hardware testing and rigorous safety evaluation. A policy
+          that works in simulation is not automatically ready to fly.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="cta">
+    <div class="container cta-inner">
+      <div>
+        <div class="eyebrow">SKYRL FLIGHT LAB</div>
+        <h2>Explore the environment.</h2>
+        <p>Open the workspace to see the next stage of the project.</p>
+      </div>
+
+      <a class="btn" href="portal.html">Launch SkyRL →</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="container">
+  <div class="footer-top">
+    <div>
+      <a class="logo" href="#top">Sky<span>RL</span></a>
+      <p class="footer-description">
+        Exploring reinforcement learning<br>
+        for autonomous flight.
+      </p>
+    </div>
+
+    <div class="footer-links">
+      <div>
+        <strong>Explore</strong>
+        <a href="#platform">Platform</a>
+        <a href="portal.html">Flight Lab</a>
+        <a href="#how">How it works</a>
+      </div>
+
+      <div>
+        <strong>Project</strong>
+        <a href="#mission">Research context</a>
+        <a href="#platform">Our approach</a>
+        <a href="https://github.com/hasanayub9999/PHS-HACKS-HASAN-SAKTHI-TEAM" target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 SkyRL</span>
+    <span>HackPHS 2026 · Experimental project</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const button = document.getElementById("themeToggle");
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+
+  function updateButton() {
+    const dark = root.dataset.theme === "dark";
+    button.textContent = dark ? "☀" : "☾";
+    button.setAttribute(
+      "aria-label",
+      dark ? "Switch to light mode" : "Switch to dark mode"
+    );
+    themeColor.content = dark ? "#171c19" : "#f7f7f4";
+  }
+
+  updateButton();
+
+  button.addEventListener("click", function () {
+    const dark = root.dataset.theme !== "dark";
+
+    if (dark) {
+      root.dataset.theme = "dark";
+    } else {
+      delete root.dataset.theme;
+    }
+
+    try {
+      localStorage.setItem("skyrl-theme", dark ? "dark" : "light");
+    } catch (e) {}
+
+    updateButton();
+  });
+})();
+</script>
+
+</body>
+</html>
