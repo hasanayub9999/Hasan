@@ -1,62 +1,78 @@
-/* ==========================================================================
-   SkyRL Homepage Interactive Logic & Theme Management
-   ========================================================================== */
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Theme Management with localStorage persistence
-    const themeToggle = document.getElementById('themeToggle');
-    const htmlElement = document.documentElement;
+(() => {
+  const root = document.documentElement;
+  const themeToggle = document.getElementById("themeToggle");
+  const themeIcon = document.getElementById("themeIcon");
+  const menuToggle = document.getElementById("menuToggle");
+  const mainNav = document.getElementById("mainNav");
+  const currentYear = document.getElementById("currentYear");
 
-    const savedTheme = localStorage.getItem('skyrl_theme') || 'dark';
-    htmlElement.setAttribute('data-theme', savedTheme);
+  function getSavedTheme() {
+    try {
+      return localStorage.getItem("skyrl-theme");
+    } catch {
+      return null;
+    }
+  }
+
+  function saveTheme(theme) {
+    try {
+      localStorage.setItem("skyrl-theme", theme);
+    } catch {
+      // The page still works if browser storage is unavailable.
+    }
+  }
+
+  function setTheme(theme) {
+    root.dataset.theme = theme;
+
+    if (themeIcon) {
+      themeIcon.textContent = theme === "dark" ? "☀" : "☾";
+    }
 
     if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = htmlElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            htmlElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('skyrl_theme', newTheme);
-        });
+      themeToggle.setAttribute(
+        "aria-label",
+        theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
+      );
+      themeToggle.title = theme === "dark" ? "Light mode" : "Dark mode";
     }
 
-    // Mobile Navigation Toggle
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navLinks = document.getElementById('navLinks');
+    saveTheme(theme);
+  }
 
-    if (mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('mobile-active');
-            mobileMenuBtn.classList.toggle('open');
-        });
+  const savedTheme = getSavedTheme();
+  const initialTheme = savedTheme === "dark" ? "dark" : "light";
+  setTheme(initialTheme);
 
-        // Close menu when clicking a link
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('mobile-active');
-                mobileMenuBtn.classList.remove('open');
-            });
-        });
-    }
+  themeToggle?.addEventListener("click", () => {
+    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+  });
 
-    // Smooth scrolling active state update for navigation
-    const sections = document.querySelectorAll('section[id]');
-    window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset;
+  menuToggle?.addEventListener("click", () => {
+    const isOpen = mainNav?.classList.toggle("is-open") ?? false;
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute(
+      "aria-label",
+      isOpen ? "Close navigation" : "Open navigation"
+    );
+    menuToggle.textContent = isOpen ? "✕" : "☰";
+  });
 
-        sections.forEach(section => {
-            const sectionHeight = section.offsetHeight;
-            const sectionTop = section.offsetTop - 100;
-            const sectionId = section.getAttribute('id');
-            const navLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
+  mainNav?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      mainNav.classList.remove("is-open");
+      menuToggle?.setAttribute("aria-expanded", "false");
 
-            if (navLink) {
-                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                    navLink.classList.add('active');
-                } else {
-                    navLink.classList.remove('active');
-                }
-            }
-        });
+      if (menuToggle) {
+        menuToggle.textContent = "☰";
+        menuToggle.setAttribute("aria-label", "Open navigation");
+      }
     });
-});
+  });
+
+  if (currentYear) {
+    currentYear.textContent = new Date().getFullYear();
+  }
+})();
