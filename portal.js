@@ -1,339 +1,121 @@
+(() => {
+  "use strict";
 
-"use strict";
-
-document.addEventListener("DOMContentLoaded", () => {
+  const $ = (id) => document.getElementById(id);
   const root = document.documentElement;
+  const TITLES = { mission: "Our Mission", human: "Human", object: "Object" };
 
-  const pageNames = {
-    mission: "Our Mission",
-    humans: "Human",
-    objects: "Object"
-  };
+  const app = $("app");
+  const sidebar = $("sidebar");
+  const scrim = $("scrim");
+  const menuBtn = $("menuBtn");
+  const views = Array.from(document.querySelectorAll("[data-view-id]"));
+  const sideLinks = Array.from(document.querySelectorAll(".side-link"));
 
-  const navLinks = document.querySelectorAll(".side-link");
-  const sections = document.querySelectorAll("[data-page-section]");
-  const breadcrumb = document.getElementById("breadcrumb-current");
+  /* ---------- Theme (saved in localStorage) ---------- */
+  const themeBtn = $("themeToggle");
 
-  const themeToggle = document.getElementById("theme-toggle");
-  const themeIcon = document.getElementById("theme-icon");
-  const themeLabel = document.getElementById("theme-label");
-
-  const deployWrap = document.getElementById("deploy-wrap");
-  const deployButton = document.getElementById("deploy-button");
-  const deployMenu = document.getElementById("deploy-menu");
-
-  let pointerIsInsideDeploy = false;
-
-  function showPage(page) {
-    if (!Object.prototype.hasOwnProperty.call(pageNames, page)) {
-      return;
-    }
-
-    sections.forEach((section) => {
-      const active = section.dataset.pageSection === page;
-      section.hidden = !active;
-      section.classList.toggle("active", active);
-    });
-
-    navLinks.forEach((link) => {
-      const active = link.dataset.page === page;
-
-      link.classList.toggle("active", active);
-
-      if (active) {
-        link.setAttribute("aria-current", "page");
-      } else {
-        link.removeAttribute("aria-current");
-      }
-    });
-
-    if (breadcrumb) {
-      breadcrumb.textContent = pageNames[page];
-    }
-
-    closeDeployMenu();
-
-    // Keep navigation tidy without jumping the entire page unexpectedly.
-    window.scrollTo({ top: 0, behavior: "auto" });
+  function applyTheme(theme) {
+    theme = theme === "light" ? "light" : "dark";
+    root.dataset.theme = theme;
+    try { localStorage.setItem("skyrl-theme", theme); } catch (e) {}
+    themeBtn.textContent = theme === "dark" ? "☼" : "☾";
+    themeBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", theme === "dark" ? "#090d18" : "#f7f9fd");
   }
 
-  // SIDEBAR NAVIGATION
+  themeBtn.addEventListener("click", () => applyTheme(root.dataset.theme === "dark" ? "light" : "dark"));
+  applyTheme(root.dataset.theme);
 
-  navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      showPage(link.dataset.page);
+  /* ---------- Pages ---------- */
+  function show(name, focus) {
+    if (!TITLES[name]) name = "mission";
+    views.forEach((v) => { v.hidden = v.dataset.viewId !== name; });
+    sideLinks.forEach((l) => {
+      const on = l.dataset.view === name;
+      l.classList.toggle("active", on);
+      if (on) l.setAttribute("aria-current", "page"); else l.removeAttribute("aria-current");
     });
+    $("crumb").textContent = TITLES[name];
+    document.title = TITLES[name] + " · SkyRL";
+    window.scrollTo(0, 0);
+    if (focus) $("content").focus({ preventScroll: true });
+  }
+
+  function openView(name) {
+    setMenu(false);
+    setSidebar(false);
+    if (window.location.hash === "#" + name) show(name, true);
+    else window.location.hash = name; // triggers hashchange -> show()
+  }
+
+  window.addEventListener("hashchange", () => show(window.location.hash.slice(1), true));
+
+  // One handler for every element with data-view: sidebar, Deploy menu, buttons.
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest("[data-view]");
+    if (target) openView(target.dataset.view);
   });
 
-  // LOGO AND PAGE ACTIONS
+  /* ---------- Deploy dropdown: hover + click ---------- */
+  const dropdown = $("deploy");
+  const deployBtn = $("deployBtn");
+  const menu = $("deployMenu");
+  const canHover = !!(window.matchMedia && window.matchMedia("(hover: hover)").matches);
+  let closeTimer = null;
+  let openedByHover = false;
 
-  document.querySelectorAll("[data-page-link], [data-go]").forEach((element) => {
-    element.addEventListener("click", (event) => {
-      event.preventDefault();
+  function setMenu(open) {
+    menu.hidden = !open;
+    dropdown.classList.toggle("open", open);
+    deployBtn.setAttribute("aria-expanded", String(open));
+    if (!open) openedByHover = false;
+  }
 
-      const page = element.dataset.pageLink || element.dataset.go;
-
-      if (page === "mission") {
-        showPage("mission");
-      } else {
-        showPage(page);
-      }
-    });
+  deployBtn.addEventListener("click", () => {
+    if (!menu.hidden && openedByHover) { openedByHover = false; return; } // keep open after hover-then-click
+    setMenu(menu.hidden);
   });
 
-  // THEME TOGGLE
-
-  function applyTheme(theme, save = true) {
-    const validTheme = theme === "light" ? "light" : "dark";
-
-    root.dataset.theme = validTheme;
-
-    if (themeIcon) {
-      themeIcon.textContent = validTheme === "dark" ? "☼" : "☾";
-    }
-
-    if (themeLabel) {
-      themeLabel.textContent =
-        validTheme === "dark" ? "Light mode" : "Dark mode";
-    }
-
-    if (themeToggle) {
-      const nextTheme = validTheme === "dark" ? "light" : "dark";
-
-      themeToggle.setAttribute(
-        "aria-label",
-        `Switch to ${nextTheme} mode`
-      );
-
-      themeToggle.setAttribute("aria-pressed", String(validTheme === "light"));
-    }
-
-    const themeColor = document.querySelector('meta[name="theme-color"]');
-
-    if (themeColor) {
-      themeColor.setAttribute(
-        "content",
-        validTheme === "dark" ? "#090c14" : "#f5f6fa"
-      );
-    }
-
-    if (save) {
-      try {
-        localStorage.setItem("skyrl-theme", validTheme);
-      } catch (error) {
-        // Theme still works for the current page if storage is unavailable.
-      }
-    }
-  }
-
-  let initialTheme = root.dataset.theme === "light" ? "light" : "dark";
-
-  try {
-    const savedTheme = localStorage.getItem("skyrl-theme");
-
-    if (savedTheme === "light" || savedTheme === "dark") {
-      initialTheme = savedTheme;
-    }
-  } catch (error) {
-    // Fall back to the theme set in the HTML.
-  }
-
-  applyTheme(initialTheme, false);
-
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-      applyTheme(nextTheme);
+  if (canHover) {
+    dropdown.addEventListener("mouseenter", () => {
+      clearTimeout(closeTimer);
+      if (menu.hidden) { setMenu(true); openedByHover = true; }
+    });
+    dropdown.addEventListener("mouseleave", () => {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => setMenu(false), 180);
     });
   }
 
-  // DEPLOY DROPDOWN
-
-  function openDeployMenu() {
-    if (!deployMenu || !deployButton || !deployWrap) {
-      return;
-    }
-
-    deployMenu.hidden = false;
-    deployWrap.classList.add("open");
-    deployButton.setAttribute("aria-expanded", "true");
-  }
-
-  function closeDeployMenu() {
-    if (!deployMenu || !deployButton || !deployWrap) {
-      return;
-    }
-
-    deployMenu.hidden = true;
-    deployWrap.classList.remove("open");
-    deployButton.setAttribute("aria-expanded", "false");
-  }
-
-  function toggleDeployMenu() {
-    if (!deployMenu) {
-      return;
-    }
-
-    if (deployMenu.hidden) {
-      openDeployMenu();
-    } else {
-      closeDeployMenu();
-    }
-  }
-
-  if (deployButton) {
-    deployButton.addEventListener("click", (event) => {
-      event.stopPropagation();
-      toggleDeployMenu();
-    });
-  }
-
-  // Open on hover for pointer devices. Clicking still works on touchscreens.
-  if (deployWrap) {
-    deployWrap.addEventListener("pointerenter", (event) => {
-      if (event.pointerType === "mouse" || event.pointerType === "pen") {
-        pointerIsInsideDeploy = true;
-        openDeployMenu();
-      }
-    });
-
-    deployWrap.addEventListener("pointerleave", (event) => {
-      if (event.pointerType === "mouse" || event.pointerType === "pen") {
-        pointerIsInsideDeploy = false;
-
-        if (document.activeElement &&
-            deployWrap.contains(document.activeElement)) {
-          return;
-        }
-
-        closeDeployMenu();
-      }
-    });
-
-    deployWrap.addEventListener("focusout", () => {
-      // Let focus move to the next dropdown item before checking.
-      requestAnimationFrame(() => {
-        if (
-          !pointerIsInsideDeploy &&
-          !deployWrap.contains(document.activeElement)
-        ) {
-          closeDeployMenu();
-        }
-      });
-    });
-  }
-
-  // Choosing an environment from Deploy navigates to that workspace.
-  document.querySelectorAll("[data-deploy-page]").forEach((option) => {
-    option.addEventListener("click", () => {
-      showPage(option.dataset.deployPage);
-    });
-  });
-
-  // The hero CTA opens the same Deploy menu.
-  document.querySelectorAll("[data-open-deploy]").forEach((button) => {
-    button.addEventListener("click", () => {
-      openDeployMenu();
-
-      if (deployButton) {
-        deployButton.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest"
-        });
-
-        deployButton.focus({ preventScroll: true });
-      }
-    });
-  });
-
-  // Close the dropdown when clicking outside it.
-  document.addEventListener("click", (event) => {
-    if (deployWrap && !deployWrap.contains(event.target)) {
-      closeDeployMenu();
+  deployBtn.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setMenu(true);
+      menu.querySelector("button").focus();
     }
   });
 
-  // Escape closes the menu and returns focus to Deploy.
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && deployMenu && !deployMenu.hidden) {
-      closeDeployMenu();
-
-      if (deployButton) {
-        deployButton.focus();
-      }
-    }
+  document.addEventListener("click", (e) => { if (!dropdown.contains(e.target)) setMenu(false); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (!menu.hidden) { setMenu(false); deployBtn.focus(); }
+    if (app.classList.contains("nav-open")) { setSidebar(false); menuBtn.focus(); }
   });
 
-  // SCENE CONTROLS
+  /* ---------- Mobile sidebar ---------- */
+  function setSidebar(open) {
+    app.classList.toggle("nav-open", open);
+    scrim.hidden = !open;
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+  }
 
-  document.querySelectorAll(".simulation-scene").forEach((scene) => {
-    const toolbar = scene.closest(".scene-panel")?.querySelector(".scene-toolbar");
+  menuBtn.addEventListener("click", () => setSidebar(!app.classList.contains("nav-open")));
+  scrim.addEventListener("click", () => setSidebar(false));
+  window.addEventListener("resize", () => { if (window.innerWidth > 800) setSidebar(false); });
 
-    if (!toolbar) {
-      return;
-    }
-
-    toolbar.querySelectorAll("[data-scene-action]").forEach((button) => {
-      button.addEventListener("click", async () => {
-        const action = button.dataset.sceneAction;
-
-        if (action === "grid") {
-          const hidden = scene.classList.toggle("grid-hidden");
-
-          button.classList.toggle("active", !hidden);
-          button.setAttribute("aria-pressed", String(!hidden));
-          return;
-        }
-
-        if (action === "axes") {
-          const hidden = scene.classList.toggle("axes-hidden");
-
-          button.classList.toggle("active", !hidden);
-          button.setAttribute("aria-pressed", String(!hidden));
-          return;
-        }
-
-        if (action === "fullscreen") {
-          try {
-            if (document.fullscreenElement === scene) {
-              await document.exitFullscreen();
-            } else if (document.fullscreenElement) {
-              await document.exitFullscreen();
-              await scene.requestFullscreen();
-            } else if (scene.requestFullscreen) {
-              await scene.requestFullscreen();
-            } else {
-              scene.classList.toggle("fallback-fullscreen");
-            }
-          } catch (error) {
-            // Keep a usable fullscreen alternative if browser fullscreen fails.
-            scene.classList.toggle("fallback-fullscreen");
-          }
-
-          button.classList.toggle(
-            "active",
-            document.fullscreenElement === scene ||
-              scene.classList.contains("fallback-fullscreen")
-          );
-        }
-      });
-    });
-  });
-
-  document.addEventListener("fullscreenchange", () => {
-    document.querySelectorAll('[data-scene-action="fullscreen"]').forEach((button) => {
-      const scene = button.closest(".scene-panel")?.querySelector(".simulation-scene");
-
-      if (scene) {
-        button.classList.toggle(
-          "active",
-          document.fullscreenElement === scene ||
-            scene.classList.contains("fallback-fullscreen")
-        );
-      }
-    });
-  });
-
-  // Initial page.
-  showPage("mission");
-});
+  /* ---------- Start ---------- */
+  show(window.location.hash.slice(1), false);
+})();
