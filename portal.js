@@ -1,374 +1,149 @@
 
-(() => {
-  const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+"use strict";
 
-  const STORAGE_KEY = "skyrl-workspace-v2";
-
-  const defaults = {
-    objects: {
-      name: "",
-      preset: "balanced",
-      count: 10,
-      interaction: "standard",
-      complexity: 50,
-      logging: true,
-      seed: 42,
-      frequency: "Every 10 steps",
-      observation: "Default",
-      outputDetail: "Standard",
-      notes: ""
-    },
-    humans: {
-      name: "",
-      preset: "balanced",
-      count: 10,
-      interaction: "standard",
-      complexity: 50,
-      logging: true,
-      seed: 42,
-      frequency: "Every 10 steps",
-      observation: "Default",
-      outputDetail: "Standard",
-      notes: ""
-    }
+document.addEventListener("DOMContentLoaded", () => {
+  const pageNames = {
+    mission: "Our Mission",
+    humans: "Human",
+    objects: "Object"
   };
 
-  let store = loadStore();
-  let currentProject = "objects";
+  const navLinks = document.querySelectorAll(".side-link");
+  const pageSections = document.querySelectorAll("[data-page-section]");
+  const breadcrumb = document.getElementById("breadcrumb-current");
 
-  function loadStore() {
-    try {
-      const saved = JSON.parse(
-        localStorage.getItem(STORAGE_KEY) || "{}"
-      );
-
-      return {
-        objects: { ...defaults.objects, ...(saved.objects || {}) },
-        humans: { ...defaults.humans, ...(saved.humans || {}) },
-        history: Array.isArray(saved.history) ? saved.history : []
-      };
-    } catch {
-      return {
-        objects: { ...defaults.objects },
-        humans: { ...defaults.humans },
-        history: []
-      };
-    }
-  }
-
-  function persist() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-    } catch (error) {
-      console.warn("Could not save workspace settings.", error);
+  function showPage(pageName) {
+    if (!pageNames[pageName]) {
+      return;
     }
 
-    updateCounts();
-  }
+    // Show the selected page and hide the others.
+    pageSections.forEach((section) => {
+      const isActive = section.dataset.pageSection === pageName;
 
-  function projectData() {
-    return store[currentProject];
-  }
-
-  function projectLabel(key = currentProject) {
-    return key === "objects" ? "Objects" : "Humans";
-  }
-
-  function updateCounts() {
-    const count = $("#saved-count");
-    if (count) count.textContent = store.history.length;
-
-    const projectCount = $("#project-count");
-    if (projectCount) projectCount.textContent = "2";
-  }
-
-  function showPage(page) {
-    $$(".page-section").forEach(section => {
-      section.classList.add("hidden");
+      section.hidden = !isActive;
+      section.classList.toggle("active", isActive);
     });
 
-    const section = $(`#${page}-page`);
+    // Update the sidebar selection.
+    navLinks.forEach((link) => {
+      const isActive = link.dataset.page === pageName;
 
-    if (section) {
-      section.classList.remove("hidden");
-    }
-
-    $$(".side-link").forEach(button => {
-      button.classList.toggle(
-        "active",
-        button.dataset.page === page
-      );
+      link.classList.toggle("active", isActive);
+      link.setAttribute("aria-current", isActive ? "page" : "false");
     });
 
-    const names = {
-      overview: "Overview",
-      projects: "Projects",
-      project: "Project workspace",
-      experiments: "Experiment setup",
-      results: "Results & evaluation",
-      history: "Experiment history"
-    };
-
-    const crumb = $("#crumb-current");
-
-    if (crumb) {
-      crumb.textContent = names[page] || "Overview";
+    // Update the breadcrumb.
+    if (breadcrumb) {
+      breadcrumb.textContent = pageNames[pageName];
     }
 
-    if (page === "history") {
-      renderHistory();
-    }
-
+    // Keep the browser's page position tidy.
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
   }
 
-  function openProject(key) {
-    currentProject = key === "humans" ? "humans" : "objects";
-
-    $("#project-eyebrow").textContent =
-      currentProject === "objects" ? "PROJECT 01" : "PROJECT 02";
-
-    $("#project-title").innerHTML =
-      `${projectLabel()}<span class="heading-period">.</span>`;
-
-    $("#project-description").textContent =
-      currentProject === "objects"
-        ? "Configure object properties and interaction parameters for your environment."
-        : "Configure human-agent parameters independently from the Objects project.";
-
-    $("#project-badge").textContent =
-      currentProject === "objects"
-        ? "OBJECT CONFIG"
-        : "HUMAN CONFIG";
-
-    $("#panel-eyebrow").textContent =
-      currentProject === "objects"
-        ? "OBJECT PARAMETERS"
-        : "HUMAN PARAMETERS";
-
-    $("#panel-title").textContent =
-      currentProject === "objects"
-        ? "Object environment configuration"
-        : "Human-agent configuration";
-
-    fillForm();
-    switchTab("configuration");
-    showPage("project");
-  }
-
-  function fillForm() {
-    const data = projectData();
-
-    $("#config-name").value = data.name;
-    $("#preset").value = data.preset;
-    $("#entity-count").value = data.count;
-    $("#interaction").value = data.interaction;
-    $("#complexity").value = data.complexity;
-    $("#complexity-value").textContent = `${data.complexity}%`;
-    $("#logging").checked = data.logging;
-    $("#seed").value = data.seed;
-    $("#frequency").value = data.frequency;
-    $("#observation").value = data.observation;
-    $("#output-detail").value = data.outputDetail;
-    $("#project-notes").value = data.notes;
-
-    $("#save-message").textContent =
-      "Changes are stored locally in this browser.";
-  }
-
-  function readForm() {
-    const data = projectData();
-
-    data.name = $("#config-name").value.trim();
-    data.preset = $("#preset").value;
-
-    data.count = Math.max(
-      1,
-      Math.min(100, Number($("#entity-count").value) || 1)
-    );
-
-    data.interaction = $("#interaction").value;
-    data.complexity = Number($("#complexity").value);
-    data.logging = $("#logging").checked;
-
-    data.seed = Math.max(
-      0,
-      Number($("#seed").value) || 0
-    );
-
-    data.frequency = $("#frequency").value;
-    data.observation = $("#observation").value;
-    data.outputDetail = $("#output-detail").value;
-    data.notes = $("#project-notes").value;
-
-    return data;
-  }
-
-  function saveConfiguration(kind = "configuration") {
-    const data = readForm();
-
-    const entry = {
-      project: currentProject,
-      label: projectLabel(),
-      name: data.name || `${projectLabel()} configuration`,
-      kind,
-      when: new Date().toLocaleString(),
-      settings: { ...data }
-    };
-
-    store.history.unshift(entry);
-    store.history = store.history.slice(0, 30);
-
-    persist();
-
-    $("#save-message").textContent =
-      "Saved successfully in this browser.";
-
-    renderHistory();
-  }
-
-  function switchTab(tab) {
-    $$(".tab-button").forEach(button => {
-      const active = button.dataset.tab === tab;
-
-      button.classList.toggle("active", active);
-      button.setAttribute("aria-selected", String(active));
+  // Sidebar navigation.
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      showPage(link.dataset.page);
     });
+  });
 
-    ["configuration", "advanced", "notes"].forEach(name => {
-      const panel = $(`#${name}-panel`);
+  // Mission-page buttons and the SkyRL logo.
+  document.querySelectorAll("[data-go], [data-page-link]").forEach((element) => {
+    element.addEventListener("click", (event) => {
+      event.preventDefault();
 
-      if (panel) {
-        panel.classList.toggle("hidden", name !== tab);
-      }
+      const pageName =
+        element.dataset.go || element.dataset.pageLink;
+
+      showPage(pageName);
     });
-  }
+  });
 
-  function escapeHtml(value) {
-    return String(value).replace(/[&<>"']/g, character => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    })[character]);
-  }
+  // Scene toolbar controls.
+  document.querySelectorAll(".simulation-scene").forEach((scene) => {
+    const toolbar = scene.previousElementSibling;
 
-  function renderHistory() {
-    const list = $("#history-list");
-
-    if (!list) return;
-
-    if (!store.history.length) {
-      list.innerHTML =
-        '<div class="empty-state">No saved configurations yet. Open a project and save its settings.</div>';
-
+    if (!toolbar || !toolbar.classList.contains("scene-toolbar")) {
       return;
     }
 
-    list.innerHTML = store.history.map(item => `
-      <div class="history-item">
-        <div>
-          <strong>${escapeHtml(item.name)}</strong>
-          <p>
-            ${escapeHtml(item.label)} ·
-            ${escapeHtml(item.kind)} ·
-            ${escapeHtml(item.when)}
-          </p>
-        </div>
-        <span class="history-tag">
-          ${item.project === "objects" ? "OBJECTS" : "HUMANS"}
-        </span>
-      </div>
-    `).join("");
-  }
+    const toolButtons = toolbar.querySelectorAll(".tool-button");
 
-  // Sidebar navigation
-  $$(".side-link").forEach(button => {
-    button.addEventListener("click", () => {
-      showPage(button.dataset.page);
-    });
-  });
+    toolButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const view = button.dataset.view;
 
-  // Other navigation buttons
-  $$("[data-page]")
-    .filter(element => !element.classList.contains("side-link"))
-    .forEach(button => {
-      button.addEventListener("click", () => {
-        showPage(button.dataset.page);
+        if (view === "grid") {
+          const isHidden = scene.classList.toggle("grid-hidden");
+
+          button.classList.toggle("active", !isHidden);
+          button.setAttribute("aria-pressed", String(!isHidden));
+          return;
+        }
+
+        if (view === "axes") {
+          const isHidden = scene.classList.toggle("axes-hidden");
+
+          button.classList.toggle("active", !isHidden);
+          button.setAttribute("aria-pressed", String(!isHidden));
+          return;
+        }
+
+        if (view === "fullscreen") {
+          if (document.fullscreenElement === scene) {
+            try {
+              await document.exitFullscreen();
+            } catch (error) {
+              console.warn("Could not exit fullscreen:", error);
+            }
+          } else if (scene.requestFullscreen) {
+            try {
+              await scene.requestFullscreen();
+            } catch (error) {
+              // Fall back to the built-in fullscreen styling.
+              scene.classList.toggle("fullscreen");
+            }
+          } else {
+            scene.classList.toggle("fullscreen");
+          }
+
+          button.classList.toggle(
+            "active",
+            document.fullscreenElement === scene ||
+              scene.classList.contains("fullscreen")
+          );
+        }
       });
     });
-
-  // Open Objects or Humans
-  $$("[data-open-project]").forEach(button => {
-    button.addEventListener("click", () => {
-      openProject(button.dataset.openProject);
-    });
   });
 
-  // Return to project library
-  $("#back-to-projects").addEventListener("click", () => {
-    showPage("projects");
-  });
+  // Keep fullscreen button state synchronized.
+  document.addEventListener("fullscreenchange", () => {
+    document.querySelectorAll(".simulation-scene").forEach((scene) => {
+      const toolbar = scene.previousElementSibling;
 
-  // Configuration tabs
-  $$(".tab-button").forEach(button => {
-    button.addEventListener("click", () => {
-      switchTab(button.dataset.tab);
-    });
-  });
+      if (!toolbar) {
+        return;
+      }
 
-  // Complexity slider
-  $("#complexity").addEventListener("input", event => {
-    $("#complexity-value").textContent =
-      `${event.target.value}%`;
-  });
-
-  // Save configuration
-  $("#save-config").addEventListener("click", () => {
-    saveConfiguration("configuration");
-  });
-
-  // Save advanced settings
-  $("#save-advanced").addEventListener("click", () => {
-    saveConfiguration("advanced settings");
-  });
-
-  // Save project notes
-  $("#save-notes").addEventListener("click", () => {
-    saveConfiguration("notes");
-  });
-
-  // Refresh experiment history
-  $("#refresh-history").addEventListener("click", renderHistory);
-
-  // Light/dark theme toggle
-  $("#theme-toggle").addEventListener("click", () => {
-    document.body.classList.toggle("light-theme");
-
-    try {
-      localStorage.setItem(
-        "skyrl-theme",
-        document.body.classList.contains("light-theme")
-          ? "light"
-          : "dark"
+      const fullscreenButton = toolbar.querySelector(
+        '[data-view="fullscreen"]'
       );
-    } catch (error) {
-      console.warn("Could not save theme preference.", error);
-    }
+
+      if (fullscreenButton) {
+        fullscreenButton.classList.toggle(
+          "active",
+          document.fullscreenElement === scene
+        );
+      }
+    });
   });
 
-  // Restore saved theme
-  try {
-    if (localStorage.getItem("skyrl-theme") === "light") {
-      document.body.classList.add("light-theme");
-    }
-  } catch {}
-
-  // Initialize the workspace
-  updateCounts();
-})();
+  // Start on Our Mission.
+  showPage("mission");
+});
