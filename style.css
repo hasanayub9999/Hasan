@@ -14,7 +14,7 @@
 :root[data-theme="light"] {
   color-scheme: light;
   --bg: #f7f9fd;
-  --surface: #fff;
+  --surface: #ffffff;
   --surface-2: #eef3fb;
   --text: #121b30;
   --muted: #5e6b83;
@@ -69,7 +69,7 @@ button:focus-visible, a:focus-visible {
   width: 100%;
 }
 
-/* Navigation */
+/* Compact top bar */
 
 .topbar {
   position: sticky;
@@ -104,38 +104,6 @@ button:focus-visible, a:focus-visible {
   background: var(--blue-strong);
   color: #fff;
   font-weight: 800;
-}
-
-.top-nav {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.top-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 38px;
-  padding: 7px 14px;
-  border: 1px solid transparent;
-  border-radius: 9px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 600;
-  transition: background .15s, color .15s;
-}
-
-.top-link:hover {
-  background: var(--surface);
-  color: var(--text);
-}
-
-.top-link.active {
-  background: var(--surface-2);
-  color: var(--text);
-  border-color: var(--border);
 }
 
 .actions {
@@ -181,6 +149,91 @@ button:focus-visible, a:focus-visible {
   background: var(--blue-strong);
   border-color: transparent;
   color: #fff;
+}
+
+/* Deploy dropdown */
+
+.deploy-dropdown {
+  position: relative;
+}
+
+.deploy-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.deploy-btn:hover {
+  border-color: var(--blue);
+}
+
+.chevron {
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.deploy-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 100;
+  width: 230px;
+  padding: 7px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--surface);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .3);
+}
+
+.deploy-menu[hidden] {
+  display: none;
+}
+
+.deploy-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px;
+  border-radius: 9px;
+  color: var(--text);
+}
+
+.deploy-menu a:hover {
+  background: var(--surface-2);
+}
+
+.menu-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--blue);
+  font-weight: 800;
+}
+
+.deploy-menu strong, .deploy-menu small {
+  display: block;
+}
+
+.deploy-menu strong {
+  font-size: 13px;
+}
+
+.deploy-menu small {
+  color: var(--muted);
+  font-size: 11px;
 }
 
 /* Main content */
@@ -263,7 +316,7 @@ button:focus-visible, a:focus-visible {
   font-size: 12px;
 }
 
-/* Human and Object pages */
+/* Simulation pages */
 
 .simulation-page {
   min-height: calc(100vh - 64px);
@@ -304,7 +357,7 @@ button:focus-visible, a:focus-visible {
   font-size: 14px;
 }
 
-/* Responsive */
+/* Responsive layout */
 
 @media (max-width: 800px) {
   .topbar {
@@ -337,19 +390,22 @@ button:focus-visible, a:focus-visible {
     height: 28px;
   }
 
-  .top-nav {
-    gap: 1px;
-  }
-
-  .top-link {
+  .deploy-btn {
+    gap: 5px;
     min-height: 36px;
-    padding: 7px 8px;
+    padding: 0 9px;
     font-size: 12px;
   }
 
   .icon-btn {
     width: 36px;
     height: 36px;
+  }
+
+  .deploy-menu {
+    left: auto;
+    right: 0;
+    width: 215px;
   }
 
   .view {
