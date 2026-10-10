@@ -4,365 +4,342 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1020">
-  <title>SkyRL Workspace</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="portal.js" defer></script>
+  <meta name="theme-color" content="#080b13">
+  <title>SkyRL Portal — Flight Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <a class="brand" href="index.html" aria-label="SkyRL home">
-        <span class="brand-mark">S</span>
-        <span>skyrl<span class="brand-dot">.</span></span>
-      </a>
+  <header class="topnav">
+    <a class="portal-logo" href="index.html"><b>✦</b> Sky<span>RL</span></a>
+    <div class="navcenter"><i></i> FLIGHT LAB / 3D WORKSPACE</div>
+    <a class="back" href="index.html">← Back to website</a>
+  </header>
 
-      <div class="sidebar-label">WORKSPACE</div>
+  <main class="layout">
+    <aside class="left">
+      <label>ENVIRONMENT</label>
+      <h1>Flight <span>Lab.</span></h1>
+      <p class="intro">Explore a 3D navigation environment for autonomous flight experiments.</p>
 
-      <nav class="side-nav" aria-label="Workspace navigation">
-        <button class="side-link active" data-page="overview"><span>▦</span> Overview</button>
-        <button class="side-link" data-page="projects"><span>◇</span> Projects</button>
-        <button class="side-link" data-page="experiments"><span>⌁</span> Experiment setup</button>
-        <button class="side-link" data-page="results"><span>↗</span> Results &amp; evaluation</button>
-        <button class="side-link" data-page="history"><span>◷</span> Experiment history</button>
-      </nav>
+      <hr>
+      <label>SCENE OBJECTS</label>
 
-      <div class="sidebar-bottom">
-        <div class="status-line"><span class="status-dot"></span> Demo workspace</div>
-        <p>Interface preview. No real reinforcement-learning model is being trained.</p>
-        <a class="back-link" href="index.html">← Back to website</a>
+      <div class="agent">
+        <b>✦</b>
+        <div><strong>Drone agent</strong><small><i>●</i> Ready to explore</small></div>
       </div>
+
+      <div class="triplet">
+        <div><small>OBSTACLES</small><b>4</b></div>
+        <div><small>TARGETS</small><b>1</b></div>
+        <div><small>AGENTS</small><b>1</b></div>
+      </div>
+
+      <hr>
+      <label>CONTROLS</label>
+      <p class="intro">Drag to rotate the view. Scroll to zoom. Right-click and drag to pan.</p>
+      <button class="run" id="focusBtn">Focus scene</button>
+      <button class="reset" id="resetBtn">Reset view</button>
+
+      <p class="disclaimer">3D PREVIEW · TRAINING NOT CONNECTED</p>
     </aside>
 
-    <main class="main-content">
-      <header class="topbar">
-        <div class="crumb">
-          <span class="crumb-muted">SkyRL Research</span>
-          <span class="crumb-sep">/</span>
-          <span id="crumb-current">Overview</span>
+    <section class="view" aria-label="3D simulation view">
+      <div id="mount"></div>
+      <div id="fallback">Loading 3D workspace…</div>
+
+      <div class="viewtop">
+        <span><i></i> SCENE VIEW</span>
+        <div><button class="tool active">3D</button><span class="view-label">Perspective</span></div>
+      </div>
+
+      <div class="axis">
+        <span><i class="x"></i> X</span>
+        <span><i class="y"></i> Y</span>
+        <span><i class="z"></i> Z</span>
+      </div>
+
+      <div class="target">
+        <b>◎</b><span><small>NAVIGATION TARGET</small><strong>Landing zone</strong></span>
+      </div>
+
+      <div class="tip">DRAG TO ROTATE · SCROLL TO ZOOM</div>
+
+      <div class="viewbottom">
+        <div><small>ENVIRONMENT</small><b>Navigation / Demo</b></div>
+        <div><small>AGENT STATUS</small><b><i></i> Idle</b></div>
+        <div><small>TRAINING</small><b>Not connected</b></div>
+      </div>
+    </section>
+
+    <aside class="right">
+      <div class="righthead">
+        <div><label>OVERVIEW</label><h2>Scene details</h2></div>
+        <span>DEMO</span>
+      </div>
+
+      <div class="panel">
+        <label>ACTIVE ENVIRONMENT</label>
+        <div class="world">
+          <b>▦</b>
+          <div><strong>Navigation field</strong><small>Obstacle course</small></div>
         </div>
+        <div class="row"><span>Scene</span><b>Default</b></div>
+        <div class="row"><span>View</span><b>Perspective 3D</b></div>
+        <div class="row"><span>Renderer</span><b>Three.js</b></div>
+      </div>
 
-        <div class="topbar-actions">
-          <span class="demo-pill"><span class="status-dot"></span> DEMO MODE</span>
-          <button id="theme-toggle" class="icon-button" aria-label="Toggle color theme" title="Toggle theme">☼</button>
+      <div class="panel">
+        <label>SCENE TELEMETRY</label>
+        <div class="telemetry">
+          <div><small>OBSTACLES</small><b>04</b></div>
+          <div><small>DRONE AGENTS</small><b>01</b></div>
+          <div><small>TRAINING EPISODES</small><b>00</b></div>
+          <div><small>REWARD</small><b>—</b></div>
         </div>
-      </header>
+        <p class="note">Telemetry values are placeholders. No learning model or training loop is connected.</p>
+      </div>
 
-      <!-- OVERVIEW -->
-      <section class="page-section" id="overview-page">
-        <div class="hero-row">
-          <div>
-            <div class="eyebrow">HACKPHS 2026 · INTO THE SKY</div>
-            <h1>Research workspace<span class="heading-period">.</span></h1>
-            <p class="page-lede">Configure environments, organize entities, and compare experiment settings in one place.</p>
-          </div>
+      <div class="panel integrate">
+        <label>INTEGRATION</label>
+        <div class="bigglyph">✦</div>
+        <h3>Ready for development</h3>
+        <p>This scene is a starting point for connecting an environment builder and reinforcement-learning agent.</p>
+        <small>SIMULATION PREVIEW</small>
+      </div>
+    </aside>
+  </main>
 
-          <div class="hero-symbol" aria-hidden="true">
-            <span>SR</span><i></i><i></i><i></i>
-          </div>
-        </div>
+  <script>
+    (() => {
+      const mount = document.getElementById("mount");
+      const fallback = document.getElementById("fallback");
 
-        <div class="stats-grid">
-          <article class="stat-card">
-            <div class="stat-label">ACTIVE PROJECTS</div>
-            <div class="stat-value" id="project-count">2</div>
-            <div class="stat-foot">Objects and Humans</div>
-          </article>
+      if (!window.THREE) {
+        fallback.textContent = "Three.js could not load. Check your internet connection.";
+        return;
+      }
 
-          <article class="stat-card">
-            <div class="stat-label">SAVED CONFIGURATIONS</div>
-            <div class="stat-value" id="saved-count">0</div>
-            <div class="stat-foot">Stored in this browser</div>
-          </article>
+      let scene, camera, renderer, controls;
+      let frameId;
+      let resizeObserver;
 
-          <article class="stat-card">
-            <div class="stat-label">WORKSPACE STATUS</div>
-            <div class="stat-value status-text">Ready</div>
-            <div class="stat-foot"><span class="status-dot"></span> Demo environment</div>
-          </article>
-        </div>
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a1020);
+      scene.fog = new THREE.Fog(0x0a1020, 20, 55);
 
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">YOUR WORKSPACE</div>
-            <h2>Choose a project</h2>
-          </div>
-          <span class="subtle">Two independent project spaces</span>
-        </div>
+      camera = new THREE.PerspectiveCamera(
+        50, mount.clientWidth / mount.clientHeight, 0.1, 100
+      );
+      camera.position.set(10, 9, 12);
 
-        <div class="project-grid">
-          <button class="project-card object-card" data-open-project="objects">
-            <div class="project-card-top">
-              <span class="project-icon project-placeholder">ALI</span>
-              <span class="card-arrow">↗</span>
-            </div>
-            <div class="project-type">PROJECT 01</div>
-            <h3>Objects</h3>
-            <p>Set up object properties and interaction parameters for your environment.</p>
-            <div class="project-card-footer">
-              <span>Open project</span><span>→</span>
-            </div>
-          </button>
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(mount.clientWidth, mount.clientHeight);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      mount.appendChild(renderer.domElement);
 
-          <button class="project-card human-card" data-open-project="humans">
-            <div class="project-card-top">
-              <span class="project-icon project-placeholder">ALI</span>
-              <span class="card-arrow">↗</span>
-            </div>
-            <div class="project-type">PROJECT 02</div>
-            <h3>Humans</h3>
-            <p>Configure human-agent parameters separately from the Objects project.</p>
-            <div class="project-card-footer">
-              <span>Open project</span><span>→</span>
-            </div>
-          </button>
-        </div>
+      scene.add(new THREE.HemisphereLight(0xbad5ff, 0x111827, 2));
 
-        <div class="notice">
-          <span class="notice-icon">i</span>
-          <div>
-            <strong>Demo mode is active</strong>
-            <p>Controls below are a front-end interface demonstration. They do not represent measurements from a trained model or a physical drone.</p>
-          </div>
-        </div>
-      </section>
+      const light = new THREE.DirectionalLight(0xffffff, 2.2);
+      light.position.set(8, 15, 10);
+      scene.add(light);
 
-      <!-- PROJECT LIBRARY -->
-      <section class="page-section hidden" id="projects-page">
-        <div class="eyebrow">PROJECT LIBRARY</div>
-        <h1>Projects<span class="heading-period">.</span></h1>
-        <p class="page-lede">Open either project. Their settings are saved independently in this browser.</p>
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(30, 30),
+        new THREE.MeshStandardMaterial({
+          color: 0x101b2d,
+          roughness: 0.9,
+          metalness: 0.1
+        })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -0.04;
+      scene.add(floor);
 
-        <div class="project-grid compact-projects">
-          <button class="project-card object-card" data-open-project="objects">
-            <div class="project-card-top">
-              <span class="project-icon project-placeholder">ALI</span>
-              <span class="card-arrow">↗</span>
-            </div>
-            <div class="project-type">PROJECT 01</div>
-            <h3>Objects</h3>
-            <p>Object properties and interactions.</p>
-            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
-          </button>
+      const grid = new THREE.GridHelper(30, 30, 0x42618c, 0x243651);
+      grid.position.y = 0;
+      scene.add(grid);
 
-          <button class="project-card human-card" data-open-project="humans">
-            <div class="project-card-top">
-              <span class="project-icon project-placeholder">ALI</span>
-              <span class="card-arrow">↗</span>
-            </div>
-            <div class="project-type">PROJECT 02</div>
-            <h3>Humans</h3>
-            <p>Human-agent configuration.</p>
-            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
-          </button>
-        </div>
-      </section>
+      const obstacles = [];
+      const obstaclePositions = [
+        [-4, 0.8, -3],
+        [2, 1.1, -4],
+        [4, 0.9, 2],
+        [-2, 0.65, 4]
+      ];
 
-      <!-- INDIVIDUAL PROJECT SETTINGS -->
-      <section class="page-section hidden" id="project-page">
-        <button class="back-inline" id="back-to-projects">← All projects</button>
+      obstaclePositions.forEach((p, i) => {
+        const h = p[1] * 2;
+        const mesh = new THREE.Mesh(
+          new THREE.BoxGeometry(1.5, h, 1.5),
+          new THREE.MeshStandardMaterial({
+            color: i % 2 ? 0x29466f : 0x203451,
+            roughness: 0.65,
+            metalness: 0.15
+          })
+        );
+        mesh.position.set(p[0], h / 2, p[2]);
+        scene.add(mesh);
+        obstacles.push(mesh);
 
-        <div class="eyebrow" id="project-eyebrow">PROJECT 01</div>
+        const edges = new THREE.LineSegments(
+          new THREE.EdgesGeometry(mesh.geometry),
+          new THREE.LineBasicMaterial({ color: 0x668cc3 })
+        );
+        edges.position.copy(mesh.position);
+        scene.add(edges);
+      });
 
-        <div class="project-title-row">
-          <div>
-            <h1 id="project-title">Objects<span class="heading-period">.</span></h1>
-            <p class="page-lede" id="project-description">Configure object properties.</p>
-          </div>
-          <span class="project-badge" id="project-badge">OBJECT CONFIG</span>
-        </div>
+      const drone = new THREE.Group();
+      const body = new THREE.Mesh(
+        new THREE.BoxGeometry(0.8, 0.22, 0.55),
+        new THREE.MeshStandardMaterial({
+          color: 0x709cff,
+          emissive: 0x162c60,
+          metalness: 0.5,
+          roughness: 0.35
+        })
+      );
+      drone.add(body);
 
-        <div class="tabs" role="tablist" aria-label="Project tabs">
-          <button class="tab-button active" role="tab" aria-selected="true" data-tab="configuration">Configuration</button>
-          <button class="tab-button" role="tab" aria-selected="false" data-tab="advanced">Advanced settings</button>
-          <button class="tab-button" role="tab" aria-selected="false" data-tab="notes">Notes</button>
-        </div>
+      [[-0.65, 0, -0.45], [0.65, 0, -0.45],
+       [-0.65, 0, 0.45], [0.65, 0, 0.45]].forEach(pos => {
+        const arm = new THREE.Mesh(
+          new THREE.BoxGeometry(0.6, 0.07, 0.07),
+          new THREE.MeshStandardMaterial({ color: 0xc4d6ff })
+        );
+        arm.position.set(pos[0] / 2, 0, pos[2] / 2);
+        drone.add(arm);
 
-        <div class="panel">
-          <div class="panel-heading">
-            <div>
-              <div class="eyebrow" id="panel-eyebrow">OBJECT PARAMETERS</div>
-              <h2 id="panel-title">Environment configuration</h2>
-            </div>
-            <span class="autosave">LOCAL SETTINGS</span>
-          </div>
+        const rotor = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.19, 0.19, 0.035, 20),
+          new THREE.MeshStandardMaterial({ color: 0x49d9a0 })
+        );
+        rotor.position.set(pos[0], 0.12, pos[2]);
+        drone.add(rotor);
+      });
 
-          <div id="configuration-panel" class="tab-panel">
-            <div class="form-grid">
-              <label class="field">
-                <span>Configuration name</span>
-                <input id="config-name" type="text" placeholder="e.g. Baseline setup" maxlength="70">
-              </label>
+      drone.position.set(-7, 1.1, 7);
+      scene.add(drone);
 
-              <label class="field">
-                <span>Environment preset</span>
-                <select id="preset">
-                  <option value="balanced">Balanced</option>
-                  <option value="simple">Simple</option>
-                  <option value="complex">Complex</option>
-                  <option value="custom">Custom</option>
-                </select>
-              </label>
+      const target = new THREE.Group();
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(1, 0.045, 8, 48),
+        new THREE.MeshBasicMaterial({ color: 0x49d9a0 })
+      );
+      ring.rotation.x = Math.PI / 2;
+      target.add(ring);
 
-              <label class="field">
-                <span>Entity count</span>
-                <input id="entity-count" type="number" min="1" max="100" value="10">
-              </label>
+      const targetDot = new THREE.Mesh(
+        new THREE.SphereGeometry(0.12, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0x49d9a0 })
+      );
+      targetDot.position.y = 0.05;
+      target.add(targetDot);
+      target.position.set(7, 0.08, -7);
+      scene.add(target);
 
-              <label class="field">
-                <span>Interaction mode</span>
-                <select id="interaction">
-                  <option value="standard">Standard</option>
-                  <option value="direct">Direct interaction</option>
-                  <option value="limited">Limited interaction</option>
-                </select>
-              </label>
-            </div>
+      // Lightweight orbit controls, included inline to avoid another JS file.
+      let dragging = false;
+      let panning = false;
+      let lastX = 0;
+      let lastY = 0;
+      let spherical = new THREE.Spherical();
+      let targetPoint = new THREE.Vector3(0, 0, 0);
+      let radius = camera.position.length();
+      let theta = Math.atan2(camera.position.x, camera.position.z);
+      let phi = Math.acos(camera.position.y / radius);
 
-            <div class="range-field">
-              <div class="range-header">
-                <label for="complexity">Environment complexity</label>
-                <output id="complexity-value">50%</output>
-              </div>
-              <input id="complexity" type="range" min="0" max="100" value="50">
-              <div class="range-scale">
-                <span>Low complexity</span>
-                <span>High complexity</span>
-              </div>
-            </div>
+      function updateCamera() {
+        phi = Math.max(0.15, Math.min(Math.PI / 2.02, phi));
+        spherical.set(radius, phi, theta);
+        camera.position.copy(targetPoint).add(
+          new THREE.Vector3().setFromSpherical(spherical)
+        );
+        camera.lookAt(targetPoint);
+      }
 
-            <div class="check-row">
-              <div>
-                <strong>Enable interaction logging</strong>
-                <p>Keep a local record of configuration changes.</p>
-              </div>
-              <label class="switch">
-                <input id="logging" type="checkbox" checked>
-                <span></span>
-              </label>
-            </div>
+      renderer.domElement.addEventListener("pointerdown", e => {
+        dragging = true;
+        panning = e.button === 2 || e.shiftKey;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        renderer.domElement.setPointerCapture(e.pointerId);
+      });
 
-            <div class="form-actions">
-              <span class="save-message" id="save-message">Changes are stored locally in this browser.</span>
-              <button class="primary-button" id="save-config">Save configuration <span>→</span></button>
-            </div>
-          </div>
+      renderer.domElement.addEventListener("pointermove", e => {
+        if (!dragging) return;
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        lastX = e.clientX;
+        lastY = e.clientY;
 
-          <div id="advanced-panel" class="tab-panel hidden">
-            <div class="form-grid">
-              <label class="field">
-                <span>Random seed</span>
-                <input id="seed" type="number" min="0" max="999999" value="42">
-              </label>
+        if (panning) {
+          const right = new THREE.Vector3();
+          right.crossVectors(camera.getWorldDirection(new THREE.Vector3()),
+            camera.up).normalize();
+          targetPoint.addScaledVector(right, -dx * radius * 0.0015);
+          targetPoint.y += dy * radius * 0.0015;
+        } else {
+          theta -= dx * 0.008;
+          phi -= dy * 0.008;
+        }
+        updateCamera();
+      });
 
-              <label class="field">
-                <span>Evaluation frequency</span>
-                <select id="frequency">
-                  <option>Every 10 steps</option>
-                  <option>Every 25 steps</option>
-                  <option>Every 50 steps</option>
-                  <option>Manual</option>
-                </select>
-              </label>
+      renderer.domElement.addEventListener("pointerup", () => {
+        dragging = false;
+      });
+      renderer.domElement.addEventListener("contextmenu", e => e.preventDefault());
 
-              <label class="field">
-                <span>Observation profile</span>
-                <select id="observation">
-                  <option>Default</option>
-                  <option>Compact</option>
-                  <option>Extended</option>
-                </select>
-              </label>
+      renderer.domElement.addEventListener("wheel", e => {
+        radius = Math.max(5, Math.min(32, radius * (e.deltaY > 0 ? 1.08 : 0.92)));
+        updateCamera();
+      }, { passive: true });
 
-              <label class="field">
-                <span>Output detail</span>
-                <select id="output-detail">
-                  <option>Standard</option>
-                  <option>Summary only</option>
-                  <option>Detailed</option>
-                </select>
-              </label>
-            </div>
+      function resetView() {
+        targetPoint.set(0, 0, 0);
+        radius = 18;
+        theta = Math.PI / 4;
+        phi = Math.PI / 3;
+        updateCamera();
+      }
 
-            <p class="helper-note">These are editable demo controls. They do not launch training or connect to a simulation engine.</p>
+      document.getElementById("resetBtn").addEventListener("click", resetView);
+      document.getElementById("focusBtn").addEventListener("click", resetView);
 
-            <div class="form-actions">
-              <span class="save-message">Advanced settings are saved with this project.</span>
-              <button class="primary-button" id="save-advanced">Save advanced settings <span>→</span></button>
-            </div>
-          </div>
+      function resize() {
+        const w = mount.clientWidth;
+        const h = mount.clientHeight;
+        if (!w || !h) return;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
 
-          <div id="notes-panel" class="tab-panel hidden">
-            <label class="field">
-              <span>Project notes</span>
-              <textarea id="project-notes" rows="7" placeholder="Write hypotheses, planned tests, or observations..."></textarea>
-            </label>
+      resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(mount);
 
-            <div class="form-actions">
-              <span class="save-message">Notes are kept separately for each project.</span>
-              <button class="primary-button" id="save-notes">Save notes <span>→</span></button>
-            </div>
-          </div>
-        </div>
+      function animate() {
+        frameId = requestAnimationFrame(animate);
+        drone.position.y = 1.1 + Math.sin(performance.now() * 0.0015) * 0.08;
+        renderer.render(scene, camera);
+      }
 
-        <div class="bottom-tip">
-          <span>✳</span>
-          <p><strong>Keep experiments organized.</strong> Save a configuration before switching projects; Objects and Humans maintain separate settings.</p>
-        </div>
-      </section>
+      resetView();
+      fallback.hidden = true;
+      animate();
 
-      <!-- EXPERIMENT SETUP -->
-      <section class="page-section hidden" id="experiments-page">
-        <div class="eyebrow">WORKFLOW</div>
-        <h1>Experiment setup<span class="heading-period">.</span></h1>
-        <p class="page-lede">Prepare a configuration before evaluating it.</p>
-
-        <div class="panel simple-panel">
-          <h2>Start with a project</h2>
-          <p>Choose Objects or Humans to edit its independent settings.</p>
-          <div class="inline-actions">
-            <button class="primary-button" data-open-project="objects">Configure Objects →</button>
-            <button class="secondary-button" data-open-project="humans">Configure Humans →</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- RESULTS -->
-      <section class="page-section hidden" id="results-page">
-        <div class="eyebrow">EVALUATION</div>
-        <h1>Results &amp; evaluation<span class="heading-period">.</span></h1>
-        <p class="page-lede">A place to review future experiment outputs.</p>
-
-        <div class="panel simple-panel">
-          <div class="empty-state-icon">↗</div>
-          <h2>No evaluation results yet</h2>
-          <p>This demo workspace does not run a model. Saved settings can be used as a planning record.</p>
-          <button class="secondary-button" data-page="projects">Browse projects →</button>
-        </div>
-      </section>
-
-      <!-- EXPERIMENT HISTORY -->
-      <section class="page-section hidden" id="history-page">
-        <div class="eyebrow">ACTIVITY</div>
-        <h1>Experiment history<span class="heading-period">.</span></h1>
-        <p class="page-lede">Your locally saved configurations appear here.</p>
-
-        <div class="panel">
-          <div class="history-header">
-            <h2>Saved configurations</h2>
-            <button id="refresh-history" class="secondary-button">Refresh</button>
-          </div>
-          <div id="history-list" class="history-list">
-            <div class="empty-state">No saved configurations yet. Open a project and save its settings.</div>
-          </div>
-        </div>
-      </section>
-
-      <footer class="page-footer">
-        <span>SKYRL RESEARCH WORKSPACE</span>
-        <span>HackPHS 2026 · Interface demo</span>
-      </footer>
-    </main>
-  </div>
+      window.addEventListener("pagehide", () => {
+        cancelAnimationFrame(frameId);
+        resizeObserver.disconnect();
+        renderer.dispose();
+      }, { once: true });
+    })();
+  </script>
 </body>
 </html>
