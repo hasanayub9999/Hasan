@@ -1,579 +1,464 @@
 
 (() => {
+  const $ = id => document.getElementById(id);
   const root = document.documentElement;
 
-  const canvas = document.getElementById("simulationCanvas");
-  const ctx = canvas?.getContext("2d");
-
-  const scenarioSelect = document.getElementById("scenarioSelect");
-  const runButton = document.getElementById("runSimulation");
-  const stepButton = document.getElementById("stepSimulation");
-  const resetButton = document.getElementById("resetSimulation");
-
-  const simulationStatus = document.getElementById("simulationStatus");
-  const scenarioStatus = document.getElementById("scenarioStatus");
-  const canvasMessage = document.getElementById("canvasMessage");
-  const stepCounter = document.getElementById("stepCounter");
-
-  const metricSteps = document.getElementById("metricSteps");
-  const metricDistance = document.getElementById("metricDistance");
-  const metricSuccess = document.getElementById("metricSuccess");
-
-  const algorithmSelect = document.getElementById("algorithmSelect");
-  const episodeRange = document.getElementById("episodeRange");
-  const rewardRange = document.getElementById("rewardRange");
-  const difficultySelect = document.getElementById("difficultySelect");
-  const episodeValue = document.getElementById("episodeValue");
-  const rewardValue = document.getElementById("rewardValue");
-  const saveConfig = document.getElementById("saveConfig");
-  const configFeedback = document.getElementById("configFeedback");
-  const appliedSummary = document.getElementById("appliedSummary");
-
-  const themeToggle = document.getElementById("portalThemeToggle");
-  const themeIcon = document.getElementById("portalThemeIcon");
-  const portalMenu = document.getElementById("portalMenu");
-  const sidebar = document.getElementById("sidebar");
-  const exportButton = document.getElementById("exportSession");
-
-  const scenarioNames = {
-    basic: "Basic course",
-    obstacles: "Obstacle field",
-    maze: "Maze course"
+  const defaults = {
+    environment: "grid",
+    episodes: 100,
+    seed: 42,
+    steps: 10000,
+    learningRate: "0.0003",
+    exploration: 50,
+    evalRuns: "10"
   };
 
-  const scenarios = {
-    basic: {
-      start: { x: 0.10, y: 0.74 },
-      goal: { x: 0.90, y: 0.24 },
-      path: [
-        { x: 0.10, y: 0.74 },
-        { x: 0.28, y: 0.60 },
-        { x: 0.45, y: 0.65 },
-        { x: 0.63, y: 0.43 },
-        { x: 0.77, y: 0.39 },
-        { x: 0.90, y: 0.24 }
-      ],
-      obstacles: [
-        { x: 0.28, y: 0.30, r: 0.045 },
-        { x: 0.48, y: 0.35, r: 0.055 },
-        { x: 0.71, y: 0.67, r: 0.050 }
-      ]
-    },
-
-    obstacles: {
-      start: { x: 0.10, y: 0.78 },
-      goal: { x: 0.90, y: 0.22 },
-      path: [
-        { x: 0.10, y: 0.78 },
-        { x: 0.20, y: 0.62 },
-        { x: 0.32, y: 0.48 },
-        { x: 0.43, y: 0.25 },
-        { x: 0.57, y: 0.22 },
-        { x: 0.69, y: 0.40 },
-        { x: 0.81, y: 0.36 },
-        { x: 0.90, y: 0.22 }
-      ],
-      obstacles: [
-        { x: 0.24, y: 0.36, r: 0.055 },
-        { x: 0.37, y: 0.70, r: 0.065 },
-        { x: 0.49, y: 0.47, r: 0.060 },
-        { x: 0.62, y: 0.62, r: 0.065 },
-        { x: 0.75, y: 0.23, r: 0.045 }
-      ]
-    },
-
-    maze: {
-      start: { x: 0.10, y: 0.82 },
-      goal: { x: 0.90, y: 0.18 },
-      path: [
-        { x: 0.10, y: 0.82 },
-        { x: 0.24, y: 0.82 },
-        { x: 0.24, y: 0.57 },
-        { x: 0.43, y: 0.57 },
-        { x: 0.43, y: 0.31 },
-        { x: 0.64, y: 0.31 },
-        { x: 0.64, y: 0.68 },
-        { x: 0.82, y: 0.68 },
-        { x: 0.82, y: 0.18 },
-        { x: 0.90, y: 0.18 }
-      ],
-      obstacles: [
-        { x: 0.33, y: 0.72, r: 0.050 },
-        { x: 0.33, y: 0.39, r: 0.045 },
-        { x: 0.53, y: 0.48, r: 0.055 },
-        { x: 0.74, y: 0.48, r: 0.050 },
-        { x: 0.75, y: 0.84, r: 0.045 }
-      ]
-    }
+  const environmentNames = {
+    grid: "Grid navigation",
+    waypoint: "Waypoint navigation",
+    obstacle: "Obstacle avoidance"
   };
 
-  let scenarioKey = "basic";
-  let pathIndex = 0;
-  let steps = 0;
-  let success = false;
-  let running = false;
-  let runTimer = null;
-  let appliedSettings = {
-    algorithm: "PPO",
-    episodes: 500,
-    targetReward: 100,
-    difficulty: 2
+  const environmentDescriptions = {
+    grid: "An abstract grid-navigation task used for demonstration.",
+    waypoint: "An illustrative task involving a sequence of navigation targets.",
+    obstacle: "An abstract obstacle-avoidance task; no physical simulation is running."
   };
 
-  function getSavedTheme() {
+  let runCount = 0;
+  let history = [];
+  let latestRun = null;
+
+  function applyTheme(theme) {
+    root.dataset.theme = theme === "light" ? "light" : "dark";
+
     try {
-      return localStorage.getItem("skyrl-theme");
-    } catch {
-      return null;
-    }
-  }
+      localStorage.setItem("skyrl-theme", root.dataset.theme);
+    } catch (_) {}
 
-  function saveTheme(theme) {
-    try {
-      localStorage.setItem("skyrl-theme", theme);
-    } catch {
-      // Theme switching still works if storage is blocked.
-    }
-  }
-
-  function setTheme(theme) {
-    root.dataset.theme = theme;
-
-    if (themeIcon) {
-      themeIcon.textContent = theme === "dark" ? "☀" : "☾";
-    }
-
-    if (themeToggle) {
-      themeToggle.setAttribute(
+    document.querySelectorAll("[data-theme-toggle]").forEach(button => {
+      button.textContent = root.dataset.theme === "dark" ? "☼" : "◐";
+      button.setAttribute(
         "aria-label",
-        theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
+        root.dataset.theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
       );
-    }
+    });
 
-    saveTheme(theme);
-    drawSimulation();
+    if (latestRun) drawChart(latestRun.chart);
   }
 
-  setTheme(getSavedTheme() === "dark" ? "dark" : "light");
-
-  themeToggle?.addEventListener("click", () => {
-    setTheme(root.dataset.theme === "dark" ? "light" : "dark");
-  });
-
-  portalMenu?.addEventListener("click", () => {
-    const open = sidebar?.classList.toggle("is-open") ?? false;
-
-    portalMenu.setAttribute("aria-expanded", String(open));
-    portalMenu.textContent = open ? "✕" : "☰";
-  });
-
-  document.querySelectorAll(".side-link").forEach((link) => {
-    link.addEventListener("click", () => {
-      document.querySelectorAll(".side-link").forEach((item) => {
-        item.classList.remove("active");
-      });
-
-      link.classList.add("active");
-      sidebar?.classList.remove("is-open");
-      portalMenu?.setAttribute("aria-expanded", "false");
-
-      if (portalMenu) {
-        portalMenu.textContent = "☰";
-      }
+  document.querySelectorAll("[data-theme-toggle]").forEach(button => {
+    button.addEventListener("click", () => {
+      applyTheme(root.dataset.theme === "dark" ? "light" : "dark");
     });
   });
 
-  function getColors() {
-    const styles = getComputedStyle(root);
+  applyTheme(root.dataset.theme || "dark");
 
+  const environment = $("environment");
+  const episodes = $("episodes");
+  const seed = $("seed");
+  const steps = $("steps");
+  const learningRate = $("learningRate");
+  const exploration = $("exploration");
+  const evalRuns = $("evalRuns");
+
+  function updateLabels() {
+    $("episodesOutput").textContent = Number(episodes.value).toLocaleString();
+    $("stepsOutput").textContent = Number(steps.value).toLocaleString();
+    $("explorationOutput").textContent = `${exploration.value}%`;
+    $("environmentHelp").textContent = environmentDescriptions[environment.value];
+  }
+
+  [episodes, steps, exploration, environment].forEach(control => {
+    control.addEventListener("input", updateLabels);
+    control.addEventListener("change", updateLabels);
+  });
+
+  function readSettings() {
     return {
-      text: styles.getPropertyValue("--text").trim() || "#18221d",
-      muted: styles.getPropertyValue("--muted").trim() || "#68736c",
-      line: styles.getPropertyValue("--line").trim() || "#dfe4dc",
-      surface: styles.getPropertyValue("--surface").trim() || "#ffffff",
-      accent: styles.getPropertyValue("--accent").trim() || "#52785f",
-      target: "#d6a34a",
-      obstacle: "#929a93"
+      environment: environment.value,
+      episodes: Number(episodes.value),
+      seed: Math.max(0, Math.min(999999, Math.floor(Number(seed.value) || 0))),
+      steps: Number(steps.value),
+      learningRate: learningRate.value,
+      exploration: Number(exploration.value),
+      evalRuns: Number(evalRuns.value)
     };
   }
 
-  function currentScenario() {
-    return scenarios[scenarioKey] || scenarios.basic;
+  function resetSettings() {
+    environment.value = defaults.environment;
+    episodes.value = defaults.episodes;
+    seed.value = defaults.seed;
+    steps.value = defaults.steps;
+    learningRate.value = defaults.learningRate;
+    exploration.value = defaults.exploration;
+    evalRuns.value = defaults.evalRuns;
+    updateLabels();
   }
 
-  function currentPosition() {
-    const scenario = currentScenario();
-    const index = Math.min(pathIndex, scenario.path.length - 1);
-    return scenario.path[index];
-  }
-
-  function distanceToTarget() {
-    const position = currentPosition();
-    const goal = currentScenario().goal;
-    const dx = goal.x - position.x;
-    const dy = goal.y - position.y;
-
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-
-  function stopRun() {
-    running = false;
-
-    if (runTimer !== null) {
-      clearInterval(runTimer);
-      runTimer = null;
-    }
-
-    if (runButton) {
-      runButton.textContent = "▶ Run demo";
-    }
-  }
-
-  function resizeCanvas() {
-    if (!canvas || !ctx) return;
-
-    const rect = canvas.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-
-    canvas.width = Math.round(rect.width * pixelRatio);
-    canvas.height = Math.round(rect.height * pixelRatio);
-
-    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    drawSimulation();
-  }
-
-  function drawSimulation() {
-    if (!canvas || !ctx) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-
-    if (!width || !height) return;
-
-    const colors = getColors();
-    const scenario = currentScenario();
-
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = getComputedStyle(root).getPropertyValue("--surface-alt").trim();
-    ctx.fillRect(0, 0, width, height);
-
-    const margin = 22;
-    const plotWidth = width - margin * 2;
-    const plotHeight = height - margin * 2;
-
-    function px(point) {
-      return {
-        x: margin + point.x * plotWidth,
-        y: margin + point.y * plotHeight
-      };
-    }
-
-    // Background grid
-    ctx.strokeStyle = colors.line;
-    ctx.lineWidth = 1;
-
-    const gridSpacing = 24;
-
-    for (let x = margin; x <= width - margin; x += gridSpacing) {
-      ctx.beginPath();
-      ctx.moveTo(x, margin);
-      ctx.lineTo(x, height - margin);
-      ctx.stroke();
-    }
-
-    for (let y = margin; y <= height - margin; y += gridSpacing) {
-      ctx.beginPath();
-      ctx.moveTo(margin, y);
-      ctx.lineTo(width - margin, y);
-      ctx.stroke();
-    }
-
-    // Planned route
-    ctx.save();
-    ctx.strokeStyle = colors.accent;
-    ctx.lineWidth = 2;
-    ctx.setLineDash([5, 5]);
-    ctx.beginPath();
-
-    scenario.path.forEach((point, index) => {
-      const position = px(point);
-
-      if (index === 0) {
-        ctx.moveTo(position.x, position.y);
-      } else {
-        ctx.lineTo(position.x, position.y);
-      }
-    });
-
-    ctx.stroke();
-    ctx.restore();
-
-    // Obstacles
-    scenario.obstacles.forEach((obstacle) => {
-      const position = px(obstacle);
-      const radius = Math.max(5, obstacle.r * Math.min(plotWidth, plotHeight));
-
-      ctx.beginPath();
-      ctx.arc(position.x, position.y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = colors.obstacle;
-      ctx.fill();
-      ctx.strokeStyle = colors.surface;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    });
-
-    // Starting point
-    const start = px(scenario.start);
-    ctx.beginPath();
-    ctx.arc(start.x, start.y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = colors.muted;
-    ctx.fill();
-
-    // Goal marker
-    const goal = px(scenario.goal);
-    ctx.strokeStyle = colors.target;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(goal.x, goal.y, 10, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(goal.x, goal.y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = colors.target;
-    ctx.fill();
-
-    // Agent
-    const agent = px(currentPosition());
-
-    ctx.save();
-    ctx.translate(agent.x, agent.y);
-
-    ctx.beginPath();
-    ctx.arc(0, 0, 11, 0, Math.PI * 2);
-    ctx.fillStyle = colors.accent;
-    ctx.globalAlpha = 0.18;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-
-    ctx.beginPath();
-    ctx.arc(0, 0, 6, 0, Math.PI * 2);
-    ctx.fillStyle = colors.accent;
-    ctx.fill();
-
-    ctx.strokeStyle = colors.surface;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.restore();
-
-    updateMetrics();
-  }
-
-  function updateMetrics() {
-    if (metricSteps) metricSteps.textContent = String(steps);
-
-    if (metricDistance) {
-      metricDistance.textContent = success
-        ? "0.00"
-        : distanceToTarget().toFixed(2);
-    }
-
-    if (metricSuccess) {
-      metricSuccess.textContent = success ? "Yes" : "No";
-    }
-
-    if (stepCounter) {
-      stepCounter.textContent = `Step ${steps}`;
-    }
-  }
-
-  function advanceStep() {
-    if (success) {
-      stopRun();
-      return;
-    }
-
-    const scenario = currentScenario();
-
-    if (pathIndex < scenario.path.length - 1) {
-      pathIndex += 1;
-      steps += 1;
-    }
-
-    if (pathIndex >= scenario.path.length - 1) {
-      success = true;
-
-      if (canvasMessage) {
-        canvasMessage.textContent = "Demo route completed";
-      }
-
-      if (simulationStatus) {
-        simulationStatus.textContent = "Completed";
-      }
-
-      stopRun();
-    } else {
-      if (canvasMessage) {
-        canvasMessage.textContent = "Demo agent moving along a predefined route";
-      }
-
-      if (simulationStatus) {
-        simulationStatus.textContent = "Running";
-      }
-    }
-
-    drawSimulation();
-  }
-
-  function resetSimulation() {
-    stopRun();
-
-    pathIndex = 0;
-    steps = 0;
-    success = false;
-
-    if (simulationStatus) simulationStatus.textContent = "Ready";
-
-    if (canvasMessage) {
-      canvasMessage.textContent = "Ready to begin";
-    }
-
-    drawSimulation();
-  }
-
-  function changeScenario() {
-    scenarioKey = scenarioSelect?.value || "basic";
-
-    if (scenarioStatus) {
-      scenarioStatus.textContent = scenarioNames[scenarioKey];
-    }
-
-    resetSimulation();
-  }
-
-  scenarioSelect?.addEventListener("change", changeScenario);
-
-  resetButton?.addEventListener("click", resetSimulation);
-  stepButton?.addEventListener("click", advanceStep);
-
-  runButton?.addEventListener("click", () => {
-    if (running) {
-      stopRun();
-
-      if (simulationStatus) {
-        simulationStatus.textContent = success ? "Completed" : "Paused";
-      }
-
-      if (canvasMessage && !success) {
-        canvasMessage.textContent = "Demo paused";
-      }
-
-      return;
-    }
-
-    if (success) {
-      resetSimulation();
-    }
-
-    running = true;
-    runButton.textContent = "Ⅱ Pause demo";
-
-    if (simulationStatus) {
-      simulationStatus.textContent = "Running";
-    }
-
-    if (canvasMessage) {
-      canvasMessage.textContent = "Demo agent moving along a predefined route";
-    }
-
-    runTimer = setInterval(() => {
-      if (!running) return;
-      advanceStep();
-    }, 550);
-  });
-
-  episodeRange?.addEventListener("input", () => {
-    if (episodeValue) episodeValue.textContent = episodeRange.value;
-  });
-
-  rewardRange?.addEventListener("input", () => {
-    if (rewardValue) rewardValue.textContent = rewardRange.value;
-  });
-
-  function readConfiguration() {
-    return {
-      algorithm: algorithmSelect?.value || "PPO",
-      episodes: Number(episodeRange?.value || 500),
-      targetReward: Number(rewardRange?.value || 100),
-      difficulty: Number(difficultySelect?.value || 2)
+  $("resetButton").addEventListener("click", resetSettings);
+
+  // A seeded pseudo-random generator keeps demo output reproducible.
+  // This generates illustrative data only; it does not train a model.
+  function seededRandom(initialSeed) {
+    let state = initialSeed >>> 0;
+
+    return function () {
+      state = (state + 0x6D2B79F5) >>> 0;
+      let value = state;
+      value = Math.imul(value ^ (value >>> 15), value | 1);
+      value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+      return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
     };
   }
 
-  saveConfig?.addEventListener("click", () => {
-    appliedSettings = readConfiguration();
+  function createDemoResult(settings) {
+    const environmentOffset = {
+      grid: 0,
+      waypoint: -4,
+      obstacle: -8
+    }[settings.environment];
 
-    if (appliedSummary) {
-      appliedSummary.textContent =
-        `${appliedSettings.algorithm} · ` +
-        `${appliedSettings.episodes} episodes · ` +
-        `Level ${appliedSettings.difficulty}`;
-    }
+    const learningRateOffset = {
+      "0.0001": 2,
+      "0.0003": 5,
+      "0.001": 1,
+      "0.003": -5
+    }[settings.learningRate];
 
-    if (configFeedback) {
-      configFeedback.textContent =
-        "Configuration applied to the demo workspace. " +
-        "No model training has been started.";
-    }
-  });
-
-  exportButton?.addEventListener("click", () => {
-    const session = {
-      project: "SkyRL",
-      exportType: "browser-demo-session",
-      exportedAt: new Date().toISOString(),
-      scenario: scenarioKey,
-      scenarioName: scenarioNames[scenarioKey],
-      simulation: {
-        status: success ? "completed" : running ? "running" : "stopped",
-        steps,
-        targetReached: success,
-        remainingDistance: Number(distanceToTarget().toFixed(4))
-      },
-      appliedSettings,
-      notes: [
-        "This export describes the browser-based 2D demonstration.",
-        "It is not a trained reinforcement learning model result.",
-        "The route is predefined and does not represent autonomous learning."
-      ]
-    };
-
-    const blob = new Blob(
-      [JSON.stringify(session, null, 2)],
-      { type: "application/json" }
+    const random = seededRandom(
+      settings.seed +
+      settings.episodes * 13 +
+      settings.steps * 7 +
+      settings.exploration * 19 +
+      Math.round(Number(settings.learningRate) * 10000000)
     );
 
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+    const progressFactor = Math.min(1, settings.steps / 25000);
+    const explorationFactor = 1 - Math.abs(settings.exploration - 45) / 120;
 
-    link.href = url;
-    link.download = "skyrl-demo-session.json";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    const base = 40 +
+      environmentOffset +
+      learningRateOffset +
+      progressFactor * 20 +
+      explorationFactor * 12;
 
-    URL.revokeObjectURL(url);
-  });
+    const chart = [];
+    const points = 25;
 
-  window.addEventListener("resize", resizeCanvas);
+    for (let i = 0; i < points; i++) {
+      const progress = i / (points - 1);
+      const noise = (random() - 0.5) * 12;
+      const value = 8 + (base - 8) * progress + noise;
+      chart.push(Math.max(0, Math.round(value * 10) / 10));
+    }
 
-  if (typeof ResizeObserver !== "undefined" && canvas) {
-    const observer = new ResizeObserver(resizeCanvas);
-    observer.observe(canvas);
+    const averageReward = Math.round(
+      chart.reduce((total, value) => total + value, 0) / chart.length * 10
+    ) / 10;
+
+    const successRate = Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(
+          (25 + progressFactor * 35 + explorationFactor * 22 +
+          environmentOffset / 2 + learningRateOffset + (random() - 0.5) * 10) * 10
+        ) / 10
+      )
+    );
+
+    const averageLength = Math.round(
+      Math.max(5, 100 - progressFactor * 40 + random() * 15)
+    );
+
+    return {
+      settings,
+      chart,
+      averageReward,
+      successRate,
+      averageLength,
+      evalRuns: settings.evalRuns,
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      })
+    };
   }
 
-  changeScenario();
-  resizeCanvas();
+  function svgElement(tag, attributes = {}) {
+    const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+
+    Object.entries(attributes).forEach(([key, value]) => {
+      element.setAttribute(key, String(value));
+    });
+
+    return element;
+  }
+
+  function drawChart(values) {
+    const svg = $("rewardChart");
+    if (!svg) return;
+
+    svg.replaceChildren();
+
+    const width = 600;
+    const height = 240;
+    const left = 42;
+    const right = 15;
+    const top = 18;
+    const bottom = 25;
+    const chartWidth = width - left - right;
+    const chartHeight = height - top - bottom;
+
+    const isLight = root.dataset.theme === "light";
+    const gridColor = isLight ? "#dfe6f1" : "#263249";
+    const labelColor = isLight ? "#74819a" : "#8190aa";
+    const lineColor = isLight ? "#285dd0" : "#79a7ff";
+    const fillColor = isLight ? "#dce8ff" : "#263e69";
+
+    const data = values && values.length
+      ? values
+      : [5, 9, 7, 12, 10, 14, 13, 18, 17, 22, 20, 25];
+
+    const maxValue = Math.max(20, Math.ceil(Math.max(...data) / 10) * 10);
+
+    for (let i = 0; i <= 4; i++) {
+      const y = top + chartHeight * i / 4;
+      const value = maxValue * (1 - i / 4);
+
+      svg.appendChild(svgElement("line", {
+        x1: left, y1: y, x2: width - right, y2: y,
+        stroke: gridColor, "stroke-width": 1
+      }));
+
+      const label = svgElement("text", {
+        x: left - 9,
+        y: y + 4,
+        fill: labelColor,
+        "font-size": 10,
+        "text-anchor": "end"
+      });
+      label.textContent = Math.round(value);
+      svg.appendChild(label);
+    }
+
+    const coords = data.map((value, index) => ({
+      x: left + (data.length === 1 ? 0 : index / (data.length - 1)) * chartWidth,
+      y: top + (1 - value / maxValue) * chartHeight
+    }));
+
+    const linePath = coords.map((point, index) =>
+      `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`
+    ).join(" ");
+
+    const areaPath =
+      `M ${coords[0].x} ${top + chartHeight} ` +
+      coords.map(point => `L ${point.x} ${point.y}`).join(" ") +
+      ` L ${coords[coords.length - 1].x} ${top + chartHeight} Z`;
+
+    svg.appendChild(svgElement("path", {
+      d: areaPath,
+      fill: fillColor,
+      opacity: 0.7
+    }));
+
+    svg.appendChild(svgElement("path", {
+      d: linePath,
+      fill: "none",
+      stroke: lineColor,
+      "stroke-width": 2.5,
+      "stroke-linejoin": "round",
+      "stroke-linecap": "round"
+    }));
+
+    coords.forEach(point => {
+      svg.appendChild(svgElement("circle", {
+        cx: point.x,
+        cy: point.y,
+        r: 2.2,
+        fill: lineColor
+      }));
+    });
+
+    const first = svgElement("text", {
+      x: left, y: height - 4, fill: labelColor, "font-size": 10
+    });
+    first.textContent = "1";
+    svg.appendChild(first);
+
+    const last = svgElement("text", {
+      x: width - right, y: height - 4,
+      fill: labelColor, "font-size": 10, "text-anchor": "end"
+    });
+    last.textContent = String(data.length);
+    svg.appendChild(last);
+  }
+
+  function updateMetrics(result) {
+    $("metricRuns").textContent = String(runCount);
+    $("metricSuccess").innerHTML =
+      `${result.successRate}<span class="metric-unit">%</span>`;
+    $("metricReward").textContent = result.averageReward.toFixed(1);
+
+    $("resultSuccess").textContent = `${result.successRate}%`;
+    $("resultReward").textContent = result.averageReward.toFixed(1);
+    $("resultLength").textContent = String(result.averageLength);
+    $("resultSamples").textContent = String(result.evalRuns);
+
+    $("resultsLabel").textContent = `Latest demo · ${result.timestamp}`;
+    drawChart(result.chart);
+  }
+
+  function renderHistory() {
+    const body = $("historyBody");
+    body.replaceChildren();
+
+    if (!history.length) {
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+      cell.colSpan = 6;
+      cell.className = "empty-state";
+      cell.textContent = "No runs yet. Run a demo experiment to populate this table.";
+      row.appendChild(cell);
+      body.appendChild(row);
+      return;
+    }
+
+    history.forEach(result => {
+      const row = document.createElement("tr");
+      const cells = [
+        `Demo #${result.id}`,
+        environmentNames[result.settings.environment],
+        result.settings.episodes.toLocaleString(),
+        result.averageReward.toFixed(1),
+        `${result.successRate}%`
+      ];
+
+      cells.forEach(value => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
+
+      const modeCell = document.createElement("td");
+      const badge = document.createElement("span");
+      badge.className = "history-mode";
+      badge.textContent = "Illustrative";
+      modeCell.appendChild(badge);
+      row.appendChild(modeCell);
+
+      body.appendChild(row);
+    });
+  }
+
+  // Add a comparison control without requiring another HTML component.
+  const historyHeading = $("clearHistoryButton").parentElement;
+  const compareButton = document.createElement("button");
+  compareButton.type = "button";
+  compareButton.className = "button button-secondary button-small";
+  compareButton.textContent = "Compare latest runs";
+  compareButton.id = "compareButton";
+  historyHeading.insertBefore(compareButton, $("clearHistoryButton"));
+
+  const comparison = document.createElement("div");
+  comparison.className = "history-compare";
+  comparison.hidden = true;
+  comparison.setAttribute("aria-live", "polite");
+  $("history").insertBefore(comparison, document.querySelector(".history-card"));
+
+  compareButton.addEventListener("click", () => {
+    if (history.length < 2) {
+      comparison.hidden = false;
+      comparison.textContent = "Run at least two demo experiments to compare their illustrative outputs.";
+      return;
+    }
+
+    const newest = history[0];
+    const previous = history[1];
+    const rewardDifference = newest.averageReward - previous.averageReward;
+    const successDifference = newest.successRate - previous.successRate;
+
+    comparison.hidden = false;
+    comparison.replaceChildren();
+
+    const heading = document.createElement("strong");
+    heading.textContent = `Demo #${newest.id} compared with Demo #${previous.id}`;
+    comparison.appendChild(heading);
+
+    const details = document.createElement("p");
+    details.style.margin = "7px 0 0";
+    details.textContent =
+      `Illustrative reward difference: ${rewardDifference >= 0 ? "+" : ""}${rewardDifference.toFixed(1)}. ` +
+      `Illustrative success-rate difference: ${successDifference >= 0 ? "+" : ""}${successDifference.toFixed(1)} percentage points. ` +
+      "Different settings and random seeds can affect these demo values; this is not evidence of real model improvement.";
+    comparison.appendChild(details);
+  });
+
+  function runDemo() {
+    const settings = readSettings();
+    runCount++;
+
+    const result = createDemoResult(settings);
+    result.id = runCount;
+
+    latestRun = result;
+    history.unshift(result);
+
+    updateMetrics(result);
+    renderHistory();
+
+    $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  $("runButton").addEventListener("click", runDemo);
+  $("runTopButton").addEventListener("click", runDemo);
+
+  $("clearHistoryButton").addEventListener("click", () => {
+    history = [];
+    runCount = 0;
+    latestRun = null;
+
+    $("metricRuns").textContent = "0";
+    $("metricSuccess").textContent = "—";
+    $("metricReward").textContent = "—";
+    $("resultSuccess").textContent = "—";
+    $("resultReward").textContent = "—";
+    $("resultLength").textContent = "—";
+    $("resultSamples").textContent = "—";
+    $("resultsLabel").textContent = "Waiting for first demo run";
+
+    comparison.hidden = true;
+    renderHistory();
+    drawChart([]);
+  });
+
+  // Sidebar navigation highlights the section currently being viewed.
+  const sections = [...document.querySelectorAll(
+    "#overview, #configuration, #results, #history"
+  )];
+  const links = [...document.querySelectorAll(".sidebar-link")];
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+
+        links.forEach(link => {
+          link.classList.toggle(
+            "active",
+            link.getAttribute("href") === `#${entry.target.id}`
+          );
+        });
+      });
+    }, { rootMargin: "-15% 0px -70% 0px" });
+
+    sections.forEach(section => observer.observe(section));
+  }
+
+  updateLabels();
+  renderHistory();
+  drawChart([]);
 })();
