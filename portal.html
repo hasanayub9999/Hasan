@@ -1,4 +1,4 @@
-
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,340 +6,584 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080b13">
   <title>SkyRL Portal — Flight Lab</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="portal.css">
   <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
 </head>
+
 <body>
-  <header class="topnav">
-    <a class="portal-logo" href="index.html"><b>✦</b> Sky<span>RL</span></a>
-    <div class="navcenter"><i></i> FLIGHT LAB / 3D WORKSPACE</div>
-    <a class="back" href="index.html">← Back to website</a>
-  </header>
+<header class="topnav">
+  <a class="portal-logo" href="index.html"><b>✦</b> Sky<span>RL</span></a>
+  <div class="navcenter"><i></i> FLIGHT LAB / WORKSPACE</div>
+  <a class="back" href="index.html">← Back to website</a>
+</header>
 
-  <main class="layout">
-    <aside class="left">
-      <label>ENVIRONMENT</label>
-      <h1>Flight <span>Lab.</span></h1>
-      <p class="intro">Explore a 3D navigation environment for autonomous flight experiments.</p>
+<main class="layout">
+  <aside class="left">
+    <label>ENVIRONMENT</label>
+    <h1>Flight <span>Lab.</span></h1>
+    <p class="intro">Choose a simulation workspace to explore your environment.</p>
 
-      <hr>
-      <label>SCENE OBJECTS</label>
+    <hr>
+    <label>SELECT WORKSPACE</label>
 
-      <div class="agent">
-        <b>✦</b>
-        <div><strong>Drone agent</strong><small><i>●</i> Ready to explore</small></div>
+    <div class="workspace-switch">
+      <button class="workspace-choice active" id="humanBtn" type="button">
+        <span class="choice-icon">H</span>
+        <span><strong>Human</strong><small>Human simulation</small></span>
+      </button>
+
+      <button class="workspace-choice" id="objectBtn" type="button">
+        <span class="choice-icon">O</span>
+        <span><strong>Object</strong><small>Object simulation</small></span>
+      </button>
+    </div>
+
+    <hr>
+    <label id="sceneObjectsLabel">SCENE OBJECTS</label>
+
+    <div class="agent">
+      <b id="agentGlyph">H</b>
+      <div>
+        <strong id="agentName">Human agent</strong>
+        <small><i>●</i> Preview ready</small>
       </div>
+    </div>
 
-      <div class="triplet">
-        <div><small>OBSTACLES</small><b>4</b></div>
-        <div><small>TARGETS</small><b>1</b></div>
-        <div><small>AGENTS</small><b>1</b></div>
-      </div>
+    <div class="triplet">
+      <div><small>OBJECTS</small><b id="objectCount">4</b></div>
+      <div><small>TARGETS</small><b>1</b></div>
+      <div><small>AGENTS</small><b>1</b></div>
+    </div>
 
-      <hr>
-      <label>CONTROLS</label>
-      <p class="intro">Drag to rotate the view. Scroll to zoom. Right-click and drag to pan.</p>
-      <button class="run" id="focusBtn">Focus scene</button>
-      <button class="reset" id="resetBtn">Reset view</button>
+    <hr>
+    <label>CONTROLS</label>
+    <p class="intro">Drag to rotate. Scroll to zoom. Right-click and drag to pan.</p>
+    <button class="run" id="focusBtn" type="button">Focus scene</button>
+    <button class="reset" id="resetBtn" type="button">Reset view</button>
 
-      <p class="disclaimer">3D PREVIEW · TRAINING NOT CONNECTED</p>
-    </aside>
+    <p class="disclaimer">3D PREVIEW · TRAINING NOT CONNECTED</p>
+  </aside>
 
-    <section class="view" aria-label="3D simulation view">
-      <div id="mount"></div>
-      <div id="fallback">Loading 3D workspace…</div>
+  <section class="view" aria-label="3D simulation view">
+    <div id="mount"></div>
+    <div id="fallback">Loading 3D workspace…</div>
 
-      <div class="viewtop">
-        <span><i></i> SCENE VIEW</span>
-        <div><button class="tool active">3D</button><span class="view-label">Perspective</span></div>
-      </div>
+    <div class="viewtop">
+      <span><i></i> <span id="viewHeading">HUMAN WORKSPACE</span></span>
+      <div><button class="tool active" type="button">3D</button><span class="view-label">Perspective</span></div>
+    </div>
 
-      <div class="axis">
-        <span><i class="x"></i> X</span>
-        <span><i class="y"></i> Y</span>
-        <span><i class="z"></i> Z</span>
-      </div>
+    <div class="axis">
+      <span><i class="x"></i> X</span>
+      <span><i class="y"></i> Y</span>
+      <span><i class="z"></i> Z</span>
+    </div>
 
-      <div class="target">
-        <b>◎</b><span><small>NAVIGATION TARGET</small><strong>Landing zone</strong></span>
-      </div>
+    <div class="target">
+      <b>◎</b>
+      <span>
+        <small>SIMULATION TARGET</small>
+        <strong id="targetName">Destination zone</strong>
+      </span>
+    </div>
 
-      <div class="tip">DRAG TO ROTATE · SCROLL TO ZOOM</div>
+    <div class="tip">DRAG TO ROTATE · SCROLL TO ZOOM</div>
 
-      <div class="viewbottom">
-        <div><small>ENVIRONMENT</small><b>Navigation / Demo</b></div>
-        <div><small>AGENT STATUS</small><b><i></i> Idle</b></div>
-        <div><small>TRAINING</small><b>Not connected</b></div>
-      </div>
-    </section>
+    <div class="viewbottom">
+      <div><small>WORKSPACE</small><b id="bottomWorkspace">Human</b></div>
+      <div><small>AGENT STATUS</small><b><i></i> Idle</b></div>
+      <div><small>TRAINING</small><b>Not connected</b></div>
+    </div>
+  </section>
 
-    <aside class="right">
-      <div class="righthead">
-        <div><label>OVERVIEW</label><h2>Scene details</h2></div>
-        <span>DEMO</span>
-      </div>
+  <aside class="right">
+    <div class="righthead">
+      <div><label>OVERVIEW</label><h2>Scene details</h2></div>
+      <span>DEMO</span>
+    </div>
 
-      <div class="panel">
-        <label>ACTIVE ENVIRONMENT</label>
-        <div class="world">
-          <b>▦</b>
-          <div><strong>Navigation field</strong><small>Obstacle course</small></div>
+    <div class="panel">
+      <label>ACTIVE WORKSPACE</label>
+      <div class="world">
+        <b id="worldGlyph">H</b>
+        <div>
+          <strong id="worldName">Human environment</strong>
+          <small id="worldSubtitle">Human simulation preview</small>
         </div>
-        <div class="row"><span>Scene</span><b>Default</b></div>
-        <div class="row"><span>View</span><b>Perspective 3D</b></div>
-        <div class="row"><span>Renderer</span><b>Three.js</b></div>
       </div>
+      <div class="row"><span>Scene</span><b id="sceneType">Human Demo</b></div>
+      <div class="row"><span>View</span><b>Perspective 3D</b></div>
+      <div class="row"><span>Renderer</span><b>Three.js</b></div>
+    </div>
 
-      <div class="panel">
-        <label>SCENE TELEMETRY</label>
-        <div class="telemetry">
-          <div><small>OBSTACLES</small><b>04</b></div>
-          <div><small>DRONE AGENTS</small><b>01</b></div>
-          <div><small>TRAINING EPISODES</small><b>00</b></div>
-          <div><small>REWARD</small><b>—</b></div>
-        </div>
-        <p class="note">Telemetry values are placeholders. No learning model or training loop is connected.</p>
+    <div class="panel">
+      <label>SCENE TELEMETRY</label>
+      <div class="telemetry">
+        <div><small>OBJECTS</small><b id="telemetryObjects">04</b></div>
+        <div><small>AGENTS</small><b>01</b></div>
+        <div><small>EPISODES</small><b>00</b></div>
+        <div><small>REWARD</small><b>—</b></div>
       </div>
+      <p class="note">Demo values only. A learning model and training loop are not connected.</p>
+    </div>
 
-      <div class="panel integrate">
-        <label>INTEGRATION</label>
-        <div class="bigglyph">✦</div>
-        <h3>Ready for development</h3>
-        <p>This scene is a starting point for connecting an environment builder and reinforcement-learning agent.</p>
-        <small>SIMULATION PREVIEW</small>
-      </div>
-    </aside>
-  </main>
+    <div class="panel integrate">
+      <label>INTEGRATION</label>
+      <div class="bigglyph">✦</div>
+      <h3 id="integrationTitle">Human workspace</h3>
+      <p id="integrationText">A starting point for building human simulation environments.</p>
+      <small>SIMULATION PREVIEW</small>
+    </div>
+  </aside>
+</main>
 
-  <script>
-    (() => {
-      const mount = document.getElementById("mount");
-      const fallback = document.getElementById("fallback");
+<style>
+.workspace-switch {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+}
 
-      if (!window.THREE) {
-        fallback.textContent = "Three.js could not load. Check your internet connection.";
-        return;
-      }
+.workspace-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  text-align: left;
+  color: inherit;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(140,170,220,.18);
+  border-radius: 12px;
+  cursor: pointer;
+  font: inherit;
+  transition: .2s ease;
+}
 
-      let scene, camera, renderer, controls;
-      let frameId;
-      let resizeObserver;
+.workspace-choice:hover {
+  border-color: #6b9cff;
+  background: rgba(90,140,255,.08);
+}
 
-      scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x0a1020);
-      scene.fog = new THREE.Fog(0x0a1020, 20, 55);
+.workspace-choice.active {
+  border-color: #6b9cff;
+  background: rgba(75,125,255,.13);
+  box-shadow: inset 0 0 0 1px rgba(107,156,255,.12);
+}
 
-      camera = new THREE.PerspectiveCamera(
-        50, mount.clientWidth / mount.clientHeight, 0.1, 100
+.choice-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: rgba(100,150,255,.14);
+  color: #91b9ff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.workspace-choice strong,
+.workspace-choice small {
+  display: block;
+}
+
+.workspace-choice strong {
+  font-size: 13px;
+}
+
+.workspace-choice small {
+  margin-top: 4px;
+  color: #96a6c0;
+  font-size: 11px;
+}
+
+#mount canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+</style>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const mount = $("mount");
+  const fallback = $("fallback");
+
+  if (!window.THREE) {
+    fallback.textContent = "Three.js could not load. Check your internet connection.";
+    return;
+  }
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a1020);
+  scene.fog = new THREE.Fog(0x0a1020, 24, 65);
+
+  const camera = new THREE.PerspectiveCamera(
+    50, 1, 0.1, 150
+  );
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  mount.appendChild(renderer.domElement);
+
+  scene.add(new THREE.HemisphereLight(0xbad5ff, 0x111827, 2));
+
+  const sunlight = new THREE.DirectionalLight(0xffffff, 2.2);
+  sunlight.position.set(8, 15, 10);
+  scene.add(sunlight);
+
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(36, 36),
+    new THREE.MeshStandardMaterial({
+      color: 0x101b2d,
+      roughness: .9,
+      metalness: .1
+    })
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -.05;
+  scene.add(floor);
+
+  const grid = new THREE.GridHelper(36, 36, 0x42618c, 0x243651);
+  scene.add(grid);
+
+  const environment = new THREE.Group();
+  scene.add(environment);
+
+  let targetPoint = new THREE.Vector3(0, 0, 0);
+  let radius = 18;
+  let theta = Math.PI / 4;
+  let phi = Math.PI / 3;
+  let dragging = false;
+  let panning = false;
+  let lastX = 0;
+  let lastY = 0;
+  let activeMode = "human";
+
+  function updateCamera() {
+    phi = Math.max(.15, Math.min(Math.PI / 2.02, phi));
+    const spherical = new THREE.Spherical(radius, phi, theta);
+    camera.position.copy(targetPoint).add(
+      new THREE.Vector3().setFromSpherical(spherical)
+    );
+    camera.lookAt(targetPoint);
+  }
+
+  function resetView() {
+    targetPoint.set(0, 0, 0);
+    radius = 18;
+    theta = Math.PI / 4;
+    phi = Math.PI / 3;
+    updateCamera();
+  }
+
+  function addEdges(mesh, color = 0x668cc3) {
+    const edges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(mesh.geometry),
+      new THREE.LineBasicMaterial({ color })
+    );
+    edges.position.copy(mesh.position);
+    edges.rotation.copy(mesh.rotation);
+    environment.add(edges);
+  }
+
+  function addBox(x, y, z, w, h, d, color = 0x29466f) {
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(w, h, d),
+      new THREE.MeshStandardMaterial({
+        color,
+        roughness: .65,
+        metalness: .12
+      })
+    );
+    mesh.position.set(x, y, z);
+    environment.add(mesh);
+    addEdges(mesh);
+    return mesh;
+  }
+
+  function addSphere(x, y, z, radius, color) {
+    const mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(radius, 24, 16),
+      new THREE.MeshStandardMaterial({
+        color,
+        roughness: .55,
+        metalness: .08
+      })
+    );
+    mesh.position.set(x, y, z);
+    environment.add(mesh);
+    return mesh;
+  }
+
+  function addTarget(x, z) {
+    const group = new THREE.Group();
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(1, .045, 8, 48),
+      new THREE.MeshBasicMaterial({ color: 0x49d9a0 })
+    );
+    ring.rotation.x = Math.PI / 2;
+    group.add(ring);
+
+    const dot = new THREE.Mesh(
+      new THREE.SphereGeometry(.12, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0x49d9a0 })
+    );
+    dot.position.y = .05;
+    group.add(dot);
+    group.position.set(x, .08, z);
+    environment.add(group);
+  }
+
+  function buildHumanScene() {
+    // Simple stylized human figure and surrounding obstacles.
+    const human = new THREE.Group();
+
+    const blue = new THREE.MeshStandardMaterial({
+      color: 0x709cff,
+      roughness: .4,
+      metalness: .15
+    });
+    const skin = new THREE.MeshStandardMaterial({
+      color: 0xd8a783,
+      roughness: .65
+    });
+    const dark = new THREE.MeshStandardMaterial({
+      color: 0x243d65,
+      roughness: .6
+    });
+
+    const torso = new THREE.Mesh(
+      new THREE.CylinderGeometry(.35, .48, 1.15, 20),
+      blue
+    );
+    torso.position.y = 1.65;
+    human.add(torso);
+
+    const head = new THREE.Mesh(
+      new THREE.SphereGeometry(.3, 24, 18),
+      skin
+    );
+    head.position.y = 2.48;
+    human.add(head);
+
+    const leftArm = new THREE.Mesh(
+      new THREE.CylinderGeometry(.12, .15, .85, 12),
+      skin
+    );
+    leftArm.position.set(-.52, 1.75, 0);
+    leftArm.rotation.z = -.18;
+    human.add(leftArm);
+
+    const rightArm = leftArm.clone();
+    rightArm.position.x = .52;
+    rightArm.rotation.z = .18;
+    human.add(rightArm);
+
+    [-.23, .23].forEach(x => {
+      const leg = new THREE.Mesh(
+        new THREE.CylinderGeometry(.14, .18, .9, 12),
+        dark
       );
-      camera.position.set(10, 9, 12);
+      leg.position.set(x, .65, 0);
+      human.add(leg);
+    });
 
-      renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(mount.clientWidth, mount.clientHeight);
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
-      mount.appendChild(renderer.domElement);
+    human.position.set(-1, 0, 0);
+    environment.add(human);
 
-      scene.add(new THREE.HemisphereLight(0xbad5ff, 0x111827, 2));
+    addBox(-4, .8, -3, 1.5, 1.6, 1.5, 0x29466f);
+    addBox(3, .7, -3, 1.5, 1.4, 1.5, 0x203451);
+    addBox(4, .9, 3, 1.5, 1.8, 1.5, 0x29466f);
+    addBox(-4, .6, 3, 1.5, 1.2, 1.5, 0x203451);
+    addTarget(6, -6);
+  }
 
-      const light = new THREE.DirectionalLight(0xffffff, 2.2);
-      light.position.set(8, 15, 10);
-      scene.add(light);
+  function buildObjectScene() {
+    // Sample objects in a 3D environment.
+    addBox(-3, .9, -2, 1.6, 1.8, 1.6, 0x29466f);
+    addBox(2, .6, -3, 1.2, 1.2, 1.2, 0x203451);
+    addBox(3, 1.1, 2, 1.8, 2.2, 1.8, 0x365b89);
 
-      const floor = new THREE.Mesh(
-        new THREE.PlaneGeometry(30, 30),
-        new THREE.MeshStandardMaterial({
-          color: 0x101b2d,
-          roughness: 0.9,
-          metalness: 0.1
-        })
-      );
-      floor.rotation.x = -Math.PI / 2;
-      floor.position.y = -0.04;
-      scene.add(floor);
+    const sphere = new THREE.Mesh(
+      new THREE.SphereGeometry(.85, 32, 24),
+      new THREE.MeshStandardMaterial({
+        color: 0x709cff,
+        roughness: .35,
+        metalness: .25
+      })
+    );
+    sphere.position.set(-3, .85, 3);
+    environment.add(sphere);
 
-      const grid = new THREE.GridHelper(30, 30, 0x42618c, 0x243651);
-      grid.position.y = 0;
-      scene.add(grid);
+    const torus = new THREE.Mesh(
+      new THREE.TorusKnotGeometry(.65, .2, 100, 16),
+      new THREE.MeshStandardMaterial({
+        color: 0x49d9a0,
+        roughness: .4,
+        metalness: .2
+      })
+    );
+    torus.position.set(0, 1.5, 0);
+    environment.add(torus);
 
-      const obstacles = [];
-      const obstaclePositions = [
-        [-4, 0.8, -3],
-        [2, 1.1, -4],
-        [4, 0.9, 2],
-        [-2, 0.65, 4]
-      ];
+    addTarget(6, -6);
+  }
 
-      obstaclePositions.forEach((p, i) => {
-        const h = p[1] * 2;
-        const mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(1.5, h, 1.5),
-          new THREE.MeshStandardMaterial({
-            color: i % 2 ? 0x29466f : 0x203451,
-            roughness: 0.65,
-            metalness: 0.15
-          })
-        );
-        mesh.position.set(p[0], h / 2, p[2]);
-        scene.add(mesh);
-        obstacles.push(mesh);
+  function switchWorkspace(mode) {
+    activeMode = mode;
 
-        const edges = new THREE.LineSegments(
-          new THREE.EdgesGeometry(mesh.geometry),
-          new THREE.LineBasicMaterial({ color: 0x668cc3 })
-        );
-        edges.position.copy(mesh.position);
-        scene.add(edges);
-      });
+    while (environment.children.length) {
+      const child = environment.children[0];
+      environment.remove(child);
 
-      const drone = new THREE.Group();
-      const body = new THREE.Mesh(
-        new THREE.BoxGeometry(0.8, 0.22, 0.55),
-        new THREE.MeshStandardMaterial({
-          color: 0x709cff,
-          emissive: 0x162c60,
-          metalness: 0.5,
-          roughness: 0.35
-        })
-      );
-      drone.add(body);
-
-      [[-0.65, 0, -0.45], [0.65, 0, -0.45],
-       [-0.65, 0, 0.45], [0.65, 0, 0.45]].forEach(pos => {
-        const arm = new THREE.Mesh(
-          new THREE.BoxGeometry(0.6, 0.07, 0.07),
-          new THREE.MeshStandardMaterial({ color: 0xc4d6ff })
-        );
-        arm.position.set(pos[0] / 2, 0, pos[2] / 2);
-        drone.add(arm);
-
-        const rotor = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.19, 0.19, 0.035, 20),
-          new THREE.MeshStandardMaterial({ color: 0x49d9a0 })
-        );
-        rotor.position.set(pos[0], 0.12, pos[2]);
-        drone.add(rotor);
-      });
-
-      drone.position.set(-7, 1.1, 7);
-      scene.add(drone);
-
-      const target = new THREE.Group();
-      const ring = new THREE.Mesh(
-        new THREE.TorusGeometry(1, 0.045, 8, 48),
-        new THREE.MeshBasicMaterial({ color: 0x49d9a0 })
-      );
-      ring.rotation.x = Math.PI / 2;
-      target.add(ring);
-
-      const targetDot = new THREE.Mesh(
-        new THREE.SphereGeometry(0.12, 16, 16),
-        new THREE.MeshBasicMaterial({ color: 0x49d9a0 })
-      );
-      targetDot.position.y = 0.05;
-      target.add(targetDot);
-      target.position.set(7, 0.08, -7);
-      scene.add(target);
-
-      // Lightweight orbit controls, included inline to avoid another JS file.
-      let dragging = false;
-      let panning = false;
-      let lastX = 0;
-      let lastY = 0;
-      let spherical = new THREE.Spherical();
-      let targetPoint = new THREE.Vector3(0, 0, 0);
-      let radius = camera.position.length();
-      let theta = Math.atan2(camera.position.x, camera.position.z);
-      let phi = Math.acos(camera.position.y / radius);
-
-      function updateCamera() {
-        phi = Math.max(0.15, Math.min(Math.PI / 2.02, phi));
-        spherical.set(radius, phi, theta);
-        camera.position.copy(targetPoint).add(
-          new THREE.Vector3().setFromSpherical(spherical)
-        );
-        camera.lookAt(targetPoint);
-      }
-
-      renderer.domElement.addEventListener("pointerdown", e => {
-        dragging = true;
-        panning = e.button === 2 || e.shiftKey;
-        lastX = e.clientX;
-        lastY = e.clientY;
-        renderer.domElement.setPointerCapture(e.pointerId);
-      });
-
-      renderer.domElement.addEventListener("pointermove", e => {
-        if (!dragging) return;
-        const dx = e.clientX - lastX;
-        const dy = e.clientY - lastY;
-        lastX = e.clientX;
-        lastY = e.clientY;
-
-        if (panning) {
-          const right = new THREE.Vector3();
-          right.crossVectors(camera.getWorldDirection(new THREE.Vector3()),
-            camera.up).normalize();
-          targetPoint.addScaledVector(right, -dx * radius * 0.0015);
-          targetPoint.y += dy * radius * 0.0015;
-        } else {
-          theta -= dx * 0.008;
-          phi -= dy * 0.008;
+      child.traverse?.(node => {
+        if (node.geometry) node.geometry.dispose();
+        if (node.material) {
+          if (Array.isArray(node.material)) {
+            node.material.forEach(material => material.dispose());
+          } else {
+            node.material.dispose();
+          }
         }
-        updateCamera();
       });
+    }
 
-      renderer.domElement.addEventListener("pointerup", () => {
-        dragging = false;
-      });
-      renderer.domElement.addEventListener("contextmenu", e => e.preventDefault());
+    if (mode === "human") {
+      buildHumanScene();
 
-      renderer.domElement.addEventListener("wheel", e => {
-        radius = Math.max(5, Math.min(32, radius * (e.deltaY > 0 ? 1.08 : 0.92)));
-        updateCamera();
-      }, { passive: true });
+      $("agentGlyph").textContent = "H";
+      $("agentName").textContent = "Human agent";
+      $("objectCount").textContent = "5";
+      $("viewHeading").textContent = "HUMAN WORKSPACE";
+      $("targetName").textContent = "Destination zone";
+      $("bottomWorkspace").textContent = "Human";
+      $("worldGlyph").textContent = "H";
+      $("worldName").textContent = "Human environment";
+      $("worldSubtitle").textContent = "Human simulation preview";
+      $("sceneType").textContent = "Human Demo";
+      $("telemetryObjects").textContent = "05";
+      $("integrationTitle").textContent = "Human workspace";
+      $("integrationText").textContent =
+        "A starting point for building human simulation environments.";
+    } else {
+      buildObjectScene();
 
-      function resetView() {
-        targetPoint.set(0, 0, 0);
-        radius = 18;
-        theta = Math.PI / 4;
-        phi = Math.PI / 3;
-        updateCamera();
-      }
+      $("agentGlyph").textContent = "O";
+      $("agentName").textContent = "Object agent";
+      $("objectCount").textContent = "5";
+      $("viewHeading").textContent = "OBJECT WORKSPACE";
+      $("targetName").textContent = "Object destination";
+      $("bottomWorkspace").textContent = "Object";
+      $("worldGlyph").textContent = "O";
+      $("worldName").textContent = "Object environment";
+      $("worldSubtitle").textContent = "3D object preview";
+      $("sceneType").textContent = "Object Demo";
+      $("telemetryObjects").textContent = "05";
+      $("integrationTitle").textContent = "Object workspace";
+      $("integrationText").textContent =
+        "A starting point for exploring 3D objects and environments.";
+    }
 
-      document.getElementById("resetBtn").addEventListener("click", resetView);
-      document.getElementById("focusBtn").addEventListener("click", resetView);
+    $("humanBtn").classList.toggle("active", mode === "human");
+    $("objectBtn").classList.toggle("active", mode === "object");
 
-      function resize() {
-        const w = mount.clientWidth;
-        const h = mount.clientHeight;
-        if (!w || !h) return;
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
-      }
+    resetView();
+  }
 
-      resizeObserver = new ResizeObserver(resize);
-      resizeObserver.observe(mount);
+  const canvas = renderer.domElement;
 
-      function animate() {
-        frameId = requestAnimationFrame(animate);
-        drone.position.y = 1.1 + Math.sin(performance.now() * 0.0015) * 0.08;
-        renderer.render(scene, camera);
-      }
+  canvas.addEventListener("pointerdown", e => {
+    dragging = true;
+    panning = e.button === 2 || e.shiftKey;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    canvas.setPointerCapture(e.pointerId);
+  });
 
-      resetView();
-      fallback.hidden = true;
-      animate();
+  canvas.addEventListener("pointermove", e => {
+    if (!dragging) return;
 
-      window.addEventListener("pagehide", () => {
-        cancelAnimationFrame(frameId);
-        resizeObserver.disconnect();
-        renderer.dispose();
-      }, { once: true });
-    })();
-  </script>
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+
+    if (panning) {
+      const right = new THREE.Vector3().crossVectors(
+        camera.getWorldDirection(new THREE.Vector3()),
+        camera.up
+      ).normalize();
+
+      targetPoint.addScaledVector(right, -dx * radius * .0015);
+      targetPoint.y += dy * radius * .0015;
+    } else {
+      theta -= dx * .008;
+      phi -= dy * .008;
+    }
+
+    updateCamera();
+  });
+
+  function stopDragging() {
+    dragging = false;
+  }
+
+  canvas.addEventListener("pointerup", stopDragging);
+  canvas.addEventListener("pointercancel", stopDragging);
+  canvas.addEventListener("contextmenu", e => e.preventDefault());
+
+  canvas.addEventListener("wheel", e => {
+    radius = Math.max(
+      5,
+      Math.min(32, radius * (e.deltaY > 0 ? 1.08 : .92))
+    );
+    updateCamera();
+  }, { passive: true });
+
+  $("humanBtn").addEventListener("click", () => switchWorkspace("human"));
+  $("objectBtn").addEventListener("click", () => switchWorkspace("object"));
+  $("resetBtn").addEventListener("click", resetView);
+  $("focusBtn").addEventListener("click", resetView);
+
+  function resize() {
+    const width = mount.clientWidth;
+    const height = mount.clientHeight;
+    if (!width || !height) return;
+
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+  }
+
+  const resizeObserver = new ResizeObserver(resize);
+  resizeObserver.observe(mount);
+  window.addEventListener("resize", resize);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+  }
+
+  resize();
+  switchWorkspace("human");
+  fallback.hidden = true;
+  animate();
+
+  window.addEventListener("pagehide", () => {
+    resizeObserver.disconnect();
+    renderer.dispose();
+  }, { once: true });
+})();
+</script>
 </body>
 </html>
+```
