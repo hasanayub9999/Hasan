@@ -970,3 +970,30 @@ footer p {
     transition-duration: .01ms !important;
   }
 }
+```css
+/* Fix Deploy dropdown disappearing on hover */
+.deploy-wrap {
+  position: relative;
+}
+
+.deploy-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 9999;
+  min-width: 240px;
+  padding-top: 10px;
+}
+
+/* Keep the menu visible while hovering over the button or menu */
+.deploy-wrap:hover .deploy-menu,
+.deploy-wrap:focus-within .deploy-menu,
+.deploy-menu:not([hidden]) {
+  display: block;
+}
+
+/* Preserve the hidden state when closed */
+.deploy-menu[hidden] {
+  display: none !important;
+}
+```
