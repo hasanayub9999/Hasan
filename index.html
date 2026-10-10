@@ -3,301 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkyRL | Autonomous Navigation & Reinforcement Learning Research Platform</title>
+    <title>Workspace | SkyRL Research Platform</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="portal.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
-<body>
-    <!-- Navigation -->
-    <header class="site-header">
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <span class="logo-mark">SR</span>
-                <span class="logo-text">Sky<span>RL</span></span>
-                <span class="hack-badge">HackPHS 2026</span>
-            </a>
-            
-            <nav class="nav-links" id="navLinks">
-                <a href="#platform" class="nav-link">Platform</a>
-                <a href="#how-it-works" class="nav-link">How It Works</a>
-                <a href="#research" class="nav-link">Research & Impact</a>
-                <a href="#mission" class="nav-link">Our Mission</a>
-            </nav>
+<body class="portal-body">
 
-            <div class="nav-actions">
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-                    <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1.03 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-                    <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                </button>
-                <a href="portal.html" class="btn btn-primary">Launch Workspace</a>
-                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="container hero-grid">
-                <div class="hero-content">
-                    <div class="hero-tag">
-                        <span class="pulse-dot"></span> HackPHS 2026 Research Initiative
-                    </div>
-                    <h1>Teaching agents to navigate better through reinforcement learning.</h1>
-                    <p class="hero-description">
-                        SkyRL is an experimental research platform exploring how deep reinforcement learning enables autonomous agents to adapt, plan, and execute complex navigation policies within challenging simulated environments.
-                    </p>
-                    <div class="hero-cta">
-                        <a href="portal.html" class="btn btn-primary btn-lg">Launch Workspace</a>
-                        <a href="#platform" class="btn btn-secondary btn-lg">Explore the Platform</a>
-                    </div>
-                    <div class="hero-meta">
-                        <div class="meta-item">
-                            <span class="meta-label">Framework</span>
-                            <span class="meta-val">Python / NumPy / Gym API</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">License</span>
-                            <span class="meta-val">MIT Open Source</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Status</span>
-                            <span class="meta-val">Active Experimentation</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero-visual">
-                    <div class="terminal-card">
-                        <div class="terminal-header">
-                            <span class="dot red"></span>
-                            <span class="dot yellow"></span>
-                            <span class="dot green"></span>
-                            <span class="terminal-title">skyrl-env-v0.2.1 // live-telemetry</span>
-                        </div>
-                        <div class="terminal-body">
-                            <code><span class="t-comment"># Initializing SkyRL Environment Simulation</span><br>
-<span class="t-keyword">import</span> skyrl<br>
-<br>
-env = skyrl.make(<span class="t-string">"UrbanCanyon-v2"</span>)<br>
-agent = skyrl.PPOAgent(policy=<span class="t-string">"MLPPolicy"</span>, lr=<span class="t-number">3e-4</span>)<br>
-<br>
-<span class="t-keyword">for</span> episode <span class="t-keyword">in</span> range(<span class="t-number">500</span>):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;obs = env.reset()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;done, total_reward = <span class="t-keyword">False</span>, <span class="t-number">0.0</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-keyword">while</span> <span class="t-keyword">not</span> done:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;action = agent.predict(obs)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obs, reward, done, info = env.step(action)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total_reward += reward<br>
-<span class="t-success">&gt;&gt;&gt; Episode 500 complete. Avg Reward: 412.8 [SUCCESS]</span></code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Platform Capabilities -->
-        <section id="platform" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Platform Capabilities</h2>
-                    <p>Designed for systematic experimentation, reproducibility, and rigorous reinforcement learning research.</p>
-                </div>
-                <div class="grid-4">
-                    <div class="card capability-card">
-                        <div class="card-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                        </div>
-                        <h3>Environment Design</h3>
-                        <p>Configure experimental navigation spaces with customizable obstacles, wind vectors, sensor noise profiles, and target waypoints.</p>
-                    </div>
-                    <div class="card capability-card">
-                        <div class="card-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                        </div>
-                        <h3>Policy Training</h3>
-                        <p>Explore how reinforcement learning policies (PPO, Actor-Critic) improve over iterative simulation episodes and reward shaping.</p>
-                    </div>
-                    <div class="card capability-card">
-                        <div class="card-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                        </div>
-                        <h3>Evaluation</h3>
-                        <p>Compare experimental results, tracking convergence rates, success ratios, episode lengths, and collision frequencies.</p>
-                    </div>
-                    <div class="card capability-card">
-                        <div class="card-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </div>
-                        <h3>Community Research</h3>
-                        <p>Built with modular Python abstractions, making the platform extensible for collaborative student and researcher experiments.</p>
-                    </div>
-                </div>
-                <div class="capability-notice">
-                    <p><strong>Note on Scope:</strong> SkyRL is an experimental simulation platform. Capabilities reflect implemented reinforcement learning loops and Gym-compatible benchmarking tools within the workspace portal.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- How It Works -->
-        <section id="how-it-works" class="section bg-alt">
-            <div class="container">
-                <div class="section-header">
-                    <h2>How It Works</h2>
-                    <p>A streamlined four-step workflow from configuration to policy evaluation.</p>
-                </div>
-                <div class="steps-grid">
-                    <div class="step-card">
-                        <span class="step-num">01</span>
-                        <h3>Design Environment</h3>
-                        <p>Select simulation parameters, obstacle density, and target coordinates in the workspace configuration panel.</p>
-                    </div>
-                    <div class="step-card">
-                        <span class="step-num">02</span>
-                        <h3>Configure Agent</h3>
-                        <p>Adjust hyperparameters including learning rate, discount factor, episode counts, and policy exploration settings.</p>
-                    </div>
-                    <div class="step-card">
-                        <span class="step-num">03</span>
-                        <h3>Run Experiment</h3>
-                        <p>Execute simulation loops to train the navigation agent, monitoring live rewards and convergence telemetry.</p>
-                    </div>
-                    <div class="step-card">
-                        <span class="step-num">04</span>
-                        <h3>Review & Compare</h3>
-                        <p>Analyze performance charts, success rates, and trajectory metrics across multiple experimental runs.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Research & Real-World Context -->
-        <section id="research" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Research & Real-World Context</h2>
-                    <p>Examining why autonomous navigation and disaster-response technology remain critical areas of scientific study.</p>
-                </div>
-                <div class="research-grid">
-                    <div class="research-text">
-                        <p>
-                            Complex structural inspections and rapid post-disaster response scenarios present severe operational hurdles. When natural disasters strike—such as the <strong>magnitude 7.1 earthquake that impacted Puebla, Mexico on September 19, 2017</strong>—first responders face unstable terrain, blocked access routes, and damaged infrastructure that endanger human survey teams.
-                        </p>
-                        <p>
-                            These high-stakes environments motivate ongoing academic and industrial research into autonomous robotic navigation, robust sensor fusion, and reinforcement learning control policies. While simulation environments cannot replicate every nuance of physical reality, they provide safe, reproducible testbeds for algorithmic exploration.
-                        </p>
-                        <div class="citation-box">
-                            <h4>Key References & Documentation</h4>
-                            <ul>
-                                <li>
-                                    <a href="https://www.usgs.gov/news/featured-story/magnitude-71-earthquake-mexico" target="_blank" rel="noopener">USGS Featured Story: Magnitude 7.1 Earthquake in Mexico (Sep 19, 2017)</a>
-                                </li>
-                                <li>
-                                    <a href="https://lfestorage.s3.us-east-2.amazonaws.com/images/2017_09_19_Puebla_Mexico/pdfs/Preliminary_Report_Mexico2017_v7.pdf" target="_blank" rel="noopener">Preliminary Engineering Research Report: 2017 Puebla Mexico Earthquake (PDF)</a>
-                                </li>
-                                <li>
-                                    <a href="https://www.jpl.nasa.gov/news/nasa-tech-aids-search-following-mexico-quake/" target="_blank" rel="noopener">NASA/JPL Article: NASA Tech Aids Search Following Mexico Quake</a>
-                                </li>
-                            </ul>
-                            <p class="citation-disclaimer">
-                                <em>Clarification:</em> SkyRL was not deployed during these historical events, and simulation results do not imply that automated systems prevent structural damage or eliminate disaster risks. Furthermore, technologies such as NASA's FINDER are specialized radar-based survivor-detection systems rather than aerial drones. Real-world deployment requires rigorous hardware validation beyond simulation.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="research-stats">
-                        <div class="stat-card">
-                            <span class="stat-number">7.1</span>
-                            <span class="stat-label">Magnitude earthquake documented in Puebla, Mexico (USGS, 2017)</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number">4+</span>
-                            <span class="stat-label">Core hyperparameters adjustable in SkyRL experimental workspace</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number">100%</span>
-                            <span class="stat-label">Open-source experimental research platform architecture</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mission and Long-Term Vision -->
-        <section id="mission" class="section bg-alt">
-            <div class="container mission-container">
-                <div class="section-header">
-                    <h2>Our Mission & Vision</h2>
-                    <p>Advancing accessible, reproducible reinforcement learning experimentation for autonomous systems.</p>
-                </div>
-                <div class="mission-content card">
-                    <p>
-                        SkyRL was created for <strong>HackPHS 2026</strong> with a clear objective: to build a rigorous, transparent platform where students and researchers can study how reinforcement learning agents learn spatial navigation policies. We believe that open experimentation, clear performance metrics, and rigorous evaluation are essential for advancing autonomous system research.
-                    </p>
-                    <div class="disclaimer-banner">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        <span><strong>Important Safety & Scientific Disclaimer:</strong> SkyRL is an experimental research project, not a certified real-world flight control system. Simulation metrics and demo training runs are intended solely for educational evaluation and algorithmic exploration. Simulation success does not guarantee real-world safety or operational readiness.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Final CTA Section -->
-        <section class="section cta-section">
-            <div class="container text-center">
-                <h2>Ready to test your navigation policies?</h2>
-                <p>Launch the interactive workspace to configure environments, adjust hyperparameters, and run simulation experiments.</p>
-                <div class="hero-cta justify-center">
-                    <a href="portal.html" class="btn btn-primary btn-lg">Launch Workspace</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-col">
-                <div class="logo">
+    <!-- App Shell Layout -->
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo">
                     <span class="logo-mark">SR</span>
                     <span class="logo-text">Sky<span>RL</span></span>
-                </div>
-                <p>Reinforcement learning and autonomous navigation research platform built for HackPHS 2026.</p>
+                </a>
+                <span class="workspace-tag">Workspace v0.2</span>
             </div>
-            <div class="footer-col">
-                <h4>Platform</h4>
-                <ul>
-                    <li><a href="portal.html">Workspace Portal</a></li>
-                    <li><a href="#platform">Capabilities</a></li>
-                    <li><a href="#how-it-works">How It Works</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Research</h4>
-                <ul>
-                    <li><a href="#research">Real-World Context</a></li>
-                    <li><a href="https://www.usgs.gov/news/featured-story/magnitude-71-earthquake-mexico" target="_blank" rel="noopener">USGS Report</a></li>
-                    <li><a href="https://www.jpl.nasa.gov/news/nasa-tech-aids-search-following-mexico-quake/" target="_blank" rel="noopener">NASA FINDER Info</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Project</h4>
-                <ul>
-                    <li><a href="#mission">Mission & Vision</a></li>
-                    <li><a href="https://github.com/hasanayub9999/67asihg-asdf-random-idk-heiohfo-e67-mango-skib" target="_blank" rel="noopener">GitHub Repository</a></li>
-                    <li><a href="#">HackPHS 2026 Submission</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="container footer-bottom">
-            <p>&copy; 2026 SkyRL Research Team. Open source under MIT License.</p>
-        </div>
-    </footer>
 
-    <script src="script.js"></script>
+            <div class="sidebar-nav">
+                <div class="nav-section-title">Navigation</div>
+                <a href="index.html" class="sidebar-link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Back to Home
+                </a>
+                
+                <div class="nav-section-title">Workspace Views</div>
+                <button class="sidebar-link active" data-tab="config">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    Configuration & Training
+                </button>
+                <button class="sidebar-link" data-tab="results">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    Live Telemetry & Results
+                </button>
+                <button class="sidebar-link" data-tab="history">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Experiment Logs
+                </button>
+                <button class="sidebar-link" data-tab="auth">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Clerk Auth Setup
+                </button>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="auth-status-card">
+                    <span class="status-dot simulated"></span>
+                    <div class="auth-info">
+                        <span class="auth-state">Demo Mode Active</span>
+                        <span class="auth-user">Local Research Session</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="workspace-main">
+            <!-- Top Header Bar -->
+            <header class="workspace-header">
+                <div class="workspace-title-area">
+                    <h1 id="activeViewTitle">Experiment Configuration</h1>
+                    <p id="activeViewDesc">Configure environment parameters, agent hyperparameters, and simulation runs.</p>
+                </div>
+                <div class="workspace-actions">
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                        <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1.03 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                        <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button id="runDemoBtn" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Run Demo Experiment
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Area Tabs -->
+            <div class="workspace-content">
+
+                <!-- TAB 1: CONFIGURATION -->
+                <section id="tabConfig" class="tab-pane active">
+                    <div class="config-grid">
+                        <!-- Left Panel: Controls -->
+                        <div class="card config-card">
+                            <h3>Hyperparameter & Environment Settings</h3>
+                            <form id="configForm" class="control-form">
+                                
+                                <div class="form-group">
+                                    <label for="envSelect">Environment Topology</label>
+                                    <select id="envSelect" class="form-control">
+                                        <option value="UrbanCanyon-v2">UrbanCanyon-v2 (Complex Obstacles)</option>
+                                        <option value="DisasterRubble-v1">DisasterRubble-v1 (Unstable Debris Field)</option>
+                                        <option value="WindyCorridor-v0">WindyCorridor-v0 (Crosswind Shear)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="label-with-value">
+                                        <label for="episodeCount">Training Episodes</label>
+                                        <span id="episodeVal" class="val-badge">500</span>
+                                    </div>
+                                    <input type="range" id="episodeCount" min="100" max="2000" step="100" value="500" class="form-range">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="label-with-value">
+                                        <label for="learningRate">Learning Rate (alpha)</label>
+                                        <span id="lrVal" class="val-badge">0.0003</span>
+                                    </div>
+                                    <input type="range" id="learningRate" min="0.0001" max="0.005" step="0.0001" value="0.0003" class="form-range">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="label-with-value">
+                                        <label for="explorationRate">Exploration Rate (epsilon)</label>
+                                        <span id="expVal" class="val-badge">0.15</span>
+                                    </div>
+                                    <input type="range" id="explorationRate" min="0.01" max="0.5" tag="step" step="0.01" value="0.15" class="form-range">
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group half">
+                                        <label for="randomSeed">Random Seed</label>
+                                        <input type="number" id="randomSeed" value="42" class="form-control">
+                                    </div>
+                                    <div class="form-group half">
+                                        <label for="policyType">Policy Architecture</label>
+                                        <select id="policyType" class="form-control">
+                                            <option value="PPO">PPO (Proximal Policy)</option>
+                                            <option value="ActorCritic">Actor-Critic</option>
+                                            <option value="DQN">DQN (Q-Learning)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" id="resetConfigBtn" class="btn btn-secondary">Reset Defaults</button>
+                                    <button type="button" id="applyConfigBtn" class="btn btn-primary">Save & Initialize</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Right Panel: Status & Live Preview State -->
+                        <div class="config-sidebar">
+                            <div class="card status-overview-card">
+                                <h3>Simulation Status</h3>
+                                <div class="status-indicator-box">
+                                    <div class="status-row">
+                                        <span class="status-key">State:</span>
+                                        <span id="simStateLabel" class="status-val text-success">Ready for Execution</span>
+                                    </div>
+                                    <div class="status-row">
+                                        <span class="status-key">Selected Env:</span>
+                                        <span id="simEnvLabel" class="status-val">UrbanCanyon-v2</span>
+                                    </div>
+                                    <div class="status-row">
+                                        <span class="status-key">Backend API:</span>
+                                        <span class="status-val">Gym-Compat / NumPy</span>
+                                    </div>
+                                </div>
+                                <div class="quick-launch-box">
+                                    <p>Click below to execute a simulated reinforcement learning demonstration run using current parameters.</p>
+                                    <button id="quickRunBtn" class="btn btn-primary btn-lg full-width">Run Demo Experiment Now</button>
+                                </div>
+                            </div>
+
+                            <div class="card info-card-mini">
+                                <h4>HackPHS 2026 Note</h4>
+                                <p>Simulated telemetry is generated deterministically to test UI responsiveness and evaluation charts without requiring a heavy remote cluster.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 2: RESULTS & TELEMETRY -->
+                <section id="tabResults" class="tab-pane">
+                    <div class="metrics-grid">
+                        <div class="card metric-card">
+                            <span class="metric-title">Mean Episode Reward</span>
+                            <span id="metricReward" class="metric-val">412.8</span>
+                            <span class="metric-delta positive">+18.4% vs baseline</span>
+                        </div>
+                        <div class="card metric-card">
+                            <span class="metric-title">Success Ratio</span>
+                            <span id="metricSuccess" class="metric-val">94.2%</span>
+                            <span class="metric-delta positive">+4.1% convergence</span>
+                        </div>
+                        <div class="card metric-card">
+                            <span class="metric-title">Avg Episode Length</span>
+                            <span id="metricLength" class="metric-val">128.4 steps</span>
+                            <span class="metric-delta negative">-12 steps optimized</span>
+                        </div>
+                        <div class="card metric-card">
+                            <span class="metric-title">Collision Rate</span>
+                            <span id="metricCollision" class="metric-val">1.8%</span>
+                            <span class="metric-delta positive">-2.3% safe vector</span>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="card chart-card">
+                            <div class="chart-header">
+                                <h3>Training Reward Convergence (Episodes)</h3>
+                                <span class="chart-tag">Simulated Data</span>
+                            </div>
+                            <div class="chart-container">
+                                <!-- CSS / SVG Lightweight Line Chart -->
+                                <svg id="rewardChart" viewBox="0 0 600 250" class="line-chart">
+                                    <line x1="0" y1="50" x2="600" y2="50" stroke="var(--border-subtle)" stroke-dasharray="4" />
+                                    <line x1="0" y1="125" x2="600" y2="125" stroke="var(--border-subtle)" stroke-dasharray="4" />
+                                    <line x1="0" y1="200" x2="600" y2="200" stroke="var(--border-subtle)" stroke-dasharray="4" />
+                                    <polyline id="chartPolyline" fill="none" stroke="var(--accent-primary)" stroke-width="3" points="0,220 100,190 200,150 300,110 400,80 500,60 600,45" />
+                                </svg>
+                            </div>
+                            <div class="chart-xaxis">
+                                <span>Ep 0</span>
+                                <span>Ep 100</span>
+                                <span>Ep 200</span>
+                                <span>Ep 300</span>
+                                <span>Ep 400</span>
+                                <span>Ep 500</span>
+                            </div>
+                        </div>
+
+                        <div class="card chart-card">
+                            <div class="chart-header">
+                                <h3>Policy Success Rate Comparison</h3>
+                                <span class="chart-tag">Benchmark</span>
+                            </div>
+                            <div class="comparison-bars">
+                                <div class="bar-row">
+                                    <span class="bar-label">Baseline (Random)</span>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 28%; background-color: var(--text-muted);"></div></div>
+                                    <span class="bar-val">28.5%</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Actor-Critic</span>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 76%; background-color: var(--warning);"></div></div>
+                                    <span class="bar-val">76.2%</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">SkyRL PPO (Tuned)</span>
+                                    <div class="bar-track"><div id="barPpoFill" class="bar-fill" style="width: 94.2%; background-color: var(--success);"></div></div>
+                                    <span id="barPpoVal" class="bar-val">94.2%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 3: EXPERIMENT HISTORY -->
+                <section id="tabHistory" class="tab-pane">
+                    <div class="card">
+                        <div class="table-header-flex">
+                            <h3>Saved Experimental Runs</h3>
+                            <button id="clearHistoryBtn" class="btn btn-secondary btn-sm">Clear Logs</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="historyTable">
+                                <thead>
+                                    <tr>
+                                        <th>Run ID</th>
+                                        <th>Environment</th>
+                                        <th>Episodes</th>
+                                        <th>Final Reward</th>
+                                        <th>Success Rate</th>
+                                        <th>Timestamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>run_9f2a41</code></td>
+                                        <td>UrbanCanyon-v2</td>
+                                        <td>500</td>
+                                        <td>412.8</td>
+                                        <td><span class="badge success">94.2%</span></td>
+                                        <td>Just now (Demo)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>run_3c1b88</code></td>
+                                        <td>DisasterRubble-v1</td>
+                                        <td>1000</td>
+                                        <td>388.4</td>
+                                        <td><span class="badge success">89.1%</span></td>
+                                        <td>12 mins ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>run_8e7d22</code></td>
+                                        <td>WindyCorridor-v0</td>
+                                        <td>250</td>
+                                        <td>294.5</td>
+                                        <td><span class="badge warning">72.4%</span></td>
+                                        <td>1 hour ago</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 4: CLERK AUTH SETUP -->
+                <section id="tabAuth" class="tab-pane">
+                    <div class="card auth-guide-card">
+                        <h3>Clerk Authentication Integration Guide</h3>
+                        <p>SkyRL's workspace is structured to support seamless user authentication via Clerk. Because this is a frontend-first static repository optimized for GitHub Pages, authentication is currently in placeholder demo mode.</p>
+                        
+                        <div class="steps-box">
+                            <h4>Required Files to Connect Clerk:</h4>
+                            <ul>
+                                <li>Include the Clerk JavaScript frontend SDK script in <code>portal.html</code>.</li>
+                                <li>Configure your publishable key in environment variables (<code>VITE_CLERK_PUBLISHABLE_KEY</code> or equivalent).</li>
+                                <li>Initialize <code>Clerk</code> inside <code>portal.js</code> to mount user profile buttons and session guards.</li>
+                            </ul>
+                        </div>
+
+                        <div class="code-snippet-box">
+                            <pre><code><span class="t-comment">// Example Clerk initialization snippet for future backend connection</span>
+<span class="t-keyword">import</span> { Clerk } from <span class="t-string">"@clerk/clerk-js"</span>;
+
+<span class="t-keyword">const</span> clerkPubKey = process.env.VITE_CLERK_PUBLISHABLE_KEY;
+<span class="t-keyword">const</span> clerk = <span class="t-keyword">new</span> Clerk(clerkPubKey);
+<span class="t-keyword">await</span> clerk.load();
+
+<span class="t-keyword">if</span> (clerk.user) {
+    document.getElementById(<span class="t-string">"auth-user"</span>).innerText = clerk.user.fullName;
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="portal.js"></script>
 </body>
 </html>
