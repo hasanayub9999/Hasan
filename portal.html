@@ -1,226 +1,367 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1020">
-  <meta name="description" content="Configure and review SkyRL experimental navigation runs.">
-  <title>Workspace — SkyRL</title>
-  <link rel="stylesheet" href="portal.css">
-  <script>
-    try {
-      document.documentElement.dataset.theme =
-        localStorage.getItem("skyrl-theme") || "dark";
-    } catch (_) {}
-  </script>
+  <title>SkyRL Workspace</title>
+  <link rel="stylesheet" href="style.css">
   <script src="portal.js" defer></script>
 </head>
 <body>
-  <div class="workspace-shell">
-    <aside class="sidebar" id="sidebar">
-      <a class="brand" href="index.html">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html" aria-label="SkyRL home">
         <span class="brand-mark">S</span>
-        <span>skyrl<span class="brand-period">.</span></span>
+        <span>skyrl<span class="brand-dot">.</span></span>
       </a>
 
-      <div class="sidebar-caption">WORKSPACE</div>
-      <nav class="sidebar-nav" aria-label="Workspace navigation">
-        <a class="sidebar-link active" href="#overview"><span>▦</span> Overview</a>
-        <a class="sidebar-link" href="#configuration"><span>⚙</span> Experiment setup</a>
-        <a class="sidebar-link" href="#results"><span>⌁</span> Results & evaluation</a>
-        <a class="sidebar-link" href="#history"><span>◷</span> Experiment history</a>
+      <div class="sidebar-label">WORKSPACE</div>
+
+      <nav class="side-nav" aria-label="Workspace navigation">
+        <button class="side-link active" data-page="overview"><span>▦</span> Overview</button>
+        <button class="side-link" data-page="projects"><span>◇</span> Projects</button>
+        <button class="side-link" data-page="experiments"><span>⌁</span> Experiment setup</button>
+        <button class="side-link" data-page="results"><span>↗</span> Results &amp; evaluation</button>
+        <button class="side-link" data-page="history"><span>◷</span> Experiment history</button>
       </nav>
 
-      <div class="sidebar-caption sidebar-caption-spaced">PROJECT</div>
-      <div class="project-card">
-        <span class="project-dot"></span>
-        <div><strong>SkyRL Research</strong><small>HackPHS 2026</small></div>
-      </div>
-
       <div class="sidebar-bottom">
-        <div class="sidebar-note">
-          <span class="note-symbol">i</span>
-          <p>Demo mode is active. No real reinforcement-learning model is being trained.</p>
-        </div>
-        <a href="index.html" class="back-link">← Back to website</a>
+        <div class="status-line"><span class="status-dot"></span> Demo workspace</div>
+        <p>Interface preview. No real reinforcement-learning model is being trained.</p>
+        <a class="back-link" href="index.html">← Back to website</a>
       </div>
     </aside>
 
-    <main class="dashboard">
-      <header class="dashboard-topbar">
-        <div class="breadcrumb"><a href="index.html">SkyRL</a><span>/</span><strong>Workspace</strong></div>
+    <main class="main-content">
+      <header class="topbar">
+        <div class="crumb">
+          <span class="crumb-muted">SkyRL Research</span>
+          <span class="crumb-sep">/</span>
+          <span id="crumb-current">Overview</span>
+        </div>
+
         <div class="topbar-actions">
-          <span class="demo-badge"><span class="status-dot"></span> DEMO MODE</span>
-          <button class="icon-button" data-theme-toggle aria-label="Toggle color theme">☼</button>
+          <span class="demo-pill"><span class="status-dot"></span> DEMO MODE</span>
+          <button id="theme-toggle" class="icon-button" aria-label="Toggle color theme" title="Toggle theme">☼</button>
         </div>
       </header>
 
-      <section class="dashboard-content" id="overview">
-        <div class="page-heading">
+      <!-- OVERVIEW -->
+      <section class="page-section" id="overview-page">
+        <div class="hero-row">
           <div>
-            <span class="eyebrow">RESEARCH WORKSPACE</span>
-            <h1>Experiment overview</h1>
-            <p>Configure a run, explore illustrative outputs, and compare experiment settings.</p>
+            <div class="eyebrow">HACKPHS 2026 · INTO THE SKY</div>
+            <h1>Research workspace<span class="heading-period">.</span></h1>
+            <p class="page-lede">Configure environments, organize entities, and compare experiment settings in one place.</p>
           </div>
-          <button class="button button-primary" id="runTopButton">Run demo experiment <span>↗</span></button>
+
+          <div class="hero-symbol" aria-hidden="true">
+            <span>SR</span><i></i><i></i><i></i>
+          </div>
         </div>
 
-        <div class="notice-banner">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-label">ACTIVE PROJECTS</div>
+            <div class="stat-value" id="project-count">2</div>
+            <div class="stat-foot">Objects and Humans</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-label">SAVED CONFIGURATIONS</div>
+            <div class="stat-value" id="saved-count">0</div>
+            <div class="stat-foot">Stored in this browser</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-label">WORKSPACE STATUS</div>
+            <div class="stat-value status-text">Ready</div>
+            <div class="stat-foot"><span class="status-dot"></span> Demo environment</div>
+          </article>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">YOUR WORKSPACE</div>
+            <h2>Choose a project</h2>
+          </div>
+          <span class="subtle">Two independent project spaces</span>
+        </div>
+
+        <div class="project-grid">
+          <button class="project-card object-card" data-open-project="objects">
+            <div class="project-card-top">
+              <span class="project-icon project-placeholder">ALI</span>
+              <span class="card-arrow">↗</span>
+            </div>
+            <div class="project-type">PROJECT 01</div>
+            <h3>Objects</h3>
+            <p>Set up object properties and interaction parameters for your environment.</p>
+            <div class="project-card-footer">
+              <span>Open project</span><span>→</span>
+            </div>
+          </button>
+
+          <button class="project-card human-card" data-open-project="humans">
+            <div class="project-card-top">
+              <span class="project-icon project-placeholder">ALI</span>
+              <span class="card-arrow">↗</span>
+            </div>
+            <div class="project-type">PROJECT 02</div>
+            <h3>Humans</h3>
+            <p>Configure human-agent parameters separately from the Objects project.</p>
+            <div class="project-card-footer">
+              <span>Open project</span><span>→</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="notice">
           <span class="notice-icon">i</span>
           <div>
-            <strong>Illustrative demo environment</strong>
-            <p>Results on this page are generated locally for interface demonstration. They are not measurements from a trained model or a physical drone.</p>
+            <strong>Demo mode is active</strong>
+            <p>Controls below are a front-end interface demonstration. They do not represent measurements from a trained model or a physical drone.</p>
           </div>
         </div>
-
-        <div class="overview-grid">
-          <article class="metric-card">
-            <div class="metric-label">EXPERIMENTS IN THIS SESSION</div>
-            <div class="metric-value" id="metricRuns">0</div>
-            <div class="metric-foot">Demo runs created in this session</div>
-          </article>
-          <article class="metric-card">
-            <div class="metric-label">LATEST DEMO SUCCESS</div>
-            <div class="metric-value" id="metricSuccess">—<span class="metric-unit"></span></div>
-            <div class="metric-foot">Illustrative task completion rate</div>
-          </article>
-          <article class="metric-card">
-            <div class="metric-label">LATEST EPISODE REWARD</div>
-            <div class="metric-value" id="metricReward">—</div>
-            <div class="metric-foot">Illustrative reward score</div>
-          </article>
-        </div>
-
-        <div class="dashboard-section-heading" id="configuration">
-          <div><span class="eyebrow">CONFIGURATION</span><h2>Experiment setup</h2></div>
-          <button class="button button-secondary button-small" id="resetButton">Reset settings</button>
-        </div>
-
-        <div class="configuration-grid">
-          <section class="workspace-card">
-            <div class="card-heading">
-              <div><h3>Environment</h3><p>Choose a task configuration for the demo.</p></div>
-              <span class="card-number">01</span>
-            </div>
-
-            <label class="field-label" for="environment">Environment preset</label>
-            <select class="field-control" id="environment">
-              <option value="grid">Grid navigation</option>
-              <option value="waypoint">Waypoint navigation</option>
-              <option value="obstacle">Obstacle avoidance (abstract)</option>
-            </select>
-
-            <div class="field-help" id="environmentHelp">An abstract grid-navigation task used for demonstration.</div>
-
-            <label class="field-label" for="episodes">Episode count <output id="episodesOutput">100</output></label>
-            <input class="range-control" id="episodes" type="range" min="20" max="500" step="20" value="100">
-            <div class="range-ends"><span>20</span><span>500</span></div>
-
-            <label class="field-label" for="seed">Random seed</label>
-            <input class="field-control" id="seed" type="number" min="0" max="999999" value="42">
-            <div class="field-help">Use the same settings and seed for a repeatable demo.</div>
-          </section>
-
-          <section class="workspace-card">
-            <div class="card-heading">
-              <div><h3>Training parameters</h3><p>Adjust illustrative training settings.</p></div>
-              <span class="card-number">02</span>
-            </div>
-
-            <label class="field-label" for="steps">Training steps <output id="stepsOutput">10,000</output></label>
-            <input class="range-control" id="steps" type="range" min="1000" max="50000" step="1000" value="10000">
-            <div class="range-ends"><span>1,000</span><span>50,000</span></div>
-
-            <label class="field-label" for="learningRate">Learning rate</label>
-            <select class="field-control" id="learningRate">
-              <option value="0.0001">0.0001</option>
-              <option value="0.0003" selected>0.0003</option>
-              <option value="0.001">0.001</option>
-              <option value="0.003">0.003</option>
-            </select>
-
-            <label class="field-label" for="exploration">Exploration level <output id="explorationOutput">50%</output></label>
-            <input class="range-control" id="exploration" type="range" min="0" max="100" step="5" value="50">
-            <div class="range-ends"><span>Lower</span><span>Higher</span></div>
-
-            <label class="field-label" for="evalRuns">Evaluation runs</label>
-            <select class="field-control" id="evalRuns">
-              <option value="5">5 runs</option>
-              <option value="10" selected>10 runs</option>
-              <option value="25">25 runs</option>
-              <option value="50">50 runs</option>
-            </select>
-          </section>
-        </div>
-
-        <div class="run-bar">
-          <div><strong>Ready to explore?</strong><p>Run a local demo using your selected settings.</p></div>
-          <button class="button button-primary" id="runButton">Run demo experiment <span>↗</span></button>
-        </div>
-
-        <section class="results-section" id="results">
-          <div class="dashboard-section-heading">
-            <div><span class="eyebrow">EVALUATION</span><h2>Results & analysis</h2></div>
-            <span class="subtle-label" id="resultsLabel">Waiting for first demo run</span>
-          </div>
-
-          <div class="results-grid">
-            <article class="workspace-card chart-card">
-              <div class="card-heading">
-                <div><h3>Illustrative reward progression</h3><p>Example values across demo episodes</p></div>
-                <span class="chart-legend"><i></i> Demo reward</span>
-              </div>
-              <div class="chart-wrap"><svg id="rewardChart" viewBox="0 0 600 240" role="img" aria-label="Illustrative reward progression chart"></svg></div>
-              <div class="chart-axis-labels"><span>Start</span><span>Episode progression</span><span>End</span></div>
-            </article>
-
-            <article class="workspace-card chart-card">
-              <div class="card-heading">
-                <div><h3>Evaluation summary</h3><p>Illustrative run metrics</p></div>
-              </div>
-              <div class="summary-stat">
-                <span>Task completion</span><strong id="resultSuccess">—</strong>
-              </div>
-              <div class="summary-stat">
-                <span>Average reward</span><strong id="resultReward">—</strong>
-              </div>
-              <div class="summary-stat">
-                <span>Average episode length</span><strong id="resultLength">—</strong>
-              </div>
-              <div class="summary-stat">
-                <span>Evaluation sample size</span><strong id="resultSamples">—</strong>
-              </div>
-              <p class="chart-footnote">All values above are illustrative demo outputs, not scientific measurements.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="history-section" id="history">
-          <div class="dashboard-section-heading">
-            <div><span class="eyebrow">SESSION RECORD</span><h2>Experiment history</h2></div>
-            <button class="button button-secondary button-small" id="clearHistoryButton">Clear history</button>
-          </div>
-
-          <div class="workspace-card history-card">
-            <div class="table-scroll">
-              <table>
-                <thead>
-                  <tr><th>Experiment</th><th>Environment</th><th>Episodes</th><th>Demo reward</th><th>Success</th><th>Mode</th></tr>
-                </thead>
-                <tbody id="historyBody">
-                  <tr id="emptyHistory"><td colspan="6" class="empty-state">No runs yet. Run a demo experiment to populate this table.</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <footer class="dashboard-footer">
-          <span>SkyRL · HackPHS 2026</span>
-          <span>Experimental interface · No physical flight control</span>
-        </footer>
       </section>
+
+      <!-- PROJECT LIBRARY -->
+      <section class="page-section hidden" id="projects-page">
+        <div class="eyebrow">PROJECT LIBRARY</div>
+        <h1>Projects<span class="heading-period">.</span></h1>
+        <p class="page-lede">Open either project. Their settings are saved independently in this browser.</p>
+
+        <div class="project-grid compact-projects">
+          <button class="project-card object-card" data-open-project="objects">
+            <div class="project-card-top">
+              <span class="project-icon project-placeholder">ALI</span>
+              <span class="card-arrow">↗</span>
+            </div>
+            <div class="project-type">PROJECT 01</div>
+            <h3>Objects</h3>
+            <p>Object properties and interactions.</p>
+            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
+          </button>
+
+          <button class="project-card human-card" data-open-project="humans">
+            <div class="project-card-top">
+              <span class="project-icon project-placeholder">ALI</span>
+              <span class="card-arrow">↗</span>
+            </div>
+            <div class="project-type">PROJECT 02</div>
+            <h3>Humans</h3>
+            <p>Human-agent configuration.</p>
+            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
+          </button>
+        </div>
+      </section>
+
+      <!-- INDIVIDUAL PROJECT SETTINGS -->
+      <section class="page-section hidden" id="project-page">
+        <button class="back-inline" id="back-to-projects">← All projects</button>
+
+        <div class="eyebrow" id="project-eyebrow">PROJECT 01</div>
+
+        <div class="project-title-row">
+          <div>
+            <h1 id="project-title">Objects<span class="heading-period">.</span></h1>
+            <p class="page-lede" id="project-description">Configure object properties.</p>
+          </div>
+          <span class="project-badge" id="project-badge">OBJECT CONFIG</span>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Project tabs">
+          <button class="tab-button active" role="tab" aria-selected="true" data-tab="configuration">Configuration</button>
+          <button class="tab-button" role="tab" aria-selected="false" data-tab="advanced">Advanced settings</button>
+          <button class="tab-button" role="tab" aria-selected="false" data-tab="notes">Notes</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <div class="eyebrow" id="panel-eyebrow">OBJECT PARAMETERS</div>
+              <h2 id="panel-title">Environment configuration</h2>
+            </div>
+            <span class="autosave">LOCAL SETTINGS</span>
+          </div>
+
+          <div id="configuration-panel" class="tab-panel">
+            <div class="form-grid">
+              <label class="field">
+                <span>Configuration name</span>
+                <input id="config-name" type="text" placeholder="e.g. Baseline setup" maxlength="70">
+              </label>
+
+              <label class="field">
+                <span>Environment preset</span>
+                <select id="preset">
+                  <option value="balanced">Balanced</option>
+                  <option value="simple">Simple</option>
+                  <option value="complex">Complex</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Entity count</span>
+                <input id="entity-count" type="number" min="1" max="100" value="10">
+              </label>
+
+              <label class="field">
+                <span>Interaction mode</span>
+                <select id="interaction">
+                  <option value="standard">Standard</option>
+                  <option value="direct">Direct interaction</option>
+                  <option value="limited">Limited interaction</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="range-field">
+              <div class="range-header">
+                <label for="complexity">Environment complexity</label>
+                <output id="complexity-value">50%</output>
+              </div>
+              <input id="complexity" type="range" min="0" max="100" value="50">
+              <div class="range-scale">
+                <span>Low complexity</span>
+                <span>High complexity</span>
+              </div>
+            </div>
+
+            <div class="check-row">
+              <div>
+                <strong>Enable interaction logging</strong>
+                <p>Keep a local record of configuration changes.</p>
+              </div>
+              <label class="switch">
+                <input id="logging" type="checkbox" checked>
+                <span></span>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <span class="save-message" id="save-message">Changes are stored locally in this browser.</span>
+              <button class="primary-button" id="save-config">Save configuration <span>→</span></button>
+            </div>
+          </div>
+
+          <div id="advanced-panel" class="tab-panel hidden">
+            <div class="form-grid">
+              <label class="field">
+                <span>Random seed</span>
+                <input id="seed" type="number" min="0" max="999999" value="42">
+              </label>
+
+              <label class="field">
+                <span>Evaluation frequency</span>
+                <select id="frequency">
+                  <option>Every 10 steps</option>
+                  <option>Every 25 steps</option>
+                  <option>Every 50 steps</option>
+                  <option>Manual</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Observation profile</span>
+                <select id="observation">
+                  <option>Default</option>
+                  <option>Compact</option>
+                  <option>Extended</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Output detail</span>
+                <select id="output-detail">
+                  <option>Standard</option>
+                  <option>Summary only</option>
+                  <option>Detailed</option>
+                </select>
+              </label>
+            </div>
+
+            <p class="helper-note">These are editable demo controls. They do not launch training or connect to a simulation engine.</p>
+
+            <div class="form-actions">
+              <span class="save-message">Advanced settings are saved with this project.</span>
+              <button class="primary-button" id="save-advanced">Save advanced settings <span>→</span></button>
+            </div>
+          </div>
+
+          <div id="notes-panel" class="tab-panel hidden">
+            <label class="field">
+              <span>Project notes</span>
+              <textarea id="project-notes" rows="7" placeholder="Write hypotheses, planned tests, or observations..."></textarea>
+            </label>
+
+            <div class="form-actions">
+              <span class="save-message">Notes are kept separately for each project.</span>
+              <button class="primary-button" id="save-notes">Save notes <span>→</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-tip">
+          <span>✳</span>
+          <p><strong>Keep experiments organized.</strong> Save a configuration before switching projects; Objects and Humans maintain separate settings.</p>
+        </div>
+      </section>
+
+      <!-- EXPERIMENT SETUP -->
+      <section class="page-section hidden" id="experiments-page">
+        <div class="eyebrow">WORKFLOW</div>
+        <h1>Experiment setup<span class="heading-period">.</span></h1>
+        <p class="page-lede">Prepare a configuration before evaluating it.</p>
+
+        <div class="panel simple-panel">
+          <h2>Start with a project</h2>
+          <p>Choose Objects or Humans to edit its independent settings.</p>
+          <div class="inline-actions">
+            <button class="primary-button" data-open-project="objects">Configure Objects →</button>
+            <button class="secondary-button" data-open-project="humans">Configure Humans →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS -->
+      <section class="page-section hidden" id="results-page">
+        <div class="eyebrow">EVALUATION</div>
+        <h1>Results &amp; evaluation<span class="heading-period">.</span></h1>
+        <p class="page-lede">A place to review future experiment outputs.</p>
+
+        <div class="panel simple-panel">
+          <div class="empty-state-icon">↗</div>
+          <h2>No evaluation results yet</h2>
+          <p>This demo workspace does not run a model. Saved settings can be used as a planning record.</p>
+          <button class="secondary-button" data-page="projects">Browse projects →</button>
+        </div>
+      </section>
+
+      <!-- EXPERIMENT HISTORY -->
+      <section class="page-section hidden" id="history-page">
+        <div class="eyebrow">ACTIVITY</div>
+        <h1>Experiment history<span class="heading-period">.</span></h1>
+        <p class="page-lede">Your locally saved configurations appear here.</p>
+
+        <div class="panel">
+          <div class="history-header">
+            <h2>Saved configurations</h2>
+            <button id="refresh-history" class="secondary-button">Refresh</button>
+          </div>
+          <div id="history-list" class="history-list">
+            <div class="empty-state">No saved configurations yet. Open a project and save its settings.</div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="page-footer">
+        <span>SKYRL RESEARCH WORKSPACE</span>
+        <span>HackPHS 2026 · Interface demo</span>
+      </footer>
     </main>
   </div>
 </body>
