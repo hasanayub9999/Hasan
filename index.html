@@ -1,71 +1,237 @@
-```html
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SkyRL</title>
+  <meta name="theme-color" content="#080b13">
+  <meta name="description" content="SkyRL — autonomous flight intelligence and reinforcement learning.">
+  <title>SkyRL — Autonomous Flight Intelligence</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
   <script>
     try {
       document.documentElement.dataset.theme =
         localStorage.getItem("skyrl-theme") || "dark";
     } catch (e) {}
   </script>
-  <script src="portal.js" defer></script>
+
+  <script src="script.js" defer></script>
 </head>
+
 <body>
-  <header class="topbar">
-    <a class="brand" href="index.html">
-      <span class="brand-mark">S</span>
-      <span>Sky<span class="accent">RL</span></span>
-    </a>
+  <header class="nav">
+    <a class="logo" href="index.html"><b>✦</b> Sky<span>RL</span></a>
 
-    <div class="launch-dropdown">
-      <button id="launchBtn" class="launch-btn"
-        type="button" aria-expanded="false" aria-controls="launchMenu">
-        Launch <span class="chevron">⌄</span>
-      </button>
+    <nav class="main-nav">
+      <a href="#platform">Platform</a>
+      <a href="#how">How it works</a>
+      <a href="#community">Community</a>
+    </nav>
 
-      <div id="launchMenu" class="launch-menu" hidden>
-        <a href="human.html">
-          <span class="menu-icon">H</span>
-          <span>
-            <strong>Human</strong>
-            <small>Human environment</small>
-          </span>
-        </a>
-        <a href="object.html">
-          <span class="menu-icon">O</span>
-          <span>
-            <strong>Object</strong>
-            <small>Object environment</small>
-          </span>
-        </a>
+    <div class="navright">
+      <button id="themeToggle" class="iconbtn" aria-label="Toggle theme">☾</button>
+      <button id="loginOpen" class="textbtn">Log in</button>
+
+      <div class="deploy-wrap">
+        <button id="deployToggle" class="btn btn-small deploy-button"
+          aria-expanded="false" aria-controls="deployMenu">
+          Deploy <span>⌄</span>
+        </button>
+
+        <div class="deploy-menu" id="deployMenu" hidden>
+          <a href="portal.html" class="deploy-option">
+            <span class="deploy-icon">3D</span>
+            <span class="deploy-copy">
+              <strong>Flight workspace</strong>
+              <small>Open the 3D environment</small>
+            </span>
+            <span class="deploy-arrow">↗</span>
+          </a>
+        </div>
       </div>
-    </div>
-
-    <div class="actions">
-      <button id="themeToggle" class="icon-btn"
-        type="button" aria-label="Switch theme">☼</button>
     </div>
   </header>
 
-  <main class="landing">
-    <p class="eyebrow">SKYRL SIMULATION PLATFORM</p>
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><i></i> COMMUNITY-TRAINED DRONE INTELLIGENCE</div>
+        <h1>Teach drones<br><span>how to fly.</span></h1>
 
-    <h1>
-      Teaching drones to<br>
-      <span class="accent">navigate better.</span>
-    </h1>
+        <p>
+          Build environments. Train reinforcement-learning agents.
+          Watch autonomous drones learn how to navigate the world.
+        </p>
 
-    <p class="lead">
-      An experimental reinforcement learning environment
-      for autonomous navigation.
-    </p>
+        <div class="actions">
+          <a class="btn" href="portal.html">Launch SkyRL <b>→</b></a>
+          <a class="btn secondary" href="#how">See how it works</a>
+        </div>
 
-    <a class="btn primary" href="human.html">Launch Simulation ↗</a>
+        <small class="subnote">● Built for experimentation, learning &amp; autonomous systems</small>
+      </div>
+
+      <div class="preview">
+        <div class="windowtop">
+          <span>● ● ●</span>
+          <span>SkyRL / Flight preview</span>
+          <b>● CONCEPT</b>
+        </div>
+
+        <div class="map">
+          <div class="grid"></div>
+          <i class="block b1"></i>
+          <i class="block b2"></i>
+          <i class="block b3"></i>
+          <i class="block b4"></i>
+
+          <span class="start">○<small>START</small></span>
+          <span class="land">◎<small>LAND</small></span>
+
+          <svg viewBox="0 0 500 330" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M55 270 C135 230 145 135 230 175 S340 125 425 65"/>
+          </svg>
+
+          <div class="drone">✦</div>
+        </div>
+
+        <div class="stats">
+          <div><small>AGENT</small><b>PPO / Drone-01</b></div>
+          <div><small>MODE</small><b>Navigation</b></div>
+          <div><small>STATUS</small><b class="green">Preview</b></div>
+        </div>
+
+        <div class="floatcard topcard">↗ <span><small>POLICY</small><b>Learning loop</b></span></div>
+        <div class="floatcard bottomcard">✓ <span><small>MISSION</small><b>Reach the target</b></span></div>
+      </div>
+    </section>
+
+    <div class="strip">
+      <span>BUILD</span><i></i><span>TRAIN</span><i></i>
+      <span>SIMULATE</span><i></i><span>SHARE</span>
+    </div>
+
+    <section class="section" id="platform">
+      <div class="sectionhead">
+        <div>
+          <label>THE PLATFORM</label>
+          <h2>From environment<br>to intelligence.</h2>
+        </div>
+        <p>
+          SkyRL turns drone navigation into an interactive learning
+          environment where people create challenges and AI agents
+          learn how to solve them.
+        </p>
+      </div>
+
+      <div class="cards">
+        <article class="feature-card">
+          <small>01</small><div class="symbol">▦</div>
+          <h3>Build environments</h3>
+          <p>Arrange obstacles, buildings, start points and landing zones to design your own navigation challenge.</p>
+          <a href="portal.html">Open workspace →</a>
+        </article>
+
+        <article class="feature-card darkcard">
+          <small>02</small><div class="symbol">✦</div>
+          <h3>Train an AI agent</h3>
+          <p>Reinforcement learning allows an agent to explore, receive rewards and discover navigation strategies.</p>
+          <a href="portal.html">Explore portal →</a>
+        </article>
+
+        <article class="feature-card">
+          <small>03</small><div class="symbol">◎</div>
+          <h3>Grow the model</h3>
+          <p>The long-term vision is to let shared experience improve navigation across new environments.</p>
+          <a href="#community">See the vision →</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="sectionhead centered">
+        <label>HOW IT WORKS</label>
+        <h2>Four steps.<br>One learning loop.</h2>
+      </div>
+
+      <div class="steps">
+        <div><b>01</b><h3>Create</h3><p>Design a drone environment.</p></div>
+        <div><b>02</b><h3>Train</h3><p>Learn through trials and rewards.</p></div>
+        <div><b>03</b><h3>Navigate</h3><p>Test a learned navigation policy.</p></div>
+        <div><b>04</b><h3>Share</h3><p>Contribute to a shared model vision.</p></div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div>
+        <label>YOUR WORKSPACE AWAITS</label>
+        <h2>Ready for takeoff?</h2>
+        <p>Enter the SkyRL portal and explore the 3D workspace.</p>
+      </div>
+      <a class="btn" href="portal.html">Launch now ↗</a>
+    </section>
+
+    <section class="community section" id="community">
+      <div>
+        <label>THE BIGGER VISION</label>
+        <h2>One drone learns.<br><span>Everyone benefits.</span></h2>
+        <p>
+          SkyRL is designed around community-trained intelligence.
+          In the future, experiences from different environments could
+          help create stronger navigation policies for new challenges.
+        </p>
+        <a class="btn" href="portal.html">Enter SkyRL →</a>
+      </div>
+
+      <div class="network" aria-hidden="true">
+        <i></i><i></i><i></i><b>✦</b>
+        <span>01</span><span>02</span><span>03</span><span>04</span>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    <div>
+      <a class="logo" href="index.html"><b>✦</b> Sky<span>RL</span></a>
+      <p>Community-trained intelligence<br>for autonomous flight.</p>
+    </div>
+
+    <div class="footlinks">
+      <div>
+        <b>Platform</b>
+        <a href="#platform">Environment builder</a>
+        <a href="portal.html">3D portal</a>
+        <a href="#community">Community model</a>
+      </div>
+      <div>
+        <b>Project</b>
+        <a href="#how">How it works</a>
+        <a href="https://github.com/hasanayub9999/PHS-HACKS-HASAN-SAKTHI-TEAM">GitHub repository</a>
+      </div>
+    </div>
+
+    <div class="footbottom">
+      © 2026 SkyRL <span>Built for HackPHS 2026</span>
+    </div>
+  </footer>
+
+  <div class="modal" id="loginModal" hidden>
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <button class="close" id="loginClose" aria-label="Close login">×</button>
+      <div class="modalmark">✦</div>
+      <h2 id="loginTitle">Welcome to SkyRL</h2>
+      <p>Sign-in will let you save environments and training runs once authentication is connected.</p>
+      <button class="google" id="googleBtn"><b>G</b> Continue with Google</button>
+      <div class="or">DEMO INTERFACE</div>
+      <input id="loginEmail" type="email" placeholder="Email address" autocomplete="email">
+      <button class="btn full" id="emailContinue">Continue</button>
+      <small id="loginMessage">Authentication is not connected yet.</small>
+    </div>
+  </div>
 </body>
 </html>
-```
