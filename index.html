@@ -7,15 +7,12 @@
   <meta name="theme-color" content="#090d18">
   <meta name="description" content="SkyRL — an experimental simulation and reinforcement learning environment.">
   <title>SkyRL · HackPHS 2026</title>
-
   <link rel="stylesheet" href="style.css">
 
   <script>
     try {
       document.documentElement.dataset.theme =
-        localStorage.getItem("skyrl-theme") === "light"
-          ? "light"
-          : "dark";
+        localStorage.getItem("skyrl-theme") === "light" ? "light" : "dark";
     } catch (e) {}
   </script>
 
@@ -32,47 +29,29 @@
           <span>Sky<span class="accent">RL</span></span>
         </a>
 
-        <div class="crumbs">
-          SkyRL <span>/</span>
-          <strong id="crumb">Our Mission</strong>
-        </div>
+        <nav class="top-nav" aria-label="Main navigation">
+          <button type="button" class="top-link active"
+            data-view="mission" aria-current="page">
+            Mission
+          </button>
+          <button type="button" class="top-link" data-view="human">
+            Human
+          </button>
+          <button type="button" class="top-link" data-view="object">
+            Object
+          </button>
+        </nav>
 
         <div class="actions">
-          <div class="dropdown" id="deploy">
-            <button
-              type="button"
-              class="btn"
-              id="deployBtn"
-              aria-haspopup="true"
-              aria-expanded="false"
-              aria-controls="deployMenu">
-              Deploy <span class="caret" aria-hidden="true">▾</span>
-            </button>
-
-            <div class="menu" id="deployMenu" role="menu" hidden>
-              <button type="button" role="menuitem" data-view="human">
-                Human
-              </button>
-              <button type="button" role="menuitem" data-view="object">
-                Object
-              </button>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            class="icon-btn"
-            id="themeToggle"
-            aria-label="Switch to light mode">
-            ☼
-          </button>
+          <button type="button" class="icon-btn" id="themeToggle"
+            aria-label="Switch to light mode">☼</button>
         </div>
       </header>
 
       <main id="content" tabindex="-1">
 
         <section class="view" data-view-id="mission">
-          <p class="eyebrow">Our Mission</p>
+          <p class="eyebrow">OUR MISSION</p>
 
           <h1>
             Teaching drones to
@@ -86,33 +65,26 @@
           </p>
 
           <div class="cards">
-            <div class="card">
+            <article class="card">
               <h3>Experimentation</h3>
-              <p>
-                Change one setting, run it, and look at what happened.
-              </p>
-            </div>
+              <p>Change one setting, run it, and look at what happened.</p>
+            </article>
 
-            <div class="card">
+            <article class="card">
               <h3>Reproducibility</h3>
-              <p>
-                Record every configuration and seed so results can be repeated.
-              </p>
-            </div>
+              <p>Record every configuration and seed so results can be repeated.</p>
+            </article>
 
-            <div class="card">
+            <article class="card">
               <h3>Evaluation</h3>
-              <p>
-                Compare runs on shared metrics, with clear labels on what is simulated.
-              </p>
-            </div>
+              <p>Compare runs on shared metrics, with clear labels on what is simulated.</p>
+            </article>
           </div>
 
           <div class="cta">
             <button type="button" class="btn primary" data-view="human">
               Open Human
             </button>
-
             <button type="button" class="btn" data-view="object">
               Open Object
             </button>
@@ -125,11 +97,29 @@
         </section>
 
         <section class="view blank" data-view-id="human" hidden>
-          <h1 class="blank-text">ALI INTEGRATE!!!!</h1>
+          <div class="placeholder">
+            <p class="eyebrow">HUMAN SIMULATION</p>
+            <h1 class="blank-text">ALI INTEGRATE!!!!</h1>
+            <p class="lead">
+              The human simulation environment will be integrated here.
+            </p>
+            <button type="button" class="btn" data-view="mission">
+              Back to Mission
+            </button>
+          </div>
         </section>
 
         <section class="view blank" data-view-id="object" hidden>
-          <h1 class="blank-text">ALI INTEGRATE!!!!</h1>
+          <div class="placeholder">
+            <p class="eyebrow">OBJECT SIMULATION</p>
+            <h1 class="blank-text">ALI INTEGRATE!!!!</h1>
+            <p class="lead">
+              The object simulation environment will be integrated here.
+            </p>
+            <button type="button" class="btn" data-view="mission">
+              Back to Mission
+            </button>
+          </div>
         </section>
 
       </main>
