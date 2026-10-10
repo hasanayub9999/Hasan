@@ -41,6 +41,7 @@
           <span class="crumb-sep">/</span>
           <span id="crumb-current">Overview</span>
         </div>
+
         <div class="topbar-actions">
           <span class="demo-pill"><span class="status-dot"></span> DEMO MODE</span>
           <button id="theme-toggle" class="icon-button" aria-label="Toggle color theme" title="Toggle theme">☼</button>
@@ -53,10 +54,9 @@
           <div>
             <div class="eyebrow">HACKPHS 2026 · INTO THE SKY</div>
             <h1>Research workspace<span class="heading-period">.</span></h1>
-            <p class="page-lede">
-              Configure environments, organize entities, and compare experiment settings in one place.
-            </p>
+            <p class="page-lede">Configure environments, organize entities, and compare experiment settings in one place.</p>
           </div>
+
           <div class="hero-symbol" aria-hidden="true">
             <span>SR</span><i></i><i></i><i></i>
           </div>
@@ -68,11 +68,13 @@
             <div class="stat-value" id="project-count">2</div>
             <div class="stat-foot">Objects and Humans</div>
           </article>
+
           <article class="stat-card">
             <div class="stat-label">SAVED CONFIGURATIONS</div>
             <div class="stat-value" id="saved-count">0</div>
             <div class="stat-foot">Stored in this browser</div>
           </article>
+
           <article class="stat-card">
             <div class="stat-label">WORKSPACE STATUS</div>
             <div class="stat-value status-text">Ready</div>
@@ -91,24 +93,28 @@
         <div class="project-grid">
           <button class="project-card object-card" data-open-project="objects">
             <div class="project-card-top">
-              <span class="project-icon">▧</span>
+              <span class="project-icon project-placeholder">ALI</span>
               <span class="card-arrow">↗</span>
             </div>
             <div class="project-type">PROJECT 01</div>
             <h3>Objects</h3>
             <p>Set up object properties and interaction parameters for your environment.</p>
-            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
+            <div class="project-card-footer">
+              <span>Open project</span><span>→</span>
+            </div>
           </button>
 
           <button class="project-card human-card" data-open-project="humans">
             <div class="project-card-top">
-              <span class="project-icon">◎</span>
+              <span class="project-icon project-placeholder">ALI</span>
               <span class="card-arrow">↗</span>
             </div>
             <div class="project-type">PROJECT 02</div>
             <h3>Humans</h3>
             <p>Configure human-agent parameters separately from the Objects project.</p>
-            <div class="project-card-footer"><span>Open project</span><span>→</span></div>
+            <div class="project-card-footer">
+              <span>Open project</span><span>→</span>
+            </div>
           </button>
         </div>
 
@@ -129,14 +135,21 @@
 
         <div class="project-grid compact-projects">
           <button class="project-card object-card" data-open-project="objects">
-            <div class="project-card-top"><span class="project-icon">▧</span><span class="card-arrow">↗</span></div>
+            <div class="project-card-top">
+              <span class="project-icon project-placeholder">ALI</span>
+              <span class="card-arrow">↗</span>
+            </div>
             <div class="project-type">PROJECT 01</div>
             <h3>Objects</h3>
             <p>Object properties and interactions.</p>
             <div class="project-card-footer"><span>Open project</span><span>→</span></div>
           </button>
+
           <button class="project-card human-card" data-open-project="humans">
-            <div class="project-card-top"><span class="project-icon">◎</span><span class="card-arrow">↗</span></div>
+            <div class="project-card-top">
+              <span class="project-icon project-placeholder">ALI</span>
+              <span class="card-arrow">↗</span>
+            </div>
             <div class="project-type">PROJECT 02</div>
             <h3>Humans</h3>
             <p>Human-agent configuration.</p>
@@ -145,7 +158,7 @@
         </div>
       </section>
 
-      <!-- INDIVIDUAL PROJECT WORKSPACE -->
+      <!-- INDIVIDUAL PROJECT SETTINGS -->
       <section class="page-section hidden" id="project-page">
         <button class="back-inline" id="back-to-projects">← All projects</button>
 
@@ -174,7 +187,6 @@
             <span class="autosave">LOCAL SETTINGS</span>
           </div>
 
-          <!-- CONFIGURATION TAB -->
           <div id="configuration-panel" class="tab-panel">
             <div class="form-grid">
               <label class="field">
@@ -236,7 +248,6 @@
             </div>
           </div>
 
-          <!-- ADVANCED TAB -->
           <div id="advanced-panel" class="tab-panel hidden">
             <div class="form-grid">
               <label class="field">
@@ -281,7 +292,6 @@
             </div>
           </div>
 
-          <!-- NOTES TAB -->
           <div id="notes-panel" class="tab-panel hidden">
             <label class="field">
               <span>Project notes</span>
@@ -331,7 +341,7 @@
         </div>
       </section>
 
-      <!-- HISTORY -->
+      <!-- EXPERIMENT HISTORY -->
       <section class="page-section hidden" id="history-page">
         <div class="eyebrow">ACTIVITY</div>
         <h1>Experiment history<span class="heading-period">.</span></h1>
