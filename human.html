@@ -23,11 +23,29 @@
         <span>Sky<span class="accent">RL</span></span>
       </a>
 
-      <nav class="top-nav" aria-label="Main navigation">
-        <a class="top-link" href="index.html">Mission</a>
-        <a class="top-link active" aria-current="page" href="human.html">Human</a>
-        <a class="top-link" href="object.html">Object</a>
-      </nav>
+      <div class="deploy-dropdown">
+        <button class="deploy-btn" id="deployBtn"
+          aria-expanded="false" aria-controls="deployMenu" type="button">
+          Deploy <span class="chevron">⌄</span>
+        </button>
+
+        <div class="deploy-menu" id="deployMenu" hidden>
+          <a href="human.html" aria-current="page">
+            <span class="menu-icon">H</span>
+            <span>
+              <strong>Human</strong>
+              <small>Human simulation</small>
+            </span>
+          </a>
+          <a href="object.html">
+            <span class="menu-icon">O</span>
+            <span>
+              <strong>Object</strong>
+              <small>Object simulation</small>
+            </span>
+          </a>
+        </div>
+      </div>
 
       <div class="actions">
         <button type="button" class="icon-btn" id="themeToggle"
