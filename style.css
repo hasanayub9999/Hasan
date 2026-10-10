@@ -9,28 +9,22 @@
   --border: rgba(157, 177, 218, .16);
   --blue: #79a7ff;
   --blue-strong: #4f83ff;
-  --shadow: 0 18px 50px rgba(0, 0, 0, .35);
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
   --bg: #f7f9fd;
-  --surface: #ffffff;
+  --surface: #fff;
   --surface-2: #eef3fb;
   --text: #121b30;
   --muted: #5e6b83;
   --border: rgba(31, 52, 91, .14);
   --blue: #2d67d8;
   --blue-strong: #285dd0;
-  --shadow: 0 18px 50px rgba(35, 57, 99, .12);
 }
 
 * {
   box-sizing: border-box;
-}
-
-[hidden] {
-  display: none !important;
 }
 
 html {
@@ -47,8 +41,11 @@ body {
   transition: background .2s, color .2s;
 }
 
-button {
+button, a {
   font: inherit;
+}
+
+button {
   color: inherit;
   cursor: pointer;
 }
@@ -58,8 +55,7 @@ a {
   text-decoration: none;
 }
 
-button:focus-visible,
-a:focus-visible {
+button:focus-visible, a:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: 3px;
 }
@@ -68,22 +64,12 @@ a:focus-visible {
   color: var(--blue);
 }
 
-/* Full-width layout: sidebar removed */
-
 .app {
-  width: 100%;
   min-height: 100vh;
+  width: 100%;
 }
 
-.main {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-width: 0;
-  min-height: 100vh;
-}
-
-/* Compact top bar */
+/* Navigation */
 
 .topbar {
   position: sticky;
@@ -98,8 +84,6 @@ a:focus-visible {
   background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
-
-/* Logo */
 
 .brand {
   display: inline-flex;
@@ -122,8 +106,6 @@ a:focus-visible {
   font-weight: 800;
 }
 
-/* Clickable page tabs */
-
 .top-nav {
   display: flex;
   align-items: center;
@@ -131,6 +113,9 @@ a:focus-visible {
 }
 
 .top-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 38px;
   padding: 7px 14px;
   border: 1px solid transparent;
@@ -139,7 +124,7 @@ a:focus-visible {
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
-  transition: background .15s, color .15s, border-color .15s;
+  transition: background .15s, color .15s;
 }
 
 .top-link:hover {
@@ -153,24 +138,23 @@ a:focus-visible {
   border-color: var(--border);
 }
 
-/* Right-side controls */
-
 .actions {
   display: flex;
   align-items: center;
-  gap: 10px;
   margin-left: auto;
 }
 
-.btn,
-.icon-btn {
+.btn, .icon-btn {
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--surface);
-  transition: border-color .15s, background .15s, transform .15s;
+  transition: border-color .15s, transform .15s;
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 40px;
   padding: 0 16px;
   font-size: 13px;
@@ -183,17 +167,13 @@ a:focus-visible {
   width: 40px;
   height: 40px;
   font-size: 18px;
-  line-height: 1;
 }
 
-.btn:hover,
-.icon-btn:hover {
+.btn:hover, .icon-btn:hover {
   border-color: var(--blue);
 }
 
-.btn:active,
-.icon-btn:active,
-.top-link:active {
+.btn:active, .icon-btn:active {
   transform: scale(.98);
 }
 
@@ -203,24 +183,13 @@ a:focus-visible {
   color: #fff;
 }
 
-.btn.primary:hover {
-  background: #6795ff;
-}
-
 /* Main content */
-
-#content {
-  flex: 1;
-  min-width: 0;
-  outline: none;
-}
 
 .view {
   width: 100%;
   max-width: 860px;
   margin: 0 auto;
   padding: 64px 32px;
-  animation: fade-in .2s ease;
 }
 
 .eyebrow {
@@ -246,7 +215,7 @@ a:focus-visible {
   font-size: 17px;
 }
 
-/* Feature cards */
+/* Mission cards */
 
 .cards {
   display: grid;
@@ -279,8 +248,6 @@ a:focus-visible {
   font-size: 13px;
 }
 
-/* Page action buttons */
-
 .cta {
   display: flex;
   flex-wrap: wrap;
@@ -296,49 +263,48 @@ a:focus-visible {
   font-size: 12px;
 }
 
-/* Human and Object placeholder pages */
+/* Human and Object pages */
 
-.view.blank {
+.simulation-page {
+  min-height: calc(100vh - 64px);
+}
+
+.integration-panel {
+  margin: 28px 0;
+  padding: 36px 24px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.panel-symbol {
   display: grid;
   place-items: center;
-  max-width: none;
-  min-height: calc(100vh - 64px);
-  padding: 32px 24px;
-  text-align: center;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 18px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--blue);
+  font-size: 24px;
+  font-weight: 800;
 }
 
-.placeholder {
-  width: 100%;
-  max-width: 760px;
-}
-
-.placeholder .lead {
-  margin: 18px auto 24px;
-}
-
-.blank-text {
-  margin: 0;
-  font-size: clamp(32px, 7vw, 76px);
-  line-height: 1.1;
-  letter-spacing: -2px;
+.integration-panel h2 {
+  margin: 0 0 10px;
+  font-size: clamp(22px, 4vw, 34px);
   overflow-wrap: anywhere;
 }
 
-/* Subtle entrance animation */
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.integration-panel p {
+  max-width: 480px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-/* Tablet */
+/* Responsive */
 
 @media (max-width: 800px) {
   .topbar {
@@ -354,8 +320,6 @@ a:focus-visible {
     grid-template-columns: 1fr;
   }
 }
-
-/* Phones */
 
 @media (max-width: 480px) {
   .topbar {
@@ -383,10 +347,6 @@ a:focus-visible {
     font-size: 12px;
   }
 
-  .actions {
-    gap: 5px;
-  }
-
   .icon-btn {
     width: 36px;
     height: 36px;
@@ -404,17 +364,13 @@ a:focus-visible {
     font-size: 15px;
   }
 
-  .view.blank {
-    padding: 24px 16px;
+  .integration-panel {
+    padding: 28px 16px;
   }
 }
 
-/* Reduced motion accessibility */
-
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
