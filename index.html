@@ -3,256 +3,371 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1020">
-  <meta name="description" content="SkyRL explores reinforcement learning for autonomous navigation through configurable experiments and evaluation.">
-  <title>SkyRL — Autonomous Navigation Research</title>
-  <link rel="stylesheet" href="style.css">
+  <title>SkyRL — Project Workspace</title>
+  <link rel="stylesheet" href="portal.css">
   <script>
     try {
       document.documentElement.dataset.theme =
         localStorage.getItem("skyrl-theme") || "dark";
-    } catch (_) {}
+    } catch (e) {}
   </script>
-  <script src="script.js" defer></script>
+  <script src="portal.js" defer></script>
 </head>
 <body>
-  <header class="navbar">
-    <a class="brand" href="index.html" aria-label="SkyRL home">
-      <span class="brand-mark">S</span>
-      <span>skyrl<span class="brand-period">.</span></span>
-    </a>
+  <div class="app-shell">
 
-    <button class="mobile-menu-button" id="mobileMenuButton"
-      aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <aside class="sidebar">
+      <a class="brand" href="index.html" aria-label="SkyRL home">
+        <span class="brand-mark">S</span>
+        <span>skyrl<span class="brand-dot">.</span></span>
+      </a>
 
-    <nav class="nav-links" id="navLinks">
-      <a href="#platform">Platform</a>
-      <a href="#workflow">How it works</a>
-      <a href="#research">Research & impact</a>
-      <a href="#mission">Our mission</a>
-    </nav>
+      <div class="sidebar-label">WORKSPACE</div>
 
-    <div class="nav-actions">
-      <button class="icon-button" data-theme-toggle aria-label="Toggle color theme">◐</button>
-      <a class="button button-primary button-small" href="portal.html">Launch workspace <span>↗</span></a>
-    </div>
-  </header>
+      <button class="side-link active" data-section="workspace">
+        <span class="side-icon">⌂</span>
+        Workspace
+      </button>
 
-  <main>
-    <section class="hero section-wrap">
-      <div class="hero-content">
-        <div class="eyebrow"><span class="status-dot"></span> HACKPHS 2026 · RESEARCH PROJECT</div>
-        <h1>Teaching autonomous agents to <span class="gradient-text">navigate better.</span></h1>
-        <p class="hero-description">
-          SkyRL is an experimental platform for exploring reinforcement learning,
-          navigation policies, and measurable progress in configurable environments.
-        </p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="portal.html">Explore workspace <span>↗</span></a>
-          <a class="button button-secondary" href="#platform">Discover the platform <span>↓</span></a>
-        </div>
-        <div class="hero-note">
-          <span class="note-icon">⌘</span>
-          <span>Experiment. Evaluate. Learn.</span>
-          <span class="note-divider"></span>
-          <span>Built for research and exploration.</span>
-        </div>
-      </div>
+      <div class="sidebar-label project-label">PROJECTS</div>
 
-      <div class="hero-panel">
-        <div class="panel-top">
+      <button class="side-link project-link" data-mode="objects">
+        <span class="project-symbol object-symbol">O</span>
+        Objects
+      </button>
+
+      <button class="side-link project-link" data-mode="humans">
+        <span class="project-symbol human-symbol">H</span>
+        Humans
+      </button>
+
+      <div class="sidebar-bottom">
+        <div class="connection-status">
+          <span class="status-dot"></span>
           <div>
-            <span class="panel-label">PLATFORM OVERVIEW</span>
-            <h2>Research workspace</h2>
+            <strong>Workspace ready</strong>
+            <small>Local interface</small>
           </div>
-          <span class="pill pill-blue">EXPERIMENTAL</span>
         </div>
-        <div class="preview-block">
-          <div class="preview-heading">
-            <span class="tiny-label">EXPERIMENT PIPELINE</span>
-            <span class="live-label"><span class="status-dot"></span> Ready to configure</span>
+        <a href="index.html" class="back-link">← Back to website</a>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="breadcrumbs">
+          <span>SkyRL</span>
+          <span class="crumb-separator">/</span>
+          <strong id="breadcrumbCurrent">Workspace</strong>
+        </div>
+
+        <div class="topbar-right">
+          <span class="environment-badge">
+            <span class="status-dot"></span>
+            DEVELOPMENT
+          </span>
+          <button id="themeToggle" class="theme-button"
+            type="button" aria-label="Toggle light and dark mode">☼</button>
+        </div>
+      </header>
+
+      <div class="content">
+
+        <!-- WORKSPACE HOME -->
+        <section id="homeView" class="view">
+          <div class="page-intro">
+            <div class="eyebrow">SKYRL / RESEARCH WORKSPACE</div>
+            <h1>Your workspace.</h1>
+            <p>Select a project to open its dedicated interface.</p>
           </div>
-          <div class="pipeline">
-            <div class="pipeline-step">
-              <span class="pipeline-number">01</span>
-              <div><strong>Environment</strong><small>Define the task</small></div>
-              <span class="step-check">✓</span>
+
+          <div class="project-tabs" role="tablist" aria-label="SkyRL projects">
+            <button id="objectsTab" class="project-tab active"
+              role="tab" aria-selected="true" aria-controls="objectsView"
+              data-mode="objects">
+              <span class="tab-symbol object-symbol">O</span>
+              <span class="tab-copy">
+                <strong>Objects</strong>
+                <small>Object-based project</small>
+              </span>
+              <span class="tab-arrow">↗</span>
+            </button>
+
+            <button id="humansTab" class="project-tab"
+              role="tab" aria-selected="false" aria-controls="humansView"
+              data-mode="humans">
+              <span class="tab-symbol human-symbol">H</span>
+              <span class="tab-copy">
+                <strong>Humans</strong>
+                <small>Human-based project</small>
+              </span>
+              <span class="tab-arrow">↗</span>
+            </button>
+          </div>
+
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">YOUR PROJECTS</div>
+              <h2>Choose where to work</h2>
             </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-step">
-              <span class="pipeline-number">02</span>
-              <div><strong>Training setup</strong><small>Configure parameters</small></div>
-              <span class="step-check">✓</span>
+            <span class="small-muted">2 project modes</span>
+          </div>
+
+          <div class="project-grid">
+            <button class="project-card" data-mode="objects">
+              <span class="project-card-top">
+                <span class="project-symbol object-symbol">O</span>
+                <span class="open-indicator">↗</span>
+              </span>
+              <span class="project-card-title">Objects</span>
+              <span class="project-card-description">
+                Open the Objects workspace, configure its settings,
+                and prepare the interface for your project integration.
+              </span>
+              <span class="project-card-footer">Open Objects <span>→</span></span>
+            </button>
+
+            <button class="project-card" data-mode="humans">
+              <span class="project-card-top">
+                <span class="project-symbol human-symbol">H</span>
+                <span class="open-indicator">↗</span>
+              </span>
+              <span class="project-card-title">Humans</span>
+              <span class="project-card-description">
+                Open the Humans workspace, configure its settings,
+                and prepare the interface for your project integration.
+              </span>
+              <span class="project-card-footer">Open Humans <span>→</span></span>
+            </button>
+          </div>
+
+          <div class="info-panel">
+            <span class="info-icon">i</span>
+            <div>
+              <strong>Separate project interfaces</strong>
+              <p>
+                Objects and Humans have separate settings and workspace
+                views. The actual simulation or processing engine can be
+                connected to each project independently.
+              </p>
             </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-step">
-              <span class="pipeline-number">03</span>
-              <div><strong>Evaluation</strong><small>Review performance</small></div>
-              <span class="step-pending">○</span>
+          </div>
+        </section>
+
+        <!-- OBJECTS PROJECT -->
+        <section id="objectsView" class="view project-view" hidden>
+          <div class="project-page-heading">
+            <button class="back-button" data-section="workspace">← Workspace</button>
+            <div class="eyebrow">PROJECT / 01</div>
+            <div class="title-row">
+              <span class="large-project-symbol object-symbol">O</span>
+              <div>
+                <h1>Objects</h1>
+                <p>A dedicated workspace for the Objects project.</p>
+              </div>
             </div>
           </div>
-          <div class="preview-footer">
-            <span>Configure your first experiment</span>
-            <a href="portal.html">Open workspace →</a>
+
+          <div class="project-tabs compact-tabs" role="tablist" aria-label="Switch project">
+            <button class="project-tab active" data-mode="objects"
+              role="tab" aria-selected="true">
+              <span class="tab-symbol object-symbol">O</span>
+              <span class="tab-copy"><strong>Objects</strong><small>Object project</small></span>
+              <span class="tab-arrow">●</span>
+            </button>
+            <button class="project-tab" data-mode="humans"
+              role="tab" aria-selected="false">
+              <span class="tab-symbol human-symbol">H</span>
+              <span class="tab-copy"><strong>Humans</strong><small>Human project</small></span>
+              <span class="tab-arrow">↗</span>
+            </button>
           </div>
-        </div>
-        <div class="hero-panel-bottom">
-          <div><span class="mini-icon">01</span><span>Configurable experiments</span></div>
-          <div><span class="mini-icon">02</span><span>Transparent evaluation</span></div>
-        </div>
-      </div>
-    </section>
 
-    <section class="trust-strip">
-      <div class="section-wrap trust-inner">
-        <span>BUILT AROUND</span>
-        <strong>Reinforcement learning</strong>
-        <i></i>
-        <strong>Experimental design</strong>
-        <i></i>
-        <strong>Evaluation & analysis</strong>
-      </div>
-    </section>
+          <div class="workspace-panel">
+            <div class="panel-heading">
+              <div>
+                <div class="eyebrow">OBJECTS WORKSPACE</div>
+                <h2>Project configuration</h2>
+                <p>Configure the object project before connecting its engine.</p>
+              </div>
+              <span class="state-badge">INTERFACE READY</span>
+            </div>
 
-    <section class="section-wrap section-space" id="platform">
-      <div class="section-heading">
-        <div>
-          <span class="eyebrow">THE PLATFORM</span>
-          <h2>A clearer workflow for <span class="muted-text">experimentation.</span></h2>
-        </div>
-        <p>Bring configuration, training experiments, and evaluation into one organized research workflow.</p>
-      </div>
+            <div class="field-grid">
+              <label class="field">
+                <span>Project name</span>
+                <input id="objectName" type="text" value="Objects" maxlength="80">
+              </label>
 
-      <div class="feature-grid">
-        <article class="feature-card">
-          <span class="feature-index">01 / ENVIRONMENT</span>
-          <div class="feature-icon">⌘</div>
-          <h3>Environment design</h3>
-          <p>Set up an experimental navigation task and adjust its available parameters before a run.</p>
-          <a href="portal.html">Configure an environment <span>↗</span></a>
-        </article>
-        <article class="feature-card">
-          <span class="feature-index">02 / TRAINING</span>
-          <div class="feature-icon">⌁</div>
-          <h3>Policy training</h3>
-          <p>Explore how training settings affect a run. A real learning algorithm can be connected separately.</p>
-          <a href="portal.html">Explore settings <span>↗</span></a>
-        </article>
-        <article class="feature-card">
-          <span class="feature-index">03 / EVALUATION</span>
-          <div class="feature-icon">↗</div>
-          <h3>Evaluation & analysis</h3>
-          <p>Review run summaries, compare illustrative outcomes, and keep experiment configurations organized.</p>
-          <a href="portal.html">Review the workspace <span>↗</span></a>
-        </article>
-      </div>
-    </section>
+              <label class="field">
+                <span>Environment mode</span>
+                <select id="objectEnvironment">
+                  <option value="default">Default environment</option>
+                  <option value="custom">Custom environment</option>
+                  <option value="test">Test environment</option>
+                </select>
+              </label>
 
-    <section class="section-wrap section-space workflow-section" id="workflow">
-      <div class="section-heading">
-        <div>
-          <span class="eyebrow">HOW IT WORKS</span>
-          <h2>From an idea to an <span class="muted-text">experiment.</span></h2>
-        </div>
-        <p>A simple process for structuring and reviewing navigation research.</p>
-      </div>
+              <label class="field">
+                <span>Processing mode</span>
+                <select id="objectProcessing">
+                  <option value="manual">Manual configuration</option>
+                  <option value="automatic">Automatic (integration required)</option>
+                </select>
+              </label>
 
-      <div class="workflow-grid">
-        <article class="workflow-step">
-          <span class="workflow-number">01</span>
-          <h3>Design</h3>
-          <p>Choose an environment and define the task you want to investigate.</p>
-        </article>
-        <article class="workflow-step">
-          <span class="workflow-number">02</span>
-          <h3>Configure</h3>
-          <p>Set training parameters, exploration settings, and reproducibility options.</p>
-        </article>
-        <article class="workflow-step">
-          <span class="workflow-number">03</span>
-          <h3>Run</h3>
-          <p>Run a clearly labeled demo in this interface or connect an actual training backend.</p>
-        </article>
-        <article class="workflow-step">
-          <span class="workflow-number">04</span>
-          <h3>Evaluate</h3>
-          <p>Review results, compare runs, and document what the experiment can and cannot show.</p>
-        </article>
-      </div>
-    </section>
+              <label class="field">
+                <span>Experiment label</span>
+                <input id="objectLabel" type="text" value="Objects - Experiment 01" maxlength="100">
+              </label>
+            </div>
 
-    <section class="research-section" id="research">
-      <div class="section-wrap section-space">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">RESEARCH & REAL-WORLD CONTEXT</span>
-            <h2>Why autonomous systems <span class="muted-text">matter.</span></h2>
+            <div class="panel-divider"></div>
+
+            <div class="setting-row">
+              <div>
+                <strong>Enable project</strong>
+                <p>Allow this project to be selected as the active workspace.</p>
+              </div>
+              <label class="switch">
+                <input id="objectEnabled" type="checkbox" checked>
+                <span class="switch-track"></span>
+              </label>
+            </div>
+
+            <div class="panel-actions">
+              <span id="objectSaveStatus" class="save-status" aria-live="polite">
+                Settings ready
+              </span>
+              <button class="primary-button" id="saveObjects">Save settings</button>
+            </div>
           </div>
-          <p>Disaster response highlights the value of research into sensing, navigation, and tools that can support responders.</p>
-        </div>
 
-        <div class="research-grid">
-          <article class="research-card">
-            <span class="research-tag">CASE STUDY · MEXICO</span>
-            <div class="research-stat">7.1</div>
-            <h3>Magnitude of the 2017 earthquake</h3>
-            <p>The September 19 earthquake in Mexico provides important context for studying disaster-response challenges.</p>
-            <a href="https://www.usgs.gov/news/featured-story/magnitude-71-earthquake-mexico" target="_blank" rel="noopener noreferrer">Read USGS report ↗</a>
-          </article>
-          <article class="research-card">
-            <span class="research-tag">ENGINEERING RESEARCH</span>
-            <div class="research-stat">46</div>
-            <h3>Building collapses documented</h3>
-            <p>A preliminary research report documents 46 building collapses in Mexico City in the context of the earthquake.</p>
-            <a href="https://lfestorage.s3.us-east-2.amazonaws.com/images/2017_09_19_Puebla_Mexico/pdfs/Preliminary_Report_Mexico2017_v7.pdf" target="_blank" rel="noopener noreferrer">Read preliminary report ↗</a>
-          </article>
-          <article class="research-card">
-            <span class="research-tag">SEARCH & RESCUE TECHNOLOGY</span>
-            <div class="research-stat research-stat-word">FINDER</div>
-            <h3>Technology supporting survivor searches</h3>
-            <p>NASA/JPL reported that radar-based FINDER technology helped locate survivors after earthquakes. FINDER is not a drone.</p>
-            <a href="https://www.jpl.nasa.gov/news/nasa-tech-aids-search-following-mexico-quake/" target="_blank" rel="noopener noreferrer">Read NASA/JPL article ↗</a>
-          </article>
-        </div>
-        <p class="research-disclaimer">
-          These examples provide context for research into disaster-response technology. They do not establish that drones
-          would have prevented deaths or that SkyRL has been used in real disasters. SkyRL is experimental, and simulated
-          results alone cannot demonstrate real-world safety or effectiveness.
-        </p>
+          <div class="integration-panel">
+            <div class="eyebrow">INTEGRATION</div>
+            <h2>Connect the Objects engine</h2>
+            <p>
+              This interface is ready for your actual project code. The
+              simulation or processing engine has not been connected yet.
+            </p>
+            <div class="integration-footer">
+              <span class="integration-dot"></span>
+              <span id="objectEngineStatus">Engine not connected</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- HUMANS PROJECT -->
+        <section id="humansView" class="view project-view" hidden>
+          <div class="project-page-heading">
+            <button class="back-button" data-section="workspace">← Workspace</button>
+            <div class="eyebrow">PROJECT / 02</div>
+            <div class="title-row">
+              <span class="large-project-symbol human-symbol">H</span>
+              <div>
+                <h1>Humans</h1>
+                <p>A dedicated workspace for the Humans project.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-tabs compact-tabs" role="tablist" aria-label="Switch project">
+            <button class="project-tab" data-mode="objects"
+              role="tab" aria-selected="false">
+              <span class="tab-symbol object-symbol">O</span>
+              <span class="tab-copy"><strong>Objects</strong><small>Object project</small></span>
+              <span class="tab-arrow">↗</span>
+            </button>
+            <button class="project-tab active" data-mode="humans"
+              role="tab" aria-selected="true">
+              <span class="tab-symbol human-symbol">H</span>
+              <span class="tab-copy"><strong>Humans</strong><small>Human project</small></span>
+              <span class="tab-arrow">●</span>
+            </button>
+          </div>
+
+          <div class="workspace-panel">
+            <div class="panel-heading">
+              <div>
+                <div class="eyebrow">HUMANS WORKSPACE</div>
+                <h2>Project configuration</h2>
+                <p>Configure the human project independently from Objects.</p>
+              </div>
+              <span class="state-badge">INTERFACE READY</span>
+            </div>
+
+            <div class="field-grid">
+              <label class="field">
+                <span>Project name</span>
+                <input id="humanName" type="text" value="Humans" maxlength="80">
+              </label>
+
+              <label class="field">
+                <span>Environment mode</span>
+                <select id="humanEnvironment">
+                  <option value="default">Default environment</option>
+                  <option value="custom">Custom environment</option>
+                  <option value="test">Test environment</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Processing mode</span>
+                <select id="humanProcessing">
+                  <option value="manual">Manual configuration</option>
+                  <option value="automatic">Automatic (integration required)</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Experiment label</span>
+                <input id="humanLabel" type="text" value="Humans - Experiment 01" maxlength="100">
+              </label>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="setting-row">
+              <div>
+                <strong>Enable project</strong>
+                <p>Allow this project to be selected as the active workspace.</p>
+              </div>
+              <label class="switch">
+                <input id="humanEnabled" type="checkbox" checked>
+                <span class="switch-track"></span>
+              </label>
+            </div>
+
+            <div class="panel-actions">
+              <span id="humanSaveStatus" class="save-status" aria-live="polite">
+                Settings ready
+              </span>
+              <button class="primary-button" id="saveHumans">Save settings</button>
+            </div>
+          </div>
+
+          <div class="integration-panel">
+            <div class="eyebrow">INTEGRATION</div>
+            <h2>Connect the Humans engine</h2>
+            <p>
+              This interface is ready for your actual project code. The
+              human-related processing or simulation engine has not been connected yet.
+            </p>
+            <div class="integration-footer">
+              <span class="integration-dot"></span>
+              <span id="humanEngineStatus">Engine not connected</span>
+            </div>
+          </div>
+        </section>
+
+        <footer class="page-footer">
+          <span>SkyRL · HackPHS 2026</span>
+          <span>Research workspace · Project interfaces</span>
+        </footer>
       </div>
-    </section>
-
-    <section class="section-wrap section-space" id="mission">
-      <div class="mission-panel">
-        <div>
-          <span class="eyebrow">OUR MISSION</span>
-          <h2>Better experiments.<br><span class="gradient-text">More thoughtful autonomy.</span></h2>
-        </div>
-        <div class="mission-copy">
-          <p>We want to make it easier to explore how autonomous agents learn, how their performance can be evaluated, and where experimental results have limitations.</p>
-          <p>Our long-term vision is a modular research platform that can connect configurable environments, reproducible training, and transparent evaluation.</p>
-          <a class="button button-primary" href="portal.html">Enter the workspace <span>↗</span></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-wrap final-cta">
-      <div class="cta-content">
-        <span class="eyebrow">YOUR NEXT EXPERIMENT STARTS HERE</span>
-        <h2>Explore the process.<br>Question the results.</h2>
-        <p>Open the SkyRL workspace to configure an experiment and explore the demo interface.</p>
-        <a class="button button-primary" href="portal.html">Launch SkyRL workspace ↗</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="section-wrap footer-inner">
-      <a class="brand" href="index.html"><span class="brand-mark">S</span><span>skyrl<span class="brand-period">.</span></span></a>
-      <p>Experimental research into reinforcement learning and autonomous navigation.</p>
-      <span>HackPHS 2026 · Experimental project</span>
-    </div>
-  </footer>
+    </main>
+  </div>
 </body>
 </html>
