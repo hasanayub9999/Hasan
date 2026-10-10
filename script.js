@@ -1,68 +1,110 @@
 
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
   const root = document.documentElement;
-  const themeButtons = document.querySelectorAll("[data-theme-toggle]");
-  const menuButton = document.getElementById("mobileMenuButton");
-  const navLinks = document.getElementById("navLinks");
+  const themeButton = document.getElementById("themeToggle");
+  const deployButton = document.getElementById("deployToggle");
+  const deployMenu = document.getElementById("deployMenu");
+  const deployWrap = document.querySelector(".deploy-wrap");
+  const loginModal = document.getElementById("loginModal");
+  const loginOpen = document.getElementById("loginOpen");
+  const loginClose = document.getElementById("loginClose");
+  const googleButton = document.getElementById("googleBtn");
+  const emailContinue = document.getElementById("emailContinue");
+  const loginMessage = document.getElementById("loginMessage");
 
-  function applyTheme(theme) {
-    const nextTheme = theme === "light" ? "light" : "dark";
-    root.dataset.theme = nextTheme;
-
-    try {
-      localStorage.setItem("skyrl-theme", nextTheme);
-    } catch (_) {}
-
-    themeButtons.forEach(button => {
-      button.setAttribute(
+  function setTheme(theme) {
+    root.dataset.theme = theme;
+    if (themeButton) {
+      themeButton.textContent = theme === "dark" ? "☀" : "☾";
+      themeButton.setAttribute(
         "aria-label",
-        nextTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
       );
-      button.textContent = nextTheme === "dark" ? "☼" : "◐";
-    });
+    }
+    try {
+      localStorage.setItem("skyrl-theme", theme);
+    } catch (e) {}
   }
 
-  applyTheme(root.dataset.theme || "dark");
+  let savedTheme = "dark";
+  try {
+    savedTheme = localStorage.getItem("skyrl-theme") || "dark";
+  } catch (e) {}
+  setTheme(savedTheme);
 
-  themeButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      applyTheme(root.dataset.theme === "dark" ? "light" : "dark");
-    });
+  themeButton?.addEventListener("click", () => {
+    setTheme(root.dataset.theme === "dark" ? "light" : "dark");
   });
 
-  if (menuButton && navLinks) {
-    menuButton.addEventListener("click", () => {
-      const isOpen = navLinks.classList.toggle("open");
-      menuButton.setAttribute("aria-expanded", String(isOpen));
-      menuButton.textContent = isOpen ? "✕" : "☰";
-    });
-
-    navLinks.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
-        navLinks.classList.remove("open");
-        menuButton.setAttribute("aria-expanded", "false");
-        menuButton.textContent = "☰";
-      });
-    });
+  function setDeployOpen(open) {
+    if (!deployButton || !deployMenu) return;
+    deployMenu.hidden = !open;
+    deployButton.setAttribute("aria-expanded", String(open));
   }
 
-  const sections = [...document.querySelectorAll("main section[id]")];
-  const anchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+  deployButton?.addEventListener("click", event => {
+    event.stopPropagation();
+    setDeployOpen(deployMenu.hidden);
+  });
 
-  if ("IntersectionObserver" in window && sections.length && anchors.length) {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
+  deployWrap?.addEventListener("mouseenter", () => setDeployOpen(true));
+  deployWrap?.addEventListener("mouseleave", () => setDeployOpen(false));
 
-        anchors.forEach(anchor => {
-          anchor.classList.toggle(
-            "active",
-            anchor.getAttribute("href") === `#${entry.target.id}`
-          );
-        });
-      });
-    }, { rootMargin: "-25% 0px -60% 0px" });
+  deployMenu?.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => setDeployOpen(false));
+  });
 
-    sections.forEach(section => observer.observe(section));
+  document.addEventListener("click", event => {
+    if (deployWrap && !deployWrap.contains(event.target)) {
+      setDeployOpen(false);
+    }
+  });
+
+  function openLogin() {
+    if (!loginModal) return;
+    loginModal.hidden = false;
+    document.body.style.overflow = "hidden";
+    loginClose?.focus();
   }
-})();
+
+  function closeLogin() {
+    if (!loginModal) return;
+    loginModal.hidden = true;
+    document.body.style.overflow = "";
+    loginOpen?.focus();
+  }
+
+  loginOpen?.addEventListener("click", openLogin);
+  loginClose?.addEventListener("click", closeLogin);
+
+  loginModal?.addEventListener("click", event => {
+    if (event.target === loginModal) closeLogin();
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      setDeployOpen(false);
+      if (loginModal && !loginModal.hidden) closeLogin();
+    }
+  });
+
+  googleButton?.addEventListener("click", () => {
+    if (loginMessage) {
+      loginMessage.textContent =
+        "Google sign-in is not connected yet.";
+    }
+  });
+
+  emailContinue?.addEventListener("click", () => {
+    const email = document.getElementById("loginEmail");
+    if (!email?.value.trim()) {
+      email?.focus();
+      if (loginMessage) loginMessage.textContent = "Enter your email address to continue.";
+      return;
+    }
+    if (loginMessage) {
+      loginMessage.textContent =
+        "Authentication is not connected yet. No account has been created.";
+    }
+  });
+});
