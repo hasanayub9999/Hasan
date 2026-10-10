@@ -1,52 +1,56 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#080b12" />
-  <title>SkyRL | Simulation Lab</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090c14">
+  <meta name="description" content="SkyRL — an experimental simulation and reinforcement learning environment.">
+  <title>SkyRL — Simulation Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    try {
+      const savedTheme = localStorage.getItem("skyrl-theme");
+      if (savedTheme === "light" || savedTheme === "dark") {
+        document.documentElement.dataset.theme = savedTheme;
+      }
+    } catch (_) {}
+  </script>
+  <script src="portal.js" defer></script>
 </head>
 <body>
   <div class="app-shell">
-
     <aside class="sidebar">
-      <a class="brand" href="#" aria-label="SkyRL home" data-page-link="mission">
-        <div class="brand-mark">S<span>.</span></div>
-        <div>
-          <div class="brand-name">SkyRL</div>
-          <div class="brand-subtitle">SIMULATION LAB</div>
-        </div>
+      <a class="brand" href="#mission" data-page-link="mission" aria-label="SkyRL home">
+        <span class="brand-mark">S<span>.</span></span>
+        <span class="brand-copy">
+          <span class="brand-name">SkyRL</span>
+          <span class="brand-subtitle">SIMULATION LAB</span>
+        </span>
       </a>
 
-      <div class="nav-heading">WORKSPACE</div>
+      <div class="nav-label">WORKSPACE</div>
 
       <nav class="side-nav" aria-label="Main navigation">
-        <button class="side-link active" data-page="mission">
-          <span class="side-icon">✦</span>
+        <button class="side-link active" type="button" data-page="mission" aria-current="page">
+          <span class="side-icon" aria-hidden="true">✳</span>
           <span>Our Mission</span>
-          <span class="active-indicator"></span>
         </button>
-
-        <button class="side-link" data-page="humans">
-          <span class="side-icon">♙</span>
+        <button class="side-link" type="button" data-page="humans">
+          <span class="side-icon" aria-hidden="true">♙</span>
           <span>Human</span>
-          <span class="active-indicator"></span>
         </button>
-
-        <button class="side-link" data-page="objects">
-          <span class="side-icon">⬡</span>
+        <button class="side-link" type="button" data-page="objects">
+          <span class="side-icon" aria-hidden="true">⬡</span>
           <span>Object</span>
-          <span class="active-indicator"></span>
         </button>
       </nav>
 
       <div class="sidebar-bottom">
-        <div class="connection-dot"></div>
+        <span class="status-dot"></span>
         <div>
-          <div class="connection-title">LAB INTERFACE</div>
-          <div class="connection-subtitle">Ready for integration</div>
+          <strong>Simulation Lab</strong>
+          <span>Frontend environment</span>
         </div>
       </div>
     </aside>
@@ -54,123 +58,159 @@
     <main class="main-area">
       <header class="topbar">
         <div class="breadcrumb">
-          <span>SKYRL</span>
-          <span class="breadcrumb-divider">/</span>
+          <span class="breadcrumb-root">SKYRL</span>
+          <span class="breadcrumb-slash">/</span>
           <span id="breadcrumb-current">Our Mission</span>
         </div>
 
-        <div class="topbar-right">
-          <span class="status-dot"></span>
-          <span class="status-text">LOCAL ENVIRONMENT</span>
-          <div class="avatar">S</div>
+        <div class="topbar-actions">
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            type="button"
+            aria-label="Switch to light mode"
+            title="Switch theme"
+          >
+            <span id="theme-icon" aria-hidden="true">☼</span>
+            <span class="theme-label" id="theme-label">Light mode</span>
+          </button>
+
+          <div class="deploy-wrap" id="deploy-wrap">
+            <button
+              class="deploy-button"
+              id="deploy-button"
+              type="button"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="deploy-menu"
+            >
+              <span class="deploy-icon" aria-hidden="true">↗</span>
+              <span>Deploy</span>
+              <span class="deploy-chevron" aria-hidden="true">⌄</span>
+            </button>
+
+            <div class="deploy-menu" id="deploy-menu" hidden>
+              <div class="deploy-menu-heading">OPEN WORKSPACE</div>
+              <button type="button" class="deploy-option" data-deploy-page="humans">
+                <span class="option-icon">♙</span>
+                <span class="option-copy">
+                  <strong>Human</strong>
+                  <small>Human simulation environment</small>
+                </span>
+                <span class="option-arrow">→</span>
+              </button>
+              <button type="button" class="deploy-option" data-deploy-page="objects">
+                <span class="option-icon">⬡</span>
+                <span class="option-copy">
+                  <strong>Object</strong>
+                  <small>Object simulation environment</small>
+                </span>
+                <span class="option-arrow">→</span>
+              </button>
+              <div class="deploy-menu-foot">Choose an environment to continue</div>
+            </div>
+          </div>
         </div>
       </header>
 
       <div class="page-container">
 
         <!-- OUR MISSION -->
-        <section class="page-section active" data-page-section="mission">
-          <div class="mission-hero">
+        <section class="page-section active" data-page-section="mission" id="mission">
+          <div class="hero">
             <div class="hero-copy">
-              <div class="eyebrow">
-                <span class="eyebrow-line"></span>
-                OUR MISSION
-              </div>
-
-              <h1>Teaching machines<br />to <span>understand.</span></h1>
-
+              <div class="eyebrow"><span class="eyebrow-line"></span> OUR MISSION</div>
+              <h1>Building intelligence<br>through <span>simulation.</span></h1>
               <p class="hero-description">
-                SkyRL is a simulation environment concept exploring how
-                intelligent agents can learn to understand, interact with,
-                and navigate the world through reinforcement learning.
+                SkyRL is an experimental platform concept exploring how
+                intelligent agents can learn to interact with environments,
+                understand objects, and improve through reinforcement learning.
               </p>
 
               <div class="hero-actions">
-                <button class="primary-button" data-go="humans">
-                  Explore Human <span>↗</span>
-                </button>
-                <button class="secondary-button" data-go="objects">
-                  Explore Objects <span>→</span>
+                <div class="deploy-wrap hero-deploy-wrap">
+                  <button
+                    class="primary-button"
+                    type="button"
+                    data-open-deploy
+                    aria-expanded="false"
+                  >
+                    Explore environments <span>↗</span>
+                  </button>
+                </div>
+                <button class="secondary-button" type="button" data-go="mission">
+                  Our mission <span>↓</span>
                 </button>
               </div>
 
-              <div class="hero-footnote">
-                <span class="tiny-square"></span>
-                BUILT FOR EXPERIMENTATION
+              <div class="hero-note">
+                <span class="note-dot"></span>
+                AN EXPERIMENTAL SIMULATION PROJECT
               </div>
             </div>
 
-            <div class="hero-visual">
-              <div class="visual-label">SIMULATION / 001</div>
-
-              <div class="orbit orbit-one"></div>
-              <div class="orbit orbit-two"></div>
-              <div class="orbit orbit-three"></div>
-
-              <div class="visual-core">
-                <div class="core-inner">
-                  <span class="core-symbol">S</span>
-                </div>
+            <div class="hero-visual" aria-label="Abstract SkyRL simulation illustration" role="img">
+              <div class="visual-top"><span>SKYRL / CORE</span><span>SYS.001</span></div>
+              <div class="visual-grid"></div>
+              <div class="orbit orbit-a"></div>
+              <div class="orbit orbit-b"></div>
+              <div class="orbit orbit-c"></div>
+              <div class="core">
+                <div class="core-inner">S</div>
               </div>
-
-              <div class="visual-node node-top"></div>
-              <div class="visual-node node-right"></div>
-              <div class="visual-node node-bottom"></div>
-
-              <div class="visual-coordinates">
-                <span>AGENT SYSTEM</span>
-                <span>ENVIRONMENT 01</span>
-              </div>
-
-              <div class="visual-cross cross-one">+</div>
-              <div class="visual-cross cross-two">+</div>
+              <span class="orbit-point point-a"></span>
+              <span class="orbit-point point-b"></span>
+              <span class="orbit-point point-c"></span>
+              <span class="visual-cross cross-a">+</span>
+              <span class="visual-cross cross-b">+</span>
+              <div class="visual-bottom"><span>AGENT SYSTEM</span><span>ENVIRONMENT 01</span></div>
             </div>
           </div>
 
           <div class="section-heading">
             <div>
-              <div class="eyebrow">THE PROJECT</div>
-              <h2>One environment. New possibilities.</h2>
+              <div class="eyebrow">THE PLATFORM</div>
+              <h2>One interface. Two environments.</h2>
+              <p class="section-description">
+                Select a workspace to explore the planned simulation environments.
+              </p>
             </div>
-            <span class="section-count">01 — 03</span>
+            <span class="section-count">01 / 03</span>
           </div>
 
-          <div class="mission-grid">
-            <article class="mission-card">
-              <div class="card-number">01</div>
-              <div class="card-icon">♙</div>
+          <div class="environment-grid">
+            <article class="environment-card">
+              <div class="card-top">
+                <span class="card-icon">♙</span>
+                <span class="card-index">ENV. 01</span>
+              </div>
               <h3>Human</h3>
-              <p>
-                A dedicated workspace for human-centered simulation
-                experiments and future agent interactions.
-              </p>
-              <button class="text-link" data-go="humans">
-                Open workspace <span>↗</span>
+              <p>A dedicated workspace for human models and future human-centered simulation experiments.</p>
+              <button class="card-link" type="button" data-go="humans">
+                Open Human <span>↗</span>
               </button>
             </article>
 
-            <article class="mission-card">
-              <div class="card-number">02</div>
-              <div class="card-icon">⬡</div>
+            <article class="environment-card">
+              <div class="card-top">
+                <span class="card-icon">⬡</span>
+                <span class="card-index">ENV. 02</span>
+              </div>
               <h3>Object</h3>
-              <p>
-                A dedicated workspace for objects, scene elements,
-                and future interaction experiments.
-              </p>
-              <button class="text-link" data-go="objects">
-                Open workspace <span>↗</span>
+              <p>A dedicated workspace for 3D objects, scene elements, and future interactive experiments.</p>
+              <button class="card-link" type="button" data-go="objects">
+                Open Object <span>↗</span>
               </button>
             </article>
 
-            <article class="mission-card">
-              <div class="card-number">03</div>
-              <div class="card-icon">⌘</div>
-              <h3>Reinforcement Learning</h3>
-              <p>
-                Build toward an environment where agents can learn
-                from actions, observations, and rewards.
-              </p>
-              <span class="card-note">FUTURE INTEGRATION</span>
+            <article class="environment-card mission-card">
+              <div class="card-top">
+                <span class="card-icon">⌘</span>
+                <span class="card-index">CORE IDEA</span>
+              </div>
+              <h3>Reinforcement learning</h3>
+              <p>Build toward agents that learn from observations, actions, and reward signals.</p>
+              <span class="future-label"><span class="status-dot"></span> FUTURE INTEGRATION</span>
             </article>
           </div>
 
@@ -180,157 +220,113 @@
           </footer>
         </section>
 
-        <!-- HUMAN WORKSPACE -->
-        <section class="page-section" data-page-section="humans" hidden>
-          <div class="workspace-header">
+        <!-- HUMAN -->
+        <section class="page-section" data-page-section="humans" id="humans" hidden>
+          <div class="workspace-heading">
             <div>
-              <div class="eyebrow">
-                <span class="eyebrow-line"></span>
-                SIMULATION WORKSPACE
-              </div>
-              <h1>Human <span>Environment.</span></h1>
+              <div class="eyebrow"><span class="eyebrow-line"></span> ENVIRONMENT 01</div>
+              <h1>Human <span>workspace.</span></h1>
               <p class="workspace-description">
-                A dedicated space for integrating human models and
-                human-centered simulation systems.
+                A dedicated environment for human models and human-centered simulation.
               </p>
             </div>
-
-            <div class="workspace-tag">
-              <span class="status-dot"></span>
-              INTEGRATION READY
-            </div>
+            <span class="workspace-badge"><span class="status-dot"></span> WORKSPACE READY</span>
           </div>
 
-          <div class="scene-toolbar">
-            <div class="scene-title">
-              <span class="toolbar-icon">◈</span>
-              HUMAN / SCENE 01
-            </div>
-            <div class="scene-tools">
-              <button class="tool-button active" data-view="grid" title="Toggle grid">▦</button>
-              <button class="tool-button" data-view="axes" title="Toggle axes">⌖</button>
-              <button class="tool-button" data-view="fullscreen" title="Fullscreen scene">⛶</button>
-            </div>
-          </div>
-
-          <div class="simulation-scene" id="human-scene">
-            <div class="scene-grid"></div>
-            <div class="scene-axis axis-x"></div>
-            <div class="scene-axis axis-y"></div>
-
-            <div class="scene-placeholder">
-              <div class="placeholder-orbit">
-                <div class="placeholder-center">H</div>
+          <div class="scene-panel">
+            <div class="scene-toolbar">
+              <div class="scene-title"><span class="toolbar-symbol">◈</span> HUMAN / SCENE 01</div>
+              <div class="scene-controls">
+                <button class="icon-button active" type="button" data-scene-action="grid" aria-pressed="true" title="Toggle grid">▦</button>
+                <button class="icon-button active" type="button" data-scene-action="axes" aria-pressed="true" title="Toggle axes">⌖</button>
+                <button class="icon-button" type="button" data-scene-action="fullscreen" title="Toggle fullscreen">⛶</button>
               </div>
-              <div class="placeholder-label">HUMAN ENVIRONMENT</div>
-              <p>Your human simulation will appear here.</p>
-              <span class="placeholder-status">AWAITING 3D MODEL INTEGRATION</span>
             </div>
-
-            <div class="scene-coordinate coordinate-top">X: 000 / Y: 000</div>
-            <div class="scene-coordinate coordinate-bottom">SCENE 01 · HUMAN</div>
+            <div class="simulation-scene" id="human-scene" tabindex="0" aria-label="Human simulation preview">
+              <div class="scene-grid"></div>
+              <div class="scene-axis axis-x"></div>
+              <div class="scene-axis axis-y"></div>
+              <div class="scene-placeholder">
+                <div class="placeholder-orbit"><div class="placeholder-center">H</div></div>
+                <h2>Human environment</h2>
+                <p>Your human model or live simulation will appear here.</p>
+                <span class="integration-label">AWAITING 3D INTEGRATION</span>
+              </div>
+              <span class="scene-coordinate coordinate-top">SCENE / 001</span>
+              <span class="scene-coordinate coordinate-bottom">HUMAN ENVIRONMENT</span>
+            </div>
           </div>
 
-          <div class="workspace-bottom">
-            <div class="info-panel">
-              <span class="panel-label">CURRENT ENVIRONMENT</span>
+          <div class="info-grid">
+            <article class="info-panel">
+              <span class="panel-label">ABOUT THIS WORKSPACE</span>
               <h3>Human simulation</h3>
-              <p>
-                This workspace is prepared for a future Unity WebGL
-                build or another compatible 3D rendering system.
-              </p>
-            </div>
-
-            <div class="info-panel integration-panel">
-              <span class="panel-label">INTEGRATION STATUS</span>
-              <div class="integration-status">
-                <span class="status-dot"></span>
-                <strong>Waiting for simulator</strong>
-              </div>
-              <p>No live simulation is connected yet.</p>
-            </div>
+              <p>Prepared for integration with a human model, a Unity WebGL scene, or another compatible 3D renderer.</p>
+            </article>
+            <article class="info-panel">
+              <span class="panel-label">CONNECTION STATUS</span>
+              <div class="connection-status"><span class="status-dot"></span><strong>Frontend preview only</strong></div>
+              <p>No live 3D engine or simulation is connected yet.</p>
+            </article>
           </div>
 
           <footer class="page-footer">
-            <span>SKYRL © 2026</span>
-            <span>HUMAN ENVIRONMENT</span>
+            <span>SKYRL © 2026</span><span>HUMAN ENVIRONMENT</span>
           </footer>
         </section>
 
-        <!-- OBJECT WORKSPACE -->
-        <section class="page-section" data-page-section="objects" hidden>
-          <div class="workspace-header">
+        <!-- OBJECT -->
+        <section class="page-section" data-page-section="objects" id="objects" hidden>
+          <div class="workspace-heading">
             <div>
-              <div class="eyebrow">
-                <span class="eyebrow-line"></span>
-                SIMULATION WORKSPACE
-              </div>
-              <h1>Object <span>Environment.</span></h1>
+              <div class="eyebrow"><span class="eyebrow-line"></span> ENVIRONMENT 02</div>
+              <h1>Object <span>workspace.</span></h1>
               <p class="workspace-description">
-                A dedicated space for integrating 3D objects,
-                scene elements, and interactive environments.
+                A dedicated environment for 3D objects, scene elements, and interactive experiments.
               </p>
             </div>
-
-            <div class="workspace-tag">
-              <span class="status-dot"></span>
-              INTEGRATION READY
-            </div>
+            <span class="workspace-badge"><span class="status-dot"></span> WORKSPACE READY</span>
           </div>
 
-          <div class="scene-toolbar">
-            <div class="scene-title">
-              <span class="toolbar-icon">◈</span>
-              OBJECT / SCENE 02
-            </div>
-            <div class="scene-tools">
-              <button class="tool-button active" data-view="grid" title="Toggle grid">▦</button>
-              <button class="tool-button" data-view="axes" title="Toggle axes">⌖</button>
-              <button class="tool-button" data-view="fullscreen" title="Fullscreen scene">⛶</button>
-            </div>
-          </div>
-
-          <div class="simulation-scene" id="object-scene">
-            <div class="scene-grid"></div>
-            <div class="scene-axis axis-x"></div>
-            <div class="scene-axis axis-y"></div>
-
-            <div class="scene-placeholder">
-              <div class="placeholder-orbit object-orbit">
-                <div class="placeholder-center">O</div>
+          <div class="scene-panel">
+            <div class="scene-toolbar">
+              <div class="scene-title"><span class="toolbar-symbol">◈</span> OBJECT / SCENE 02</div>
+              <div class="scene-controls">
+                <button class="icon-button active" type="button" data-scene-action="grid" aria-pressed="true" title="Toggle grid">▦</button>
+                <button class="icon-button active" type="button" data-scene-action="axes" aria-pressed="true" title="Toggle axes">⌖</button>
+                <button class="icon-button" type="button" data-scene-action="fullscreen" title="Toggle fullscreen">⛶</button>
               </div>
-              <div class="placeholder-label">OBJECT ENVIRONMENT</div>
-              <p>Your 3D objects will appear here.</p>
-              <span class="placeholder-status">AWAITING 3D MODEL INTEGRATION</span>
             </div>
-
-            <div class="scene-coordinate coordinate-top">X: 000 / Y: 000</div>
-            <div class="scene-coordinate coordinate-bottom">SCENE 02 · OBJECT</div>
+            <div class="simulation-scene" id="object-scene" tabindex="0" aria-label="Object simulation preview">
+              <div class="scene-grid"></div>
+              <div class="scene-axis axis-x"></div>
+              <div class="scene-axis axis-y"></div>
+              <div class="scene-placeholder">
+                <div class="placeholder-orbit object-orbit"><div class="placeholder-center">O</div></div>
+                <h2>Object environment</h2>
+                <p>Your 3D objects or live simulation will appear here.</p>
+                <span class="integration-label">AWAITING 3D INTEGRATION</span>
+              </div>
+              <span class="scene-coordinate coordinate-top">SCENE / 002</span>
+              <span class="scene-coordinate coordinate-bottom">OBJECT ENVIRONMENT</span>
+            </div>
           </div>
 
-          <div class="workspace-bottom">
-            <div class="info-panel">
-              <span class="panel-label">CURRENT ENVIRONMENT</span>
+          <div class="info-grid">
+            <article class="info-panel">
+              <span class="panel-label">ABOUT THIS WORKSPACE</span>
               <h3>Object simulation</h3>
-              <p>
-                This workspace is prepared for future 3D objects,
-                scene manipulation, and physics integration.
-              </p>
-            </div>
-
-            <div class="info-panel integration-panel">
-              <span class="panel-label">INTEGRATION STATUS</span>
-              <div class="integration-status">
-                <span class="status-dot"></span>
-                <strong>Waiting for simulator</strong>
-              </div>
-              <p>No live simulation is connected yet.</p>
-            </div>
+              <p>Prepared for 3D models, interactive objects, scene manipulation, and future physics integration.</p>
+            </article>
+            <article class="info-panel">
+              <span class="panel-label">CONNECTION STATUS</span>
+              <div class="connection-status"><span class="status-dot"></span><strong>Frontend preview only</strong></div>
+              <p>No live 3D engine or simulation is connected yet.</p>
+            </article>
           </div>
 
           <footer class="page-footer">
-            <span>SKYRL © 2026</span>
-            <span>OBJECT ENVIRONMENT</span>
+            <span>SKYRL © 2026</span><span>OBJECT ENVIRONMENT</span>
           </footer>
         </section>
 
@@ -338,6 +334,6 @@
     </main>
   </div>
 
-  <script src="portal.js"></script>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>
