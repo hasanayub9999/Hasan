@@ -12,6 +12,7 @@ public class SimulationManager : MonoBehaviour
     public CellMap map;
     public MapBuilder builder;
     public FlyCamera flyCamera;
+    public LotRandomizer randomizer;
 
     public SimMode Mode { get; private set; } = SimMode.Build;
     public bool Paused { get; private set; }
@@ -80,8 +81,9 @@ public class SimulationManager : MonoBehaviour
                 else EnterBuildMode();
             }
             if (kb.escapeKey.wasPressedThisFrame && Mode != SimMode.Build) EnterBuildMode();
-            if (kb.rKey.wasPressedThisFrame) ResetCamera();
-            if (kb.pKey.wasPressedThisFrame && Mode == SimMode.Running) Paused = !Paused;
+            if (kb.rKey.wasPressedThisFrame && randomizer) randomizer.Randomize();
+            if (kb.pKey.wasPressedThisFrame) ResetCamera();
+            if (kb.spaceKey.wasPressedThisFrame && Mode == SimMode.Running) Paused = !Paused;
             if (kb.equalsKey.wasPressedThisFrame || kb.numpadPlusKey.wasPressedThisFrame) ChangeSpeed(+1);
             if (kb.minusKey.wasPressedThisFrame || kb.numpadMinusKey.wasPressedThisFrame) ChangeSpeed(-1);
             if (kb.hKey.wasPressedThisFrame)
@@ -123,6 +125,8 @@ public class SimulationManager : MonoBehaviour
     /// Screen area (IMGUI coords) covered by the HUD, so build clicks there are ignored.
     public Rect HudRect { get; private set; }
 
+    bool hudOpen = true;
+
     void OnGUI()
     {
         if (text == null)
@@ -149,23 +153,33 @@ public class SimulationManager : MonoBehaviour
             int objects = map.props ? map.props.Count : 0;
             sb.AppendLine($"<b>BUILD</b>  tool: <b>{(builder ? builder.ToolName : "-")}</b>   cubes: {map.Count}   objects: {objects}");
             sb.AppendLine("LMB place · Ctrl+LMB remove · 1 Wall · 2 Win · 3 Drone start · 4 Toggle wall invisible");
-            sb.AppendLine("Objects panel (left) · Z/X rotate object · Backspace clear · F5 save · F9 load");
+            sb.AppendLine("Objects panel (left) · Z/X rotate object · R randomize cars + items · Backspace clear · F5 save · F9 load");
             sb.AppendLine("<b><color=#FFD84A>Enter: launch drone</color></b>");
         }
         else
         {
-            sb.AppendLine("Enter/Esc back to build · P pause · +/- speed");
+            sb.AppendLine("Enter/Esc back to build · Space pause · +/- speed · R randomize cars + items");
         }
-        sb.Append("Camera: hold RMB look · WASD move · Q/E down/up · Shift fast · R reset · F follow · H ghosts · B path");
+        sb.Append("Camera: hold RMB look · WASD move · Q/E down/up · Shift fast · P reset · F follow · H ghosts · B path");
 
-        string hud = $"<color=#F0F0F0>{sb}</color>";
-        var panel = new Rect(10, 10, 660, text.CalcHeight(new GUIContent(hud), 644f) + 14f);
-        HudRect = panel;
-        var prev = GUI.color;
-        GUI.color = new Color(0f, 0f, 0f, 0.65f);
-        GUI.DrawTexture(panel, Texture2D.whiteTexture);
-        GUI.color = prev;
-        GUI.Label(new Rect(panel.x + 8, panel.y + 6, panel.width - 16, panel.height - 12), hud, text);
+        if (hudOpen)
+        {
+            string hud = $"<color=#F0F0F0>{sb}</color>";
+            var panel = new Rect(10, 10, 660, text.CalcHeight(new GUIContent(hud), 644f) + 14f);
+            HudRect = panel;
+            var prev = GUI.color;
+            GUI.color = new Color(0f, 0f, 0f, 0.65f);
+            GUI.DrawTexture(panel, Texture2D.whiteTexture);
+            GUI.color = prev;
+            GUI.Label(new Rect(panel.x + 8, panel.y + 6, panel.width - 16, panel.height - 12), hud, text);
+            if (GUI.Button(new Rect(panel.xMax - 30, panel.y + 7, 22, 20), "–")) hudOpen = false;
+        }
+        else
+        {
+            // Collapsed: just a button, with the mode so a run's state is still visible at a glance
+            HudRect = new Rect(10, 10, 160, 26);
+            if (GUI.Button(HudRect, $"HUD +   {Mode}{(Paused ? " (paused)" : "")}")) hudOpen = true;
+        }
 
         string banner = Mode == SimMode.Won ? "<color=#3CFF5A>GOAL REACHED</color>"
                       : Mode == SimMode.GaveUp ? $"<color=#FF5050>NO PATH ({plan?.failReason})</color>"

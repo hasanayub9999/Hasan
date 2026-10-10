@@ -26,6 +26,14 @@ public static class DroneSimSetup
         ("Phone",        "Assets/Models/Items/phone.obj",            0.15f, new Vector3(90, 0, 0),  false),
         ("Keys",         "Assets/Models/Items/key.obj",              0.12f, new Vector3(90, 0, 0),  false),
         ("Wallet",       "Assets/Models/Items/pouch.obj",            0.18f, Vector3.zero,           false),
+        ("Laptop",       "Assets/Models/Items/laptop.obj",           0.34f, Vector3.zero,           false),
+        ("Purse",        "Assets/Models/Items/purse.obj",            0.32f, Vector3.zero,           false),
+        ("Backpack",     "Assets/Models/Items/backpack.obj",         0.45f, Vector3.zero,           false),
+        ("Headphones",   "Assets/Models/Items/headphones.obj",       0.18f, new Vector3(90, 0, 0),  false),
+        ("Umbrella",     "Assets/Models/Items/umbrella.obj",         0.9f,  new Vector3(90, 0, 0),  false),
+        ("Water bottle", "Assets/Models/Items/waterbottle.obj",      0.25f, Vector3.zero,           false),
+        ("Soda can",     "Assets/Models/Items/soda.obj",             0.12f, Vector3.zero,           false),
+        ("Coffee cup",   "Assets/Models/Items/cup.obj",              0.1f,  Vector3.zero,           false),
     };
 
     [MenuItem("Drone Sim/Build Parking Lot Scene")]
@@ -62,16 +70,28 @@ public static class DroneSimSetup
         var props = new GameObject("Objects").AddComponent<PropSet>();
         props.catalog = catalog;
         map.props = props;
+        var randomizer = props.gameObject.AddComponent<LotRandomizer>();
+        randomizer.props = props;
+        randomizer.quadrants = new Vector2Int(QuadsX, QuadsZ);
+        randomizer.quadSize = new Vector2(QuadX, QuadZ);
+        randomizer.baysPerRow = BaysPerRow;
+        randomizer.bayWidth = BayW;
+        randomizer.bayDepth = BayD;
+        randomizer.firstBayX = FirstBayX;
+        randomizer.rowMargin = RowAz;
 
-        BuildParkingLot(map, props, asphalt, sidewalk, paint);
+        BuildParkingLot(map, props, randomizer, asphalt, sidewalk, paint);
+        CityBackdrop.Build(asphalt, sidewalk, paint);
 
-        // Drone: small black cube
+        // Drone: a cube for collision/logic (kept under 1 m so it stays inside its cell),
+        // drawn with the quadcopter model
         var droneGo = GameObject.CreatePrimitive(PrimitiveType.Cube);
         droneGo.name = "Drone";
         droneGo.layer = 2; // Ignore Raycast
         droneGo.transform.position = map.droneStart;
-        droneGo.transform.localScale = Vector3.one * 0.4f;
+        droneGo.transform.localScale = Vector3.one * 0.8f;
         droneGo.GetComponent<Renderer>().sharedMaterial = droneMat;
+        AttachDroneModel(droneGo);
         var rb = droneGo.AddComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.useGravity = false;
@@ -104,10 +124,61 @@ public static class DroneSimSetup
         sim.map = map;
         sim.builder = builder;
         sim.flyCamera = fly;
+        sim.randomizer = randomizer;
 
         EditorSceneManager.SaveScene(scene, ScenePath);
         Selection.activeGameObject = droneGo;
         Debug.Log($"[DroneSim] Parking lot built: {map.Count} cubes, {props.Count} objects, drone at {map.droneStart} → {ScenePath}");
+    }
+
+    const string DroneModelPath = "Assets/Prefabs/Drone.prefab";
+    const string DroneModelName = "Model";
+
+    /// Drone Sim/Apply Drone Model: swaps the cube look of the open scene's drone for the model.
+    [MenuItem("Drone Sim/Apply Drone Model")]
+    public static void ApplyDroneModel()
+    {
+        var drone = Object.FindAnyObjectByType<Drone>();
+        if (drone == null) { Debug.LogWarning("[DroneSim] No Drone in the open scene."); return; }
+        AttachDroneModel(drone.gameObject);
+        EditorSceneManager.MarkSceneDirty(drone.gameObject.scene);
+        Selection.activeGameObject = drone.gameObject;
+    }
+
+    /// Hides the drone's cube and adds the propeller model as a child, scaled to fill the cube's
+    /// footprint and centred on it. The cube's collider and scale stay, so the sim logic is unchanged.
+    static void AttachDroneModel(GameObject droneGo)
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(DroneModelPath);
+        if (prefab == null) { Debug.LogWarning($"[DroneSim] Drone model missing: {DroneModelPath}"); return; }
+
+        var old = droneGo.transform.Find(DroneModelName);
+        if (old != null) Object.DestroyImmediate(old.gameObject);
+        var cubeRenderer = droneGo.GetComponent<MeshRenderer>();
+        if (cubeRenderer != null) cubeRenderer.enabled = false;
+
+        var model = (GameObject)PrefabUtility.InstantiatePrefab(prefab, droneGo.transform);
+        model.name = DroneModelName;
+        model.transform.localPosition = Vector3.zero;
+        model.transform.localRotation = Quaternion.identity;
+        model.transform.localScale = Vector3.one;
+
+        // The model's own colliders would get caught by the drone's arrival overlap check.
+        foreach (var c in model.GetComponentsInChildren<Collider>(true)) Object.DestroyImmediate(c);
+        foreach (var t in model.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = droneGo.layer;
+
+        // Fit the widest horizontal side to the cube (1 local unit), then centre it.
+        var b = new Bounds();
+        bool any = false;
+        foreach (var r in model.GetComponentsInChildren<Renderer>())
+        {
+            if (!any) { b = r.bounds; any = true; } else b.Encapsulate(r.bounds);
+        }
+        if (!any) return;
+        float s = droneGo.transform.lossyScale.x / Mathf.Max(b.size.x, b.size.z);
+        model.transform.localScale = Vector3.one * s;
+        var centre = droneGo.transform.InverseTransformPoint(b.center) * s;
+        model.transform.localPosition = -centre;
     }
 
     // ---------- parking lot layout (1 unit = 1 m; asphalt top at y = -0.5, the builder's ground plane) ----------
@@ -123,7 +194,7 @@ public static class DroneSimSetup
     const float RowAz = 1.5f;               // row A bays span z 1.5 .. 7 (quadrant-local)
     const float RowBz = QuadZ - 1.5f - BayD; // row B bays span z 23 .. 28.5
 
-    static void BuildParkingLot(CellMap map, PropSet props, Material asphalt, Material sidewalk, Material paint)
+    static void BuildParkingLot(CellMap map, PropSet props, LotRandomizer randomizer, Material asphalt, Material sidewalk, Material paint)
     {
         var ground = new GameObject("Ground").transform;
         Slab(ground, "Asphalt", asphalt, new Vector3(LotX * 0.5f, -0.55f, LotZ * 0.5f), new Vector3(LotX, 0.1f, LotZ));
@@ -134,42 +205,52 @@ public static class DroneSimSetup
         Slab(ground, "Sidewalk W", sidewalk, new Vector3(-sw * 0.5f, top - h * 0.5f, LotZ * 0.5f), new Vector3(sw, h, LotZ));
         Slab(ground, "Sidewalk E", sidewalk, new Vector3(LotX + sw * 0.5f, top - h * 0.5f, LotZ * 0.5f), new Vector3(sw, h, LotZ));
 
-        // ---- cubes: one L-shaped low barrier on the north and east sidewalks of the whole lot ----
+        // ---- cubes: one low barrier on the sidewalk all the way around the lot ----
         map.Clear();
         int bx = Mathf.RoundToInt(LotX) + 1, bz = Mathf.RoundToInt(LotZ) + 1;
-        for (int x = -1; x <= bx; x++) map.Place(new Vector3Int(x, 0, bz), CellType.Wall);
-        for (int z = 0; z < bz; z++) map.Place(new Vector3Int(bx, 0, z), CellType.Wall);
+        for (int x = -1; x <= bx; x++)
+        {
+            map.Place(new Vector3Int(x, 0, -1), CellType.Wall);
+            map.Place(new Vector3Int(x, 0, bz), CellType.Wall);
+        }
+        for (int z = 0; z < bz; z++)
+        {
+            map.Place(new Vector3Int(-1, 0, z), CellType.Wall);
+            map.Place(new Vector3Int(bx, 0, z), CellType.Wall);
+        }
         // Start in the south-west quadrant's aisle, goal at the far end of the north-east quadrant's aisle
         map.droneStart = new Vector3Int(1, 1, Mathf.RoundToInt(QuadZ * 0.5f));
         var goal = new Vector3Int(Mathf.RoundToInt(LotX) - 2, 1, Mathf.RoundToInt(QuadZ * 1.5f));
         map.Place(goal, CellType.Win);
 
-        // ---- objects (deterministic; each quadrant draws its own random layout) ----
+        // ---- objects: fixed scenery per quadrant, then randomized cars + items (R re-rolls them in Play mode) ----
         props.Clear();
         var rng = new System.Random(7);
         int quadIndex = 0;
         for (int qz = 0; qz < QuadsZ; qz++)
             for (int qx = 0; qx < QuadsX; qx++)
                 BuildQuadrant(props, ground, paint, new Vector3(qx * QuadX, 0f, qz * QuadZ), quadIndex++, rng);
+        randomizer.Randomize(7);
 
         int Id(string n) => props.catalog.IndexOf(n);
 
-        // Trees and bushes along the outer south and west sidewalks
+        // Trees and bushes along the outer south and west sidewalks, outside the barrier
+        const float treeLine = -2.4f;
         for (float x = 2f; x < LotX - 1f; x += 6f)
         {
-            props.Place(Id(rng.Next(2) == 0 ? "Round tree" : "Pine tree"), new Vector3(x, -0.42f, -1.5f), rng.Next(360));
-            props.Place(Id("Bush"), new Vector3(x + 3f, -0.42f, -1.5f), rng.Next(360));
+            props.Place(Id(rng.Next(2) == 0 ? "Round tree" : "Pine tree"), new Vector3(x, -0.42f, treeLine), rng.Next(360));
+            props.Place(Id("Bush"), new Vector3(x + 3f, -0.42f, treeLine), rng.Next(360));
         }
         for (float z = 4f; z < LotZ - 1f; z += 7.5f)
-            props.Place(Id(rng.Next(2) == 0 ? "Pine tree" : "Round tree"), new Vector3(-1.5f, -0.42f, z), rng.Next(360));
+            props.Place(Id(rng.Next(2) == 0 ? "Pine tree" : "Round tree"), new Vector3(treeLine, -0.42f, z), rng.Next(360));
 
         // Cones guarding the goal
         foreach (var d in new[] { new Vector2(-2f, -2.5f), new Vector2(-2f, 2.5f), new Vector2(1.5f, -2.5f), new Vector2(1.5f, 2.5f) })
             props.Place(Id("Traffic cone"), new Vector3(goal.x + d.x, -0.5f, goal.z + d.y), 0f);
     }
 
-    /// One quadrant: bay markings, aisle dashes, street lights, a random set of parked cars and a
-    /// random scatter of dropped items (phones, keys, wallets) and stray cones.
+    /// One quadrant's fixed scenery: bay markings, aisle dashes, street lights and a few stray cones.
+    /// Parked cars and dropped items come from <see cref="LotRandomizer"/>.
     static void BuildQuadrant(PropSet props, Transform ground, Material paint, Vector3 o, int index, System.Random rng)
     {
         int Id(string n) => props.catalog.IndexOf(n);
@@ -188,34 +269,9 @@ public static class DroneSimSetup
         for (float x = 2f; x < QuadX - 2f; x += 4f)
             Slab(lines, "Centre dash", paint, o + new Vector3(x + 1f, lineY, QuadZ * 0.5f), new Vector3(2f, 0.01f, lw));
 
-        // Parked cars: each quadrant fills a different share of its bays
-        var cars = new[] { Id("Sedan"), Id("SUV"), Id("Taxi"), Id("Police car"), Id("Van") };
-        double emptyChance = 0.25 + rng.NextDouble() * 0.35;
-        var parked = new System.Collections.Generic.List<Vector3>();
-        foreach (float z0 in new[] { RowAz, RowBz })
-            for (int i = 0; i < BaysPerRow; i++)
-            {
-                if (rng.NextDouble() < emptyChance) continue;
-                var center = o + new Vector3(FirstBayX + (i + 0.5f) * BayW, -0.5f, z0 + BayD * 0.5f);
-                float yaw = (rng.Next(2) == 0 ? 0f : 180f) + (float)(rng.NextDouble() * 6 - 3);
-                props.Place(cars[rng.Next(cars.Length)], center, yaw);
-                parked.Add(center);
-            }
-
         // Street lights along the aisle
         foreach (float x in new[] { 6f, 13f, 28f, 35f })
             props.Place(Id("Street light"), o + new Vector3(x, -0.5f, QuadZ * 0.5f + 1.5f), 0f);
-
-        // Dropped items: 2-4 small things beside random parked cars, on the aisle side of the bay
-        var items = new[] { Id("Phone"), Id("Keys"), Id("Wallet") };
-        int drops = parked.Count == 0 ? 0 : 2 + rng.Next(3);
-        for (int d = 0; d < drops; d++)
-        {
-            var car = parked[rng.Next(parked.Count)];
-            float side = car.z - o.z < QuadZ * 0.5f ? 1f : -1f; // toward the aisle
-            var pos = car + new Vector3((float)(rng.NextDouble() * 2 - 1) * 1.2f, 0f, side * (BayD * 0.5f + 0.3f + (float)rng.NextDouble() * 0.8f));
-            props.Place(items[rng.Next(items.Length)], pos, rng.Next(360));
-        }
 
         // A couple of stray cones somewhere in the aisle
         int cones = rng.Next(3);
@@ -224,7 +280,7 @@ public static class DroneSimSetup
     }
 
     /// A collider-less box used for ground, sidewalks and paint (scenery, not part of the cell map).
-    static void Slab(Transform parent, string name, Material mat, Vector3 center, Vector3 size)
+    internal static void Slab(Transform parent, string name, Material mat, Vector3 center, Vector3 size)
     {
         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
         go.name = name;
@@ -287,7 +343,7 @@ public static class DroneSimSetup
 
     // ---------- materials ----------
 
-    static Material LitMaterial(string name, Color color, Color? emission = null)
+    internal static Material LitMaterial(string name, Color color, Color? emission = null)
     {
         var mat = GetOrCreate(name, "Universal Render Pipeline/Lit");
         mat.SetColor("_BaseColor", color);

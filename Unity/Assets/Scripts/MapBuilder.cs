@@ -144,7 +144,7 @@ public class MapBuilder : MonoBehaviour
 
         ghost.SetActive(true);
         ghost.transform.position = placeCell;
-        ghost.transform.localScale = Vector3.one * (tool == Tool.DroneStart ? 0.4f : 0.9f);
+        ghost.transform.localScale = Vector3.one * (tool == Tool.DroneStart ? 0.8f : 0.9f);
 
         if (!click) return;
         switch (tool)
@@ -273,9 +273,10 @@ public class MapBuilder : MonoBehaviour
 
         var catalog = props ? props.catalog : null;
         int count = catalog ? catalog.Count : 0;
-        const float w = 230f, rowH = 26f, gap = 4f;
-        int rows = (count + 1) / 2;
-        float h = 34 + rows * (rowH + gap) + 58;
+        const float w = 320f, rowH = 26f, gap = 4f;
+        const int cols = 3;
+        int rows = (count + cols - 1) / cols;
+        float h = 34 + rows * (rowH + gap) + 30;
         panelRect = new Rect(10, top, w, h);
         var prev = GUI.color;
         GUI.color = new Color(0f, 0f, 0f, 0.65f);
@@ -287,11 +288,11 @@ public class MapBuilder : MonoBehaviour
         if (GUI.Button(new Rect(panelRect.xMax - 30, y + 1, 22, 20), "–")) panelOpen = false;
         y += 28;
 
-        float bw = (inner - gap) * 0.5f;
+        float bw = (inner - gap * (cols - 1)) / cols;
         var prevBg = GUI.backgroundColor;
         for (int i = 0; i < count; i++)
         {
-            var r = new Rect(x + (i % 2) * (bw + gap), y + (i / 2) * (rowH + gap), bw, rowH);
+            var r = new Rect(x + (i % cols) * (bw + gap), y + (i / cols) * (rowH + gap), bw, rowH);
             bool selected = tool == Tool.Object && selectedProp == i;
             GUI.backgroundColor = selected ? new Color(1f, 0.85f, 0.1f) : prevBg;
             if (GUI.Button(r, catalog.Get(i).name))
@@ -304,8 +305,6 @@ public class MapBuilder : MonoBehaviour
         y += rows * (rowH + gap) + 2;
 
         GUI.Label(new Rect(x, y, inner, 22), $"<color=#F0F0F0>Rotation <b>{propYaw:0}°</b>   Z / X  (Shift 90°)</color>", label);
-        y += 24;
-        if (GUI.Button(new Rect(x, y, inner, 24), "Clear objects") && props) props.Clear();
     }
 
     void ResetDrone()
